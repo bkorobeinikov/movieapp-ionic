@@ -1,0 +1,26 @@
+{
+  "name": "movieapp",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "android": "node node_modules/react-native/local-cli/cli.js run-android",
+    "ios": "node node_modules/react-native/local-cli/cli.js run-ios",
+    "prebuild": "rimraf build",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "react": "~15.4.0",
+    "react-native": "0.41.2"
+  },
+  "devDependencies": {
+    "@types/react": "^15.0.13",
+    "@types/react-native": "^0.37.13",
+    "rimraf": "^2.6.0",
+    "tslint": "^4.5.0",
+    "typescript": "^2.2.1"
+  },
+  "jest": {
+    "preset": "react-native"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "name": "movieapp",
+  "dependencies": {
+    "react": "registry:dt/react#15.0.0+20170225072957",
+    "react-native": "registry:dt/react-native#0.37.0+20170221224223"
+  }
+}
