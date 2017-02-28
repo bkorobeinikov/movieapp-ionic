@@ -3,19 +3,22 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "start": "node node_modules/react-native/local-cli/cli.js start --transformer node_modules/react-native-sm-transformer --skipflow",
     "android": "node node_modules/react-native/local-cli/cli.js run-android",
     "ios": "node node_modules/react-native/local-cli/cli.js run-ios",
     "prebuild": "rimraf build",
-    "build": "tsc"
+    "build": "tsc",
+    "morning": "start cmd /K npm run build -- --watch && start cmd /K npm run start && "
   },
   "dependencies": {
+    "native-base": "^2.0.10",
     "react": "~15.4.0",
     "react-native": "0.41.2"
   },
   "devDependencies": {
     "@types/react": "^15.0.13",
     "@types/react-native": "^0.37.13",
+    "react-native-sm-transformer": "^1.0.3",
     "rimraf": "^2.6.0",
     "tslint": "^4.5.0",
     "typescript": "^2.2.1"
