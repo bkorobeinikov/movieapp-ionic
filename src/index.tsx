@@ -1,62 +1,57 @@
-/// <reference path="./../node_modules/native-base/index.d.ts"/>
-
 import React, {Component} from 'react';
 
 import {
-    StyleSheet,
     Text,
     View,
 } from 'react-native';
 
 import { Container, Header, Body, Title, Content, Button } from 'native-base';
+import { Provider } from 'react-redux';
+
+import { Splash, Home } from './scenes';
+
+import store from './store';
 
 interface Props {
 
 }
 
 interface State {
-
+    initialized: boolean;
 }
 
 export default class App extends Component<Props, State> {
 
-    clickMe() {
-        //alert("You clicked the button! its alive!");
+    constructor() {
+        super();
 
-        var a = 5;
-        a += 10;
-
-        alert('You clicked ' + a);
+        this.state = {
+            initialized: false
+        }
     }
 
+    componentDidMount() {
+        setTimeout(() => {
+            this.setState({
+                initialized: true
+            });
+        }, 2000);
+    }
+
+    renderContent() {
+        if (!this.state.initialized)
+            return <Splash/>;
+        
+        return <Home/>
+    }
+    
     render() {
         return (
-            <Container>
-                <Header>
-                    <Body>
-                        <Title>Title</Title>
-                    </Body>
-                </Header>
-                <Content>
-                    <Button success block onPress={this.clickMe}>
-                        <Text>Click Me Again!</Text>
-                    </Button>
-                </Content>
-            </Container>
+            <View>
+                <Provider store={store}>
+                    {this.renderContent()}
+                </Provider>
+            </View>
         );
     }
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#F5FCFF'
-    },
-    text: {
-        fontSize: 20,
-        textAlign: 'center',
-        margin: 10
-    } as React.TextStyle
-})

@@ -7,17 +7,20 @@
     "android": "node node_modules/react-native/local-cli/cli.js run-android",
     "ios": "node node_modules/react-native/local-cli/cli.js run-ios",
     "prebuild": "rimraf build",
-    "build": "tsc",
-    "morning": "start cmd /K npm run build -- --watch && start cmd /K npm run start && "
+    "build": "tsc"
   },
   "dependencies": {
     "native-base": "^2.0.10",
     "react": "~15.4.0",
-    "react-native": "0.41.2"
+    "react-native": "0.41.2",
+    "react-redux": "^5.0.3",
+    "redux": "^3.6.0",
+    "rxjs": "^5.2.0"
   },
   "devDependencies": {
     "@types/react": "^15.0.13",
     "@types/react-native": "^0.37.13",
+    "@types/react-redux": "^4.4.36",
     "react-native-sm-transformer": "^1.0.3",
     "rimraf": "^2.6.0",
     "tslint": "^4.5.0",
