@@ -9,10 +9,11 @@ import {
     Spinner
 } from 'native-base';
 
-
+import HomeScene from './../home';
 
 interface Props {
-
+    route: React.Route;
+    navigator: React.Navigator;
 }
 
 interface State {
@@ -20,6 +21,19 @@ interface State {
 }
 
 export default class Splash extends Component<Props, State> {
+
+    componentDidMount() {
+
+        const { navigator } = this.props;
+
+        setTimeout(() => {
+            navigator.replace({
+                name: 'Home',
+                component: HomeScene
+            })
+        }, 500);
+
+    }
     
     render() {
 

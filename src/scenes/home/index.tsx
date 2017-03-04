@@ -1,10 +1,15 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { View, Text, StyleSheet, ViewStyle, ScrollView, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, ViewStyle, ScrollView, Dimensions, TouchableHighlight } from 'react-native';
 
 import MovieItem from './components/MovieItem';
 
+import MoviesScene from './../movies';
+
 interface Props {
+    route: React.Route;
+    navigator: React.Navigator;
+
     movies: IMovie[]
 }
 
@@ -46,6 +51,16 @@ class Home extends Component<Props, State> {
         
     }
 
+    onMovie(movieId: string) {
+        this.props.navigator.push({
+            name: 'Movies',
+            component: MoviesScene,
+            passProps: {
+                movieId: movieId
+            }
+        })
+    }
+
     render() {
 
         const { movies } = this.props;
@@ -57,7 +72,9 @@ class Home extends Component<Props, State> {
             <ScrollView>
                 <View style={styles.currentMovies} onLayout={e => this.onLayout(e)}>
                     {currentMovies.map((m) => 
-                        <MovieItem style={styles.currentMoviesItem} key={m.id} movie={m}/>
+                        <MovieItem style={styles.currentMoviesItem} 
+                            key={m.id} movie={m}
+                            onPress={() => this.onMovie(m.id)}/>
                     )}
                     {currentMovies.length % 2 == 1 &&
                         <View style={styles.currentMoviesItem}></View>
@@ -65,7 +82,8 @@ class Home extends Component<Props, State> {
                 </View>
                 <View style={styles.futureMovies}>
                     {futureMovies.map((m) => 
-                        <MovieItem style={styles.futureMoviesItem} key={m.id} movie={m}/>
+                        <MovieItem style={styles.futureMoviesItem} key={m.id} movie={m}
+                            onPress={() => this.onMovie(m.id)}/>
                     )}
                     {(futureMovies.length % 3 == 1) &&
                         <View style={styles.futureMoviesItem}></View> &&
@@ -107,7 +125,6 @@ const styles = StyleSheet.create({
 })
 
 const mapStoreToProps = (store: any) => {
-    console.log('mapStoreToProps', store);
     return {
         movies: store.data.movies
     };

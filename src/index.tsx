@@ -10,12 +10,17 @@ import SplashScene from './scenes/splash';
 
 import store from './store';
 
+var routeStack: React.Route[] = [
+    { name: 'Splash', component: SplashScene },
+    { name: 'Home', component: HomeScene }
+];
+
 interface Props {
 
 }
 
 interface State {
-    initialized: boolean;
+    initialRoute: React.Route;
 }
 
 export default class App extends Component<Props, State> {
@@ -24,36 +29,25 @@ export default class App extends Component<Props, State> {
         super();
 
         this.state = {
-            initialized: false
+            initialRoute: routeStack[0]
         }
-    }
-
-    componentDidMount() {
-        setTimeout(() => {
-            this.setState({
-                initialized: true
-            });
-        }, 500);
-    }
-
-    renderContent() {
-        if (!this.state.initialized)
-            return <SplashScene />;
-        
-        return <HomeScene />
     }
     
     render() {
         return (
             <Navigator 
-                initialRoute={{ title: 'Awesome Scene', index: 0 }}
+                initialRoute={this.state.initialRoute}
                 renderScene={(route, navigator) =>
-                   <View>
-                        <Provider store={store}>
-                            {this.renderContent()}
-                        </Provider>
-                    </View>
+                    <Provider store={store}>
+                        {React.createElement(route.component, {...route.passProps, route, navigator })}
+                    </Provider>
                 }
+                configureScene={(route, routeStack) => {
+                    if (route.name == 'Movies')
+                        return Navigator.SceneConfigs.FloatFromBottom
+                    
+                    return Navigator.SceneConfigs.PushFromRight;
+                }}
         />);
     }
 }
