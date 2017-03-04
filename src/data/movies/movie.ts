@@ -1,5 +1,10 @@
 
 interface IMovie {
-    id: number;
+    id: string;
+
     name: string;
+    poster: string;
+    
+    inCinema: boolean;
+    showDate?: Date;
 }
