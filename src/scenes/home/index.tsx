@@ -25,22 +25,25 @@ class Home extends Component<Props, State> {
         };
     }
 
+    temp: number = 0;
+
     onLayout(e: any) {
 
-        // var width = e.nativeEvent.layout.width;
+        var width = e.nativeEvent.layout.width;
 
-        // const calculateMovieItemWidth = (container: ViewStyle, item: ViewStyle) => {
-        //     var result = width - container.marginHorizontal*2 - item.margin*2;
-        //     return result / 2;
-        // }
+        const calculateMovieItemWidth = (container: ViewStyle, item: ViewStyle, count: number) => {
+            var result = width - 10*2 - 10*count - width*0.01*count;
+            return result / count;
+        }
 
-        // this.currentMovieItemWidth = calculateMovieItemWidth(styles.currentMovies, styles.currentMoviesItem);
-        // this.futureMovieItemWidth = calculateMovieItemWidth(styles.futureMovies, styles.futureMoviesItem);
+        this.currentMovieItemWidth = calculateMovieItemWidth(styles.currentMovies, styles.currentMoviesItem, 2);
+        this.futureMovieItemWidth = calculateMovieItemWidth(styles.futureMovies, styles.futureMoviesItem, 3);
 
-        // styles.currentMoviesItem = StyleSheet.flatten([styles.currentMoviesItem, {width: this.currentMovieItemWidth}]);
-        // styles.futureMoviesItem = StyleSheet.flatten([styles.futureMoviesItem, {width: this.futureMovieItemWidth}]);
+        styles.currentMoviesItem = StyleSheet.flatten([styles.currentMoviesItem, {width: this.currentMovieItemWidth}]);
+        styles.futureMoviesItem = StyleSheet.flatten([styles.futureMoviesItem, {width: this.futureMovieItemWidth}]);
+
+        this.forceUpdate();
         
-        // this.forceUpdate();
     }
 
     render() {
@@ -52,7 +55,7 @@ class Home extends Component<Props, State> {
 
         return (
             <ScrollView>
-                <View style={styles.currentMovies}>
+                <View style={styles.currentMovies} onLayout={e => this.onLayout(e)}>
                     {currentMovies.map((m) => 
                         <MovieItem style={styles.currentMoviesItem} key={m.id} movie={m}/>
                     )}
@@ -96,12 +99,10 @@ const styles = StyleSheet.create({
 
     currentMoviesItem: {
         margin: 10,
-        width: 170
     } as ViewStyle,
 
     futureMoviesItem: {
         margin: 10,
-        width: 110
     } as ViewStyle,
 })
 
