@@ -1,14 +1,12 @@
 import React, {Component} from 'react';
 
-import {
-    Text,
-    View,
-} from 'react-native';
+import { Text, View, Navigator } from 'react-native';
 
 import { Container, Header, Body, Title, Content, Button } from 'native-base';
 import { Provider } from 'react-redux';
 
-import { Splash, Home } from './scenes';
+import HomeScene from './scenes/home';
+import SplashScene from './scenes/splash';
 
 import store from './store';
 
@@ -40,18 +38,22 @@ export default class App extends Component<Props, State> {
 
     renderContent() {
         if (!this.state.initialized)
-            return <Splash/>;
+            return <SplashScene />;
         
-        return <Home/>
+        return <HomeScene />
     }
     
     render() {
         return (
-            <View>
-                <Provider store={store}>
-                    {this.renderContent()}
-                </Provider>
-            </View>
-        );
+            <Navigator 
+                initialRoute={{ title: 'Awesome Scene', index: 0 }}
+                renderScene={(route, navigator) =>
+                   <View>
+                        <Provider store={store}>
+                            {this.renderContent()}
+                        </Provider>
+                    </View>
+                }
+        />);
     }
 }
