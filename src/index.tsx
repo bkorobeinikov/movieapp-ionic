@@ -35,7 +35,7 @@ export default class App extends Component<Props, State> {
             this.setState({
                 initialized: true
             });
-        }, 2000);
+        }, 500);
     }
 
     renderContent() {

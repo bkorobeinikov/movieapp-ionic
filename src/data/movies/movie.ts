@@ -4,4 +4,7 @@ interface IMovie {
 
     name: string;
     poster: string;
+    
+    inCinema: boolean;
+    showDate?: Date;
 }

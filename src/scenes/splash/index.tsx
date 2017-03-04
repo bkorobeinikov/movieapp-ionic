@@ -9,6 +9,8 @@ import {
     Spinner
 } from 'native-base';
 
+
+
 interface Props {
 
 }
@@ -20,6 +22,9 @@ interface State {
 export default class Splash extends Component<Props, State> {
     
     render() {
+
+        console.log('splash is rendered');
+
         return (
             <View>
                 <Spinner size="small" color="#000000" />
