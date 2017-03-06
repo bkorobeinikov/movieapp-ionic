@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { View, Text, StyleSheet, ViewStyle, ScrollView, Dimensions, TouchableHighlight } from 'react-native';
+import { View, Text, StyleSheet, ViewStyle, ScrollView, Dimensions, TouchableHighlight, Navigator } from 'react-native';
 
 import MovieItem from './components/MovieItem';
 
@@ -21,7 +21,7 @@ class Home extends Component<Props, State> {
 
     currentMovieItemWidth: number = 0;
     futureMovieItemWidth: number = 0;
-
+    
     constructor() {
         super();
 

@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, PanResponder, Navigator } from 'react-native';
 import { connect } from 'react-redux';
+
+var Dimensions = require('Dimensions');
+var SCREEN_WIDTH = Dimensions.get('window').width;
+var SCREEN_HEIGHT = Dimensions.get('window').height;
 
 interface Props {
     route: React.Route;
@@ -15,6 +19,32 @@ interface State {
 }
 
 class MoviesScene extends Component<Props, State> {
+
+    static sceneConfig: React.SceneConfig = null;
+
+    static getSceneConfig(): React.SceneConfig {
+
+        var sceneConfig: React.SceneConfig = MoviesScene.sceneConfig = {
+            ...Navigator.SceneConfigs.FloatFromBottom,
+            gestures: {
+                pop: {
+                    ...Navigator.SceneConfigs.FloatFromBottom.gestures.pop,
+                    edgeHitWidth: 0
+                }
+            }
+        };
+
+        return sceneConfig;
+    }
+
+    componentWillMount() {
+    }
+
+    componentDidMount() {
+        setTimeout(() => {
+            MoviesScene.sceneConfig.gestures.pop.edgeHitWidth = 150;
+        }, 4000);
+    }
 
     render() {
 

@@ -43,9 +43,9 @@ export default class App extends Component<Props, State> {
                     </Provider>
                 }
                 configureScene={(route, routeStack) => {
-                    if (route.name == 'Movies')
-                        return Navigator.SceneConfigs.FloatFromBottom
-                    
+                    if ((route.component as any).getSceneConfig)
+                        return (route.component as any).getSceneConfig();
+
                     return Navigator.SceneConfigs.PushFromRight;
                 }}
         />);
