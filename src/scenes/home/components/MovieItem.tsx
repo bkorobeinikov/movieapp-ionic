@@ -1,10 +1,12 @@
 
 import React, { Component } from 'react';
-import { View, Image, Text, StyleSheet, ImageStyle, ViewStyle } from 'react-native';
+import { View, Image, Text, StyleSheet, ImageStyle, ViewStyle, TouchableHighlight } from 'react-native';
 
 interface Props {
-    style: ViewStyle,
-    movie: IMovie
+    style: ViewStyle;
+    movie: IMovie;
+
+    onPress: () => void
 }
 
 interface State {
@@ -28,8 +30,11 @@ export default class MovieItem extends Component<Props, State> {
         }]);
 
         return (
-            <View style={style} onLayout={e => this.onLayout(e)}>
-                <Image style={styles.image} source={{uri: movie.poster}}/>
+            <View style={style}
+                onLayout={e => this.onLayout(e)}>
+                <TouchableHighlight style={{flex:1}} onPress={this.props.onPress}>
+                    <Image style={styles.image} source={{uri: movie.poster}}/>
+                </TouchableHighlight>
             </View>
         );
 
