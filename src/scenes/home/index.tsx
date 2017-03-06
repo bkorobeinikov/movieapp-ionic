@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { View, Text, StyleSheet, ViewStyle, ScrollView, Dimensions, TouchableHighlight, Navigator } from 'react-native';
+import { View, Text, StyleSheet, ViewStyle, ScrollView, Dimensions, TouchableHighlight, Navigator, TextStyle } from 'react-native';
+import { Drawer, Button } from 'native-base';
 
 import MovieItem from './components/MovieItem';
 
+import SideBar from './components/SideBar';
 import MoviesScene from './../movies';
 
 interface Props {
@@ -21,6 +23,8 @@ class Home extends Component<Props, State> {
 
     currentMovieItemWidth: number = 0;
     futureMovieItemWidth: number = 0;
+
+    _drawer: Drawer;
     
     constructor() {
         super();
@@ -61,54 +65,120 @@ class Home extends Component<Props, State> {
         })
     }
 
-    render() {
+    openDrawer() {
+        (this._drawer as any)._root.open();
+    }
 
+    renderMain() {
         const { movies } = this.props;
 
         var currentMovies = movies.filter(m => m.inCinema);
         var futureMovies = movies.filter(m => !m.inCinema);
 
         return (
-            <ScrollView>
-                <View style={styles.currentMovies} onLayout={e => this.onLayout(e)}>
-                    {currentMovies.map((m) => 
-                        <MovieItem style={styles.currentMoviesItem} 
-                            key={m.id} movie={m}
-                            onPress={() => this.onMovie(m.id)}/>
-                    )}
-                    {currentMovies.length % 2 == 1 &&
-                        <View style={styles.currentMoviesItem}></View>
-                    }
+            <View style={styles.view}>
+                <ScrollView>
+                    <View style={styles.currSection}>
+                        <Text style={styles.currSectionText}>Showing today</Text>
+                        <View style={styles.currentMovies} onLayout={e => this.onLayout(e)}>
+                            {currentMovies.map((m) => 
+                                <MovieItem style={styles.currentMoviesItem} 
+                                    key={m.id} movie={m}
+                                    onPress={() => this.onMovie(m.id)}/>
+                            )}
+                            {currentMovies.length % 2 == 1 &&
+                                <View style={styles.currentMoviesItem}></View>
+                            }
+                        </View>
+                    </View>
+                    <View style={styles.futureSection}>
+                        <Text style={styles.futureSectionText}>Future movies</Text>
+                        <View style={styles.futureMovies}>
+                            {futureMovies.map((m) => 
+                                <MovieItem style={styles.futureMoviesItem} key={m.id} movie={m}
+                                    onPress={() => this.onMovie(m.id)}/>
+                            )}
+                            {(futureMovies.length % 3 == 1) &&
+                                <View style={styles.futureMoviesItem}></View> &&
+                                <View style={styles.futureMoviesItem}></View>
+                            }
+                            {(futureMovies.length % 3 == 2) &&
+                                <View style={styles.futureMoviesItem}></View>
+                            }
+                        </View>
+                    </View>
+                </ScrollView>
+                <View style={styles.header}>
+                    <Button onPress={() => this.openDrawer()}>
+                        <Text>open drawer</Text>
+                    </Button>
                 </View>
-                <View style={styles.futureMovies}>
-                    {futureMovies.map((m) => 
-                        <MovieItem style={styles.futureMoviesItem} key={m.id} movie={m}
-                            onPress={() => this.onMovie(m.id)}/>
-                    )}
-                    {(futureMovies.length % 3 == 1) &&
-                        <View style={styles.futureMoviesItem}></View> &&
-                        <View style={styles.futureMoviesItem}></View>
-                    }
-                    {(futureMovies.length % 3 == 2) &&
-                        <View style={styles.futureMoviesItem}></View>
-                    }
-                </View>
-            </ScrollView>
+            </View>
         );
+    }
+
+    render() {
+        var closeDrawer = () => {
+            (this._drawer as any)._root.close()
+        };
+            return (
+                <Drawer
+                ref={(ref) => { this._drawer = ref; }}
+                content={<SideBar navigator={this.props.navigator} />}
+                onClose={() => closeDrawer()}
+
+
+                type="displace"
+                openDrawerOffset={80}
+                >
+                {this.renderMain()}
+            </Drawer>
+            );
+        
     }
 }
 
 
 const styles = StyleSheet.create({
-    currentMovies: {
+    view: {
+        flex: 1,
+    } as ViewStyle,
+    header: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        height: 30,
+        backgroundColor: 'rgba(255,255,255,0.7)',
+    } as ViewStyle,
+
+    currSection: {
+        marginTop: 30,
         marginHorizontal: 10,
+    } as ViewStyle,
+    currSectionText: {
+        fontWeight: 'bold',
+        marginTop: 10,
+        marginLeft: 10,
+    } as TextStyle,
+
+    futureSection: {
+        marginTop: 10,
+        marginHorizontal: 10,
+    } as ViewStyle,
+    futureSectionText: {
+        fontWeight: 'normal',
+        marginLeft: 10,
+        fontStyle: "italic",
+    } as TextStyle,
+
+    currentMovies: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         flexWrap: 'wrap',
     } as ViewStyle,
 
     futureMovies: {
-        marginHorizontal: 10,
         marginTop: 10,
         flexDirection: 'row',
         justifyContent: 'space-between',
