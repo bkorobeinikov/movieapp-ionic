@@ -10,6 +10,8 @@
     "build": "tsc"
   },
   "dependencies": {
+    "lodash": "^4.17.4",
+    "moment": "^2.17.1",
     "native-base": "^2.0.10",
     "react": "~15.4.0",
     "react-native": "0.41.2",
@@ -19,6 +21,7 @@
     "rxjs": "^5.2.0"
   },
   "devDependencies": {
+    "@types/lodash": "^4.14.54",
     "@types/react": "^15.0.13",
     "@types/react-native": "^0.37.13",
     "@types/react-redux": "^4.4.36",
@@ -29,5 +32,10 @@
   },
   "jest": {
     "preset": "react-native"
+  },
+  "rnpm": {
+    "assets": [
+        "./src/assets/fonts"
+     ]
   }
 }
