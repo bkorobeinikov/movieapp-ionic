@@ -1,5 +1,0 @@
-{
-  "presets": [
-    "react-native" // this is required for debugging with react-native/packager/transformer
-  ]
-}
