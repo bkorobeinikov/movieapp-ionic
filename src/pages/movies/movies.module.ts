@@ -3,8 +3,9 @@ import { NgModule } from '@angular/core';
 import { IonicModule } from 'ionic-angular';
 
 import { MoviesPage } from './movies';
-
 import { MovieService } from './shared/movie.service';
+
+import { JoinPipe } from './shared/join.pipe';
 
 @NgModule({
     imports: [
@@ -12,6 +13,7 @@ import { MovieService } from './shared/movie.service';
     ],
     declarations: [
         MoviesPage,
+        JoinPipe,
     ],
     providers: [MovieService],
     entryComponents: [

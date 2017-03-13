@@ -1,6 +1,115 @@
+@mixin aspect-ratio($width, $height) {
+  position: relative;
+  &:before {
+    display: block;
+    content: "";
+    width: 100%;
+    padding-top: ($height / $width) * 100%;
+  }
+  > .content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+}
+
+
 page-movies {
-    .header {
-        color: red;
-        font-size: 3em;
+
+    .movies {
+        margin-top: 20px;
+        
+        .movie-item {
+            overflow: auto;
+            
+            margin-bottom: 10px;
+            padding: 0;
+
+            align-items: flex-start;
+
+            .poster {
+                @include aspect-ratio(1, 1.5);
+
+                flex: 2;
+                min-width: auto;
+                min-height: auto;
+
+                margin: 0;
+                padding: 0;
+                margin-right: 10px;
+
+                img {
+                    width: auto;
+                    height: auto;
+
+                    box-shadow: 0 0 4px black;
+                }
+            }
+
+            .item-inner {
+                flex: 5;
+
+                padding: 0;
+            }
+
+            h2 {
+                font-weight: bold;
+            }
+
+            .genre {
+                margin-top: 2px;
+
+                color: #B9B9B9;
+            }
+
+            .ratings {
+                display: flex;
+                flex-direction: row;
+                
+                .imdb {
+                    margin-right: 4px;
+                    padding: 4px 6px;
+                    border-radius: 2px;
+
+                    background-color:#FFB10A;
+                    color: black;
+
+                    font-size: .8em;
+                    font-weight: bold;
+
+                    .nb {
+                        color: white;
+                    }
+                }
+            }
+
+            .screening {
+                margin-top: 10px;
+
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+
+                .time {
+                    margin: 0 4px 4px 0;
+                    padding: 2px 4px;
+                    border-radius: 4px;
+
+                    background-color: #F3F3F3;
+                    color: #B0B0B0;
+
+                    font-size: .9em;
+
+                    &.active {
+                        background-color: #43B8A3;
+                        color: white;
+                    }
+                }
+            }
+           
+        }
     }
+
 }

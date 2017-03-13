@@ -1,5 +1,4 @@
-export interface MovieService { 
-    type: string; 
+export interface MovieRating { 
     rating: string; 
 } 
  
@@ -18,6 +17,8 @@ export interface Movie {
      
     duration: number; 
  
-    services: MovieService[] 
+    ratings?: {
+        imdb: MovieRating
+    }
     screening?: MovieScreening[] 
 }

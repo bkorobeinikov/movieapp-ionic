@@ -1,12 +1,28 @@
 <ion-content padding>
 
-    <ion-list>
+    <ion-list no-lines class="movies">
         
-        <ion-item *ngFor="let movie of movies">
-            <ion-thumbnail item-left>
+        <ion-item *ngFor="let movie of movies" class="movie-item">
+            <ion-thumbnail item-left class="poster">
+                <div class="content">
+                    <img src="{{movie.poster}}">
+                </div>
             </ion-thumbnail>
             <h2>{{movie.name}}</h2>
-            <h3>some details</h3>
+            <h3 class="genre ">{{movie.genres | join:" | "}}</h3>
+            <!-- services rating -->
+            <div class="ratings" *ngIf="movie.ratings != null">
+                <div class="imdb" *ngIf="movie.ratings.imdb != null">
+                    <span>imdb <span class="nb">{{movie.ratings.imdb.rating}}</span></span>
+                </div>
+            </div>
+
+            <div class="screening" *ngIf="movie.screening != null">
+                <div class="time" *ngFor="let t of uniqueTimes(movie.screening)" 
+                    [ngClass]="{'active': t.active}">
+                    {{t.time}}
+                </div>
+            </div>
         </ion-item>
 
     </ion-list>

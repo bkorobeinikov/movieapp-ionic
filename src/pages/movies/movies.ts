@@ -3,7 +3,10 @@
 import { ViewController, NavController } from 'ionic-angular';
 
 import { MovieService } from './shared/movie.service';
-import { Movie } from './shared/movie.model';
+import { Movie, MovieScreening } from './shared/movie.model';
+
+import * as _ from 'lodash';
+import moment from 'moment';
 
 @Component({
     selector: 'page-movies',
@@ -23,8 +26,11 @@ export class MoviesPage implements OnInit, OnDestroy {
 
     ngOnInit() {
         var sub = this.viewCtrl.didEnter.subscribe(() => {
-            console.log('MoviesPage: didEnter');
+
+            this.movies = this.movieService.getMovies();
+
         });
+
         this.subs.push(sub);
         var sub2 = this.viewCtrl.didLeave.subscribe(() => {
             console.log('MoviesPage: didLeave');
@@ -36,6 +42,26 @@ export class MoviesPage implements OnInit, OnDestroy {
         this.subs.forEach(sub => {
             sub.unsubscribe();
         });
+    }
+
+    uniqueTimes(screening: MovieScreening[]): any[] {
+
+        if (screening == null || screening.length == 0)
+            return [];
+
+        var now = moment();
+        var times = _.chain(screening)
+            .map(s => {
+                var time = moment(s.time);
+                return {
+                    time: time.format("HH:mm"),
+                    active: time.isSame(now, 'day') && time.isAfter(now)
+                }
+            })
+            .uniqBy(t => t.time)
+            .value();
+
+        return times;
     }
 
 
