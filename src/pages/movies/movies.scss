@@ -18,21 +18,29 @@
 
 page-movies {
 
+    font-size: 16px;
+
     .movies {
         margin-top: 20px;
+
+        display: flex;
+        flex-direction: column;
         
         .movie-item {
-            overflow: auto;
+            overflow: visible;
             
             margin-bottom: 10px;
             padding: 0;
 
             align-items: flex-start;
 
+            display: flex;
+            flex-direction: row;
+
             .poster {
                 @include aspect-ratio(1, 1.5);
 
-                flex: 2;
+                flex: 1;
                 min-width: auto;
                 min-height: auto;
 
@@ -48,25 +56,37 @@ page-movies {
                 }
             }
 
-            .item-inner {
-                flex: 5;
+            .item-content {
+                overflow: hidden;
+
+                flex: 2;
+
+                display: flex;
+                flex-direction: column;
 
                 padding: 0;
             }
 
-            h2 {
+            .title {
+                font-size: 1em;
                 font-weight: bold;
             }
 
             .genre {
-                margin-top: 2px;
+                margin-top: .3em;
 
                 color: #B9B9B9;
+
+                font-size: .8em;
             }
 
             .ratings {
+                margin-top: .5em;
+
                 display: flex;
                 flex-direction: row;
+                
+                font-size: .8em;
                 
                 .imdb {
                     margin-right: 4px;
@@ -76,7 +96,6 @@ page-movies {
                     background-color:#FFB10A;
                     color: black;
 
-                    font-size: .8em;
                     font-weight: bold;
 
                     .nb {
@@ -86,11 +105,13 @@ page-movies {
             }
 
             .screening {
-                margin-top: 10px;
+                margin-top: .5em;
 
                 display: flex;
                 flex-direction: row;
                 flex-wrap: wrap;
+
+                font-size: .9em;
 
                 .time {
                     margin: 0 4px 4px 0;
@@ -99,8 +120,6 @@ page-movies {
 
                     background-color: #F3F3F3;
                     color: #B0B0B0;
-
-                    font-size: .9em;
 
                     &.active {
                         background-color: #43B8A3;

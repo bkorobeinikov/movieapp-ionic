@@ -1,30 +1,32 @@
 <ion-content padding>
 
-    <ion-list no-lines class="movies">
+    <div class="movies">
         
-        <ion-item *ngFor="let movie of movies" class="movie-item">
-            <ion-thumbnail item-left class="poster">
+        <div *ngFor="let movie of movies" class="movie-item">
+            <div class="poster">
                 <div class="content">
                     <img src="{{movie.poster}}">
                 </div>
-            </ion-thumbnail>
-            <h2>{{movie.name}}</h2>
-            <h3 class="genre ">{{movie.genres | join:" | "}}</h3>
-            <!-- services rating -->
-            <div class="ratings" *ngIf="movie.ratings != null">
-                <div class="imdb" *ngIf="movie.ratings.imdb != null">
-                    <span>imdb <span class="nb">{{movie.ratings.imdb.rating}}</span></span>
+            </div>
+            <div class="item-content">
+                <span class="title">{{movie.name}}</span>
+                <span class="genre ">{{movie.genres | join:" | "}}</span>
+                <!-- services rating -->
+                <div class="ratings" *ngIf="movie.ratings != null">
+                    <div class="imdb" *ngIf="movie.ratings.imdb != null">
+                        <span>imdb <span class="nb">{{movie.ratings.imdb.rating}}</span></span>
+                    </div>
+                </div>
+
+                <div class="screening" *ngIf="movie.screening != null">
+                    <div class="time" *ngFor="let t of uniqueTimes(movie.screening)" 
+                        [ngClass]="{'active': t.active}">
+                        {{t.time}}
+                    </div>
                 </div>
             </div>
+        </div>
 
-            <div class="screening" *ngIf="movie.screening != null">
-                <div class="time" *ngFor="let t of uniqueTimes(movie.screening)" 
-                    [ngClass]="{'active': t.active}">
-                    {{t.time}}
-                </div>
-            </div>
-        </ion-item>
-
-    </ion-list>
+    </div>
 
 </ion-content>
