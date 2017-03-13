@@ -1,41 +1,44 @@
 {
-  "name": "movieapp",
-  "version": "0.0.1",
+  "name": "ionic-hello-world",
+  "author": "Ionic Framework",
+  "homepage": "http://ionicframework.com/",
   "private": true,
   "scripts": {
-    "start": "node node_modules/react-native/local-cli/cli.js start --transformer node_modules/react-native-sm-transformer --skipflow",
-    "android": "node node_modules/react-native/local-cli/cli.js run-android",
-    "ios": "node node_modules/react-native/local-cli/cli.js run-ios",
-    "prebuild": "rimraf build",
-    "build": "tsc"
+    "clean": "ionic-app-scripts clean",
+    "build": "ionic-app-scripts build",
+    "ionic:build": "ionic-app-scripts build",
+    "ionic:serve": "ionic-app-scripts serve"
   },
   "dependencies": {
-    "lodash": "^4.17.4",
-    "moment": "^2.17.1",
-    "native-base": "^2.0.10",
-    "react": "~15.4.0",
-    "react-native": "0.41.2",
-    "react-native-snap-carousel": "^2.0.1",
-    "react-redux": "^5.0.3",
-    "redux": "^3.6.0",
-    "rxjs": "^5.2.0"
+    "@angular/common": "2.4.8",
+    "@angular/compiler": "2.4.8",
+    "@angular/compiler-cli": "2.4.8",
+    "@angular/core": "2.4.8",
+    "@angular/forms": "2.4.8",
+    "@angular/http": "2.4.8",
+    "@angular/platform-browser": "2.4.8",
+    "@angular/platform-browser-dynamic": "2.4.8",
+    "@angular/platform-server": "2.4.8",
+    "@ionic/storage": "2.0.0",
+    "ionic-angular": "2.2.0",
+    "ionic-native": "2.4.1",
+    "ionicons": "3.0.0",
+    "rxjs": "5.0.1",
+    "sw-toolbox": "3.4.0",
+    "zone.js": "0.7.2"
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.54",
-    "@types/react": "^15.0.13",
-    "@types/react-native": "^0.37.13",
-    "@types/react-redux": "^4.4.36",
-    "react-native-sm-transformer": "^1.0.3",
-    "rimraf": "^2.6.0",
-    "tslint": "^4.5.0",
-    "typescript": "^2.2.1"
+    "@ionic/app-scripts": "1.1.4",
+    "typescript": "2.0.9"
   },
-  "jest": {
-    "preset": "react-native"
-  },
-  "rnpm": {
-    "assets": [
-        "./src/assets/fonts"
-     ]
-  }
+  "cordovaPlugins": [
+    "cordova-plugin-whitelist",
+    "cordova-plugin-statusbar",
+    "cordova-plugin-console",
+    "cordova-plugin-device",
+    "ionic-plugin-keyboard",
+    "cordova-plugin-splashscreen"
+  ],
+  "cordovaPlatforms": [],
+  "description": "movieapp1: An Ionic project"
 }
