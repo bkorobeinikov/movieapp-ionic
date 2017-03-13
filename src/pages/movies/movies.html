@@ -1,3 +1,14 @@
 <ion-content padding>
-    <h3 class="header">hello world</h3>
+
+    <ion-list>
+        
+        <ion-item *ngFor="let movie of movies">
+            <ion-thumbnail item-left>
+            </ion-thumbnail>
+            <h2>{{movie.name}}</h2>
+            <h3>some details</h3>
+        </ion-item>
+
+    </ion-list>
+
 </ion-content>

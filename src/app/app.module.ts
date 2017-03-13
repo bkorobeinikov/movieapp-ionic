@@ -1,31 +1,32 @@
 import { NgModule, ErrorHandler } from '@angular/core';
+import { HttpModule } from '@angular/http';
+
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 
 import { MyApp } from './app.component';
-
+import { MoviesModule } from '../pages/movies/movies.module';
 import { TabsPage } from '../pages/tabs/tabs';
-import { MoviesPage} from '../pages/movies/movies';
 import { NewsPage } from '../pages/news/news';
 import { AccountPage } from '../pages/account/account';
 
 @NgModule({
+  imports: [
+    IonicModule.forRoot(MyApp),
+    MoviesModule,
+    HttpModule,
+  ],
   declarations: [
     MyApp,
 
     TabsPage,
-    MoviesPage,
     NewsPage,
     AccountPage,
-  ],
-  imports: [
-    IonicModule.forRoot(MyApp)
   ],
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    
+
     TabsPage,
-    MoviesPage,
     NewsPage,
     AccountPage
   ],
