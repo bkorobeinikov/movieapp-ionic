@@ -35,6 +35,16 @@ export class MoviesPage implements OnInit, OnDestroy {
             this.movieService.getMovies().subscribe(movies => {
                 this.current = movies.filter(m => m.soon == false);
                 this.future = movies.filter(m => m.soon == true);
+
+
+                // fix to show items left aligned
+                if (this.future.length % 3 == 1) {
+                    this.future.push(<any>{});
+                    this.future.push(<any>{});
+                } else if (this.future.length % 3 == 2) {
+                    this.future.push(<any>{});
+                }
+
                 this.loading = false;
             });
 
@@ -83,7 +93,7 @@ export class MoviesPage implements OnInit, OnDestroy {
     }
 
     duration(duration: number) {
-        var d = moment.duration(duration, "minutes"); 
+        var d = moment.duration(duration, "minutes");
         return d.hours() + "h " + d.minutes() + "min";
     }
 

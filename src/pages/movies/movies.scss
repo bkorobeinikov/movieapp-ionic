@@ -34,9 +34,64 @@ page-movies {
         margin-top: 20px;
 
         display: flex;
-        flex-direction: column;
+        &.current {
+            flex-direction: column;
+        }
+        &.future {
+            flex-direction: row;
+            flex-wrap: wrap;
+
+            justify-content: space-between;
+        }
+
+        .movie-icon {
+            width: 30%;
+
+            display: flex;
+            flex-direction: column;
+
+            margin-top: .5em;
+
+            .poster {
+                @include aspect-ratio(1, 1.5);
+
+                flex: 1;
+                min-width: auto;
+                min-height: auto;
+
+                margin: 0;
+                padding: 0;
+
+                img {
+                    width: auto;
+                    height: auto;
+
+                    box-shadow: 0 0 2px black;
+                }
+            }
+
+            .title {
+                display: block;
+
+                // doesn't work for some reason
+                // display: -webkit-box;
+                // -webkit-line-clamp: 2;
+                // -webkit-box-orient: vertical; // this one deleted in the output
+
+                line-height: 1.2em;
+                height: 2.4em;
+
+                font-size: .8em;
+
+                color: $color-title;
+
+                overflow: hidden;
+                text-overflow: ellipsis;
+                text-align: center;
+            }
+        }
         
-        .movie-item {
+        .movie-detail {
             overflow: visible;
             
             margin-bottom: 1em;
