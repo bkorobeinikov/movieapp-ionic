@@ -1,29 +1,49 @@
-<ion-content padding>
-    
+<ion-content padding [ngClass]="{'loading': loading}">
+
     <div class="movies">
-        
-        <div *ngFor="let movie of movies" class="movie-item">
-            <div class="poster">
-                <div class="content">
-                    <img src="{{movie.poster}}">
+
+        <ng-container *ngIf="loading == true">
+            <div *ngFor="let i of [1, 2, 3, 4]" class="movie-item loading">
+                <div class="poster">
+                    <div class="content">
+                    </div>
+                </div>
+                <div class="item-content">
+                    <span class="title">&nbsp;</span>
+                    <span class="country">&nbsp;</span>
+                    <span class="genre ">&nbsp;</span>
+                    <span class="line"> 
+                        <span class="date">&nbsp;</span>
+                        <span class="time">&nbsp;</span>
+                    </span>
                 </div>
             </div>
-            <div class="item-content">
-                <span class="title">{{movie.name}}</span>
-                <span class="country">{{movie.countries | join: ", "}}</span>
-                <span class="genre ">{{movie.genres | join:" | "}}</span>
-                <span class="line"> 
-                    <span class="date">{{movie.release | date:"yMMMd"}}</span>
+        </ng-container>
+
+        <ng-container *ngIf="loading == false">
+            <div *ngFor="let movie of movies" class="movie-item">
+                <div class="poster">
+                    <div class="content">
+                        <img src="{{movie.poster}}">
+                    </div>
+                </div>
+                <div class="item-content">
+                    <span class="title">{{movie.name}}</span>
+                    <span class="country">{{movie.countries | join: ", "}}</span>
+                    <span class="genre ">{{movie.genres | join:" | "}}</span>
+                    <span class="line"> 
+                        <span class="date">{{movie.sinceDate | date:"yMMMd"}}</span>
                     <span class="time">{{duration(movie.duration)}}</span>
-                </span>
-                <!-- services rating -->
-                <div class="ratings" *ngIf="movie.ratings != null">
-                    <div class="imdb" *ngIf="movie.ratings.imdb != null">
-                        <span>imdb <span class="nb">{{movie.ratings.imdb.rating}}</span></span>
+                    </span>
+                    <!-- services rating -->
+                    <div class="ratings" *ngIf="movie.ratings != null">
+                        <div class="imdb" *ngIf="movie.ratings.imdb != null">
+                            <span>imdb <span class="nb">{{movie.ratings.imdb.rating}}</span></span>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </ng-container>
 
     </div>
 

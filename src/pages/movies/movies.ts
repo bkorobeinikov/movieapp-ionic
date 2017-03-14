@@ -18,21 +18,29 @@ export class MoviesPage implements OnInit, OnDestroy {
 
     public movies: Movie[];
 
+    public loading: boolean;
+
     constructor(
         private viewCtrl: ViewController,
         private navCtrl: NavController,
         private movieService: MovieService) {
+
+        this.loading = true;
     }
 
     ngOnInit() {
         var sub = this.viewCtrl.didEnter.subscribe(() => {
 
-            this.movies = this.movieService.getMovies();
+            this.movieService.getMovies().subscribe(movies => {
+                this.movies = movies;
+                this.loading = false;
+            });
 
         });
 
         this.subs.push(sub);
         var sub2 = this.viewCtrl.didLeave.subscribe(() => {
+            this.loading = true;
             console.log('MoviesPage: didLeave');
         });
         this.subs.push(sub2);

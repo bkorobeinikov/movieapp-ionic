@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 export interface MovieRating { 
     rating: string; 
 } 
@@ -12,17 +14,25 @@ export interface Movie {
     id: string; 
  
     name: string; 
-    poster: string; 
+    originalName: string;
 
-    release?: string;
- 
+    picture: string;
+    poster: string;
+
+    description: string;
+
+    duration: number; 
+
     countries?: string[];
     genres?: string[]; 
-     
-    duration: number; 
+
+    sinceDate: moment.Moment;
+    endDate: moment.Moment;
+
+    language: string;
+    ageLimit?: string;
  
     ratings?: {
         imdb: MovieRating
     }
-    screening?: MovieScreening[],
 }
