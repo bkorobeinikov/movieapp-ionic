@@ -5,6 +5,7 @@ export interface MovieRating {
 export interface MovieScreening { 
     type: string; 
     time: string; 
+    tech?: string;
 } 
  
 export interface Movie { 
@@ -12,7 +13,10 @@ export interface Movie {
  
     name: string; 
     poster: string; 
+
+    release?: string;
  
+    countries?: string[];
     genres?: string[]; 
      
     duration: number; 
@@ -20,5 +24,5 @@ export interface Movie {
     ratings?: {
         imdb: MovieRating
     }
-    screening?: MovieScreening[] 
+    screening?: MovieScreening[],
 }

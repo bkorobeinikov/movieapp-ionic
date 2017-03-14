@@ -64,5 +64,17 @@ export class MoviesPage implements OnInit, OnDestroy {
         return times;
     }
 
+    uniqueTech(screening: MovieScreening[]): any[] {
+
+        if (screening == null || screening.length == 0)
+            return [];
+
+        return _.chain(screening).map(s => s.tech).uniq().value();
+    }
+
+    duration(duration: number) {
+        var d = moment.duration(duration, "minutes"); 
+        return d.hours() + "h " + d.minutes() + "min";
+    }
 
 }

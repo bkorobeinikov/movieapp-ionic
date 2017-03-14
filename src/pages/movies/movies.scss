@@ -15,6 +15,9 @@
   }
 }
 
+$color-title: black;
+$color-subtitle: lighten($color-title, 40);
+$color-subsubtitle: lighten($color-subtitle, 20);
 
 page-movies {
 
@@ -29,7 +32,7 @@ page-movies {
         .movie-item {
             overflow: visible;
             
-            margin-bottom: 10px;
+            margin-bottom: 1em;
             padding: 0;
 
             align-items: flex-start;
@@ -68,20 +71,32 @@ page-movies {
             }
 
             .title {
+                margin-bottom: .5em;
+
                 font-size: 1em;
                 font-weight: bold;
+
+                color: $color-title;
+            }
+
+            .country {
+                margin-bottom: .2em;
+
+                font-size: .8em;
+
+                color: $color-subtitle;
             }
 
             .genre {
-                margin-top: .3em;
-
-                color: #B9B9B9;
+                margin-bottom: .5em;
 
                 font-size: .8em;
+
+                color: $color-subsubtitle;
             }
 
             .ratings {
-                margin-top: .5em;
+                margin-bottom: .5em;
 
                 display: flex;
                 flex-direction: row;
@@ -105,8 +120,6 @@ page-movies {
             }
 
             .screening {
-                margin-top: .5em;
-
                 display: flex;
                 flex-direction: row;
                 flex-wrap: wrap;
@@ -115,19 +128,47 @@ page-movies {
 
                 .time {
                     margin: 0 4px 4px 0;
-                    padding: 2px 4px;
-                    border-radius: 4px;
+                    width: 3.5em;
+                    padding: .2em 0;
+                    border-radius: 2px;
 
-                    background-color: #F3F3F3;
-                    color: #B0B0B0;
+                    background-color: white;
+                    border: 1px solid #e1e1e1;
+                    color: #e1e1e1;
+
+                    text-align: center;
 
                     &.active {
-                        background-color: #43B8A3;
+                        border-color: #1aa3e0;
+                        background-color: #1aa3e0;
                         color: white;
                     }
                 }
             }
-           
+
+            .line {
+                margin-bottom: .5em;
+
+                display: flex;
+                flex-direction: row;
+
+                >* {
+                    margin: 0 .4em 0 0;
+                }
+            }           
+
+            .date {
+                 font-size: .8em;
+
+                 color: $color-subtitle;
+            }
+
+            .time {
+                 font-size: .8em;
+                 font-weight: bold;
+
+                 color: $color-subtitle;
+            }
         }
     }
 
