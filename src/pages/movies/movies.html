@@ -21,7 +21,7 @@
         </ng-container>
 
         <ng-container *ngIf="loading == false">
-            <div *ngFor="let movie of movies" class="movie-item">
+            <div *ngFor="let movie of current" class="movie-item">
                 <div class="poster">
                     <div class="content">
                         <img src="{{movie.poster}}">
@@ -43,6 +43,32 @@
                     </div>
                 </div>
             </div>
+            <div>
+                <span>Future movies</span>
+            </div>
+            <div *ngFor="let movie of future" class="movie-item future">
+                <div class="poster">
+                    <div class="content">
+                        <img src="{{movie.poster}}">
+                    </div>
+                </div>
+                <div class="item-content">
+                    <span class="title">{{movie.name}}</span>
+                    <span class="country">{{movie.countries | join: ", "}}</span>
+                    <span class="genre ">{{movie.genres | join:" | "}}</span>
+                    <span class="line"> 
+                        <span class="date">{{movie.sinceDate | date:"yMMMd"}}</span>
+                        <span class="time">{{duration(movie.duration)}}</span>
+                    </span>
+                    <!-- services rating -->
+                    <div class="ratings" *ngIf="movie.ratings != null">
+                        <div class="imdb" *ngIf="movie.ratings.imdb != null">
+                            <span>imdb <span class="nb">{{movie.ratings.imdb.rating}}</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </ng-container>
 
     </div>

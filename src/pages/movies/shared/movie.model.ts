@@ -26,11 +26,14 @@ export interface Movie {
     countries?: string[];
     genres?: string[]; 
 
+    soon: boolean;
     sinceDate: moment.Moment;
     endDate: moment.Moment;
 
     language: string;
     ageLimit?: string;
+
+    showtimes: boolean;
  
     ratings?: {
         imdb: MovieRating

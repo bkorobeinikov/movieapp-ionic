@@ -25,9 +25,10 @@ export class MovieService {
     }
 
     getMovies(): Observable<Movie[]> {
-        var a = this.http.get(this.moviesUrl, {
-            headers: this.headers
-        })
+        var a = this.http
+            .get(this.moviesUrl, {
+                headers: this.headers
+            })
             .map(res => {
                 var x2js = new X2JS();
                 var text = res.text();
@@ -35,14 +36,18 @@ export class MovieService {
                 console.log('response ojb', jsonObj);
 
                 var movies: any[] = jsonObj.inTheaters.movie;
-                return movies.map(m => this.buildMovie(m));
+                var current = movies.map(m => this.parseMovie(m));
+                movies = jsonObj.soon.movie;
+                var future = movies.map(m => this.parseMovie(m, true));
+
+                return current.concat(future);
             })
             .catch(this.handleError);
 
         return a;
     }
 
-    private buildMovie(movieObj: any): Movie {
+    private parseMovie(movieObj: any, soon: boolean = false): Movie {
         return {
             id: movieObj.id,
             name: movieObj.name,
@@ -57,11 +62,15 @@ export class MovieService {
             countries: (<string>movieObj.country).split(","),
             genres: (<string>movieObj.genre).split(","),
 
+            soon: soon,
             sinceDate: moment(movieObj.sinceDate),
             endDate: moment(movieObj.endDate),
 
             language: movieObj.duplicationLang,
             ageLimit: movieObj.ageLimit,
+
+            showtimes: movieObj["has-showtimes"] !== undefined,
+
             ratings: {
                 imdb: {
                     rating: "8.9",

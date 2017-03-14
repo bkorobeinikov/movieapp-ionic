@@ -16,7 +16,8 @@ export class MoviesPage implements OnInit, OnDestroy {
 
     private subs: any[] = [];
 
-    public movies: Movie[];
+    public current: Movie[];
+    public future: Movie[];
 
     public loading: boolean;
 
@@ -32,7 +33,8 @@ export class MoviesPage implements OnInit, OnDestroy {
         var sub = this.viewCtrl.didEnter.subscribe(() => {
 
             this.movieService.getMovies().subscribe(movies => {
-                this.movies = movies;
+                this.current = movies.filter(m => m.soon == false);
+                this.future = movies.filter(m => m.soon == true);
                 this.loading = false;
             });
 

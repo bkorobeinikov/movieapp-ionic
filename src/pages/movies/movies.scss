@@ -92,7 +92,6 @@ page-movies {
                     line-height: 80%;
                     background-color: $bg-color-loading;
                 }
-
             }
 
             .item-content {
@@ -104,6 +103,12 @@ page-movies {
                 flex-direction: column;
 
                 padding: 0;
+            }
+
+            &.future {
+                .item-content {
+                    flex: 3;
+                }
             }
 
             .title {
