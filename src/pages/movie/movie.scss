@@ -18,12 +18,13 @@
 $color-title: black;
 $color-subtitle: lighten($color-title, 40);
 $color-subsubtitle: lighten($color-subtitle, 20);
-$bg-color-loading: darken(white, 3);
+$bg-color: #F9F9F9;
+$bg-color-loading: darken($bg-color, 3);
 
 page-movie {
 
     ion-content.page-content {
-        //background-color: #F9F9F9;            
+        background-color: $bg-color;            
     }
 
     font-size: 16px;
