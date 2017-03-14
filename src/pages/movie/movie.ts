@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-import { ViewController, NavController, ModalController, NavParams } from 'ionic-angular';
+import { NavController, NavParams } from 'ionic-angular';
 
 import { Movie } from './../../core/movie.model'
 import { MovieService } from './../../core/movie.service'
@@ -18,10 +18,8 @@ export class MoviePage {
     public loading: boolean;
 
     constructor(
-        private viewCtrl: ViewController,
         private navCtrl: NavController,
         private movieService: MovieService,
-        private modalCtrl: ModalController,
         private params: NavParams
     ) {
         this.loading = true;

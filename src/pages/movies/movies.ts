@@ -1,6 +1,6 @@
 ﻿import { Component, OnInit, OnDestroy } from '@angular/core';
 
-import { App, ViewController, NavController, ModalController } from 'ionic-angular';
+import { App, ViewController, NavController } from 'ionic-angular';
 
 import { MovieService } from './../../core/movie.service';
 import { Movie, MovieScreening } from './../../core/movie.model';
@@ -27,8 +27,7 @@ export class MoviesPage implements OnInit, OnDestroy {
         private appCtrl: App,
         private viewCtrl: ViewController,
         private navCtrl: NavController,
-        private movieService: MovieService,
-        private modalCtrl: ModalController) {
+        private movieService: MovieService) {
 
         this.loading = true;
     }
