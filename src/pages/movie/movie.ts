@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-import { NavController, NavParams } from 'ionic-angular';
+import { App, NavController, NavParams } from 'ionic-angular';
 
 import { Movie } from './../../core/movie.model'
 import { MovieService } from './../../core/movie.service'
@@ -18,6 +18,7 @@ export class MoviePage {
     public loading: boolean;
 
     constructor(
+        private appCtrl: App,
         private navCtrl: NavController,
         private movieService: MovieService,
         private params: NavParams
@@ -32,6 +33,10 @@ export class MoviePage {
     duration(duration: number) {
         var d = moment.duration(duration, "minutes");
         return d.hours() + "h " + d.minutes() + "min";
+    }
+
+    goBack() {
+        this.appCtrl.getRootNav().pop();
     }
 
 }
