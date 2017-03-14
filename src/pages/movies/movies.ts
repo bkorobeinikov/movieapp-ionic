@@ -2,8 +2,8 @@
 
 import { ViewController, NavController } from 'ionic-angular';
 
-import { MovieService } from './shared/movie.service';
-import { Movie, MovieScreening } from './shared/movie.model';
+import { MovieService } from './../../core/movie.service';
+import { Movie, MovieScreening } from './../../core/movie.model';
 
 import * as _ from 'lodash';
 import moment from 'moment';

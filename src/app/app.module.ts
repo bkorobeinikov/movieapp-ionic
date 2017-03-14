@@ -4,20 +4,28 @@ import { HttpModule } from '@angular/http';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 
 import { MyApp } from './app.component';
-import { MoviesModule } from '../pages/movies/movies.module';
+
+import { CoreModule } from './../core/core.module';
+
+import { MoviesPage } from '../pages/movies/movies';
 import { TabsPage } from '../pages/tabs/tabs';
 import { NewsPage } from '../pages/news/news';
 import { AccountPage } from '../pages/account/account';
 
+import { JoinPipe } from './../shared/join.pipe';
+
 @NgModule({
   imports: [
     IonicModule.forRoot(MyApp),
-    MoviesModule,
+    CoreModule,
     HttpModule,
   ],
   declarations: [
+    JoinPipe,
+
     MyApp,
 
+    MoviesPage,
     TabsPage,
     NewsPage,
     AccountPage,
@@ -26,6 +34,7 @@ import { AccountPage } from '../pages/account/account';
   entryComponents: [
     MyApp,
 
+    MoviesPage,
     TabsPage,
     NewsPage,
     AccountPage
