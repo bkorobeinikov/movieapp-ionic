@@ -17,7 +17,9 @@ import { JoinPipe } from './../shared/join.pipe';
 
 @NgModule({
   imports: [
-    IonicModule.forRoot(MyApp),
+    IonicModule.forRoot(MyApp, {
+      backButtonText: "",
+    }),
     CoreModule,
     HttpModule,
   ],

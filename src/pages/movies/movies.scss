@@ -29,15 +29,9 @@ $bg-color-loading: darken($bg-color, 3);
 
 page-movies {
 
-    ion-content.page-content {
-        background-color: $bg-color;            
-    }
-
     font-size: 16px;
 
     .movies {
-        margin-top: 20px;
-
         display: flex;
         &.current {
             flex-direction: column;

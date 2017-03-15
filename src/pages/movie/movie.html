@@ -1,10 +1,12 @@
-<ion-content class="page-content">
+<ion-header no-border>
+    <ion-navbar>
+    </ion-navbar>
+</ion-header>
+
+<ion-content fullscreen="true">
 
     <div class="movie-header">
         <img [ngStyle]="{'background-image': 'url(' + movie.picture + ')'}">
-        <button ion-button clear icon-only (click)="goBack()">
-            <ion-icon name="arrow-back" color="dark"></ion-icon>
-        </button>
     </div>
     <div class="movie-content" padding>
         <div class="movie-summary">

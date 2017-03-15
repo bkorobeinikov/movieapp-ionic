@@ -1,6 +1,6 @@
-﻿import { Component, OnInit, OnDestroy } from '@angular/core';
+﻿import { Component, OnInit, OnDestroy, ViewChild, OnChanges, SimpleChanges } from '@angular/core';
 
-import { App, ViewController, NavController } from 'ionic-angular';
+import { App, ViewController, NavController, Content } from 'ionic-angular';
 
 import { MovieService } from './../../core/movie.service';
 import { Movie, MovieScreening } from './../../core/movie.model';
@@ -14,14 +14,16 @@ import moment from 'moment';
     selector: 'page-movies',
     templateUrl: 'movies.html',
 })
-export class MoviesPage implements OnInit, OnDestroy {
+export class MoviesPage implements OnChanges {
 
-    private subs: any[] = [];
+    public filter: string;
 
     public current: Movie[];
     public future: Movie[];
 
     public loading: boolean;
+
+    @ViewChild(Content) content: Content;
 
     constructor(
         private appCtrl: App,
@@ -29,42 +31,38 @@ export class MoviesPage implements OnInit, OnDestroy {
         private navCtrl: NavController,
         private movieService: MovieService) {
 
+        this.filter = "today";
         this.loading = true;
     }
 
-    ngOnInit() {
-        var sub = this.viewCtrl.didEnter.subscribe(() => {
+    ionViewDidEnter() {
+        this.content.scrollToTop(0);
+        this.movieService.getMovies().subscribe(movies => {
+            this.current = movies.filter(m => m.soon == false);
+            this.future = movies.filter(m => m.soon == true);
 
-            this.movieService.getMovies().subscribe(movies => {
-                this.current = movies.filter(m => m.soon == false);
-                this.future = movies.filter(m => m.soon == true);
+            // fix to show items left aligned
+            if (this.future.length % 3 == 1) {
+                this.future.push(<any>{});
+                this.future.push(<any>{});
+            } else if (this.future.length % 3 == 2) {
+                this.future.push(<any>{});
+            }
 
-
-                // fix to show items left aligned
-                if (this.future.length % 3 == 1) {
-                    this.future.push(<any>{});
-                    this.future.push(<any>{});
-                } else if (this.future.length % 3 == 2) {
-                    this.future.push(<any>{});
-                }
-
-                this.loading = false;
-            });
-
+            this.content.scrollToTop(0);
+            this.loading = false;
         });
-
-        this.subs.push(sub);
-        var sub2 = this.viewCtrl.didLeave.subscribe(() => {
-            this.loading = true;
-            console.log('MoviesPage: didLeave');
-        });
-        this.subs.push(sub2);
     }
 
-    ngOnDestroy() {
-        this.subs.forEach(sub => {
-            sub.unsubscribe();
-        });
+    ionViewDidLeave() {
+        this.loading = true;
+    }
+
+    onFilterChange() {
+        this.content.scrollToTop(0);
+    }
+
+    ngOnChanges(changes: SimpleChanges) {
     }
 
     uniqueTimes(screening: MovieScreening[]): any[] {
