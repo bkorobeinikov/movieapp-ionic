@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 
 import { App, NavController, NavParams } from 'ionic-angular';
+import { StatusBar } from 'ionic-native';
 
 import { Movie } from './../../core/movie.model'
 import { MovieService } from './../../core/movie.service'
@@ -28,6 +29,14 @@ export class MoviePage {
 
     ngOnInit() {
         this.movie = this.params.get("movie");
+    }
+
+    ionViewWillEnter() {
+        StatusBar.styleBlackTranslucent();
+    }
+
+    ionViewWillLeave() {
+        StatusBar.styleDefault();
     }
 
     duration(duration: number) {
