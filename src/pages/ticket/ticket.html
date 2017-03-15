@@ -24,6 +24,23 @@
         </div>
     </div>
     <div class="booking">
+        <ion-segment [(ngModel)]="tech" (ionChange)="onTechChange()">
+            <ng-container *ngFor="let item of techs">
+                <ion-segment-button value="{{item}}">
+                    {{item}}
+                </ion-segment-button>
+            </ng-container>
+        </ion-segment>
+        <ion-segment [(ngModel)]="date" (ionChange)="onDateChange()">
+            <ion-segment-button *ngFor="let item of dates" value="{{item}}">
+                {{item | date:"ddd D"}}
+            </ion-segment-button>
+        </ion-segment>
+        <ion-segment [(ngModel)]="time" (ionChange)="onTimeChange()">
+            <ion-segment-button *ngFor="let item of times" value="{{item}}">
+                {{item | date:"HH:mm"}}
+            </ion-segment-button>
+        </ion-segment>
     </div>
 
 </ion-content>

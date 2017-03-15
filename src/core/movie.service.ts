@@ -8,6 +8,7 @@ import 'rxjs/add/operator/map';
 import X2JS from 'x2js';
 
 import { Movie } from './movie.model';
+import { MovieShowtime } from './movie-showtime.model';
 
 import moment from 'moment';
 
@@ -15,13 +16,19 @@ import moment from 'moment';
 export class MovieService {
 
     private moviesUrl = "http://planetakino.ua/api/movies";
+    private showtimeUrl = "http://planetakino.ua/lvov/ua/showtimes/xml/";
     private headers: Headers;
+    private headers1: Headers;
 
     constructor(private http: Http) {
 
         this.headers = new Headers();
         this.headers.append('Content-Type', 'text/xml');
         this.headers.append('Access-Control-Allow-Origin', '*');
+
+        this.headers1 = new Headers();
+        this.headers1.append('Content-Type', 'text/xml');
+        //this.headers1.append('Access-Control-Allow-Origin', '*');
     }
 
     getMovies(): Observable<Movie[]> {
@@ -43,7 +50,46 @@ export class MovieService {
                 return current.concat(future);
             })
             .catch(this.handleError);
- 
+
+        return a;
+    }
+
+    getShowtimes(): Observable<MovieShowtime[]> {
+        return this.getData<any>(this.showtimeUrl).map(res => {
+            var days: any[] = res.showtimes.day;
+
+            var result: MovieShowtime[] = [];
+
+            days.forEach(d => {
+                var shows: any[] = d.show;
+
+                shows.forEach(s => {
+                    result.push(this.parseShow(s));
+                });
+            });
+
+            console.log('result', result);
+
+            return result;
+        });
+    }
+
+    private getData<T>(url: string): Observable<T> {
+        var a = this.http
+            .get(url, {
+                headers: this.headers1
+            })
+            .map(res => {
+                console.log('response ojb3', res);
+                var x2js = new X2JS();
+                var text = res.text();
+                var jsonObj: any = x2js.xml2js<any>(text)['planeta-kino'];
+                console.log('response ojb2', jsonObj);
+
+                return jsonObj;
+            })
+            .catch(this.handleError);
+
         return a;
     }
 
@@ -84,7 +130,20 @@ export class MovieService {
         return result;
     }
 
+    private parseShow(showObj: any) {
+        var res: MovieShowtime = {
+            cinemaId: showObj["_theatre-id"],
+            hallId: showObj["_hall-id"],
+            movieId: showObj["_movie-id"],
+            techId: showObj["_technology"],
+            time: moment(showObj["_full-date"])
+        };
+
+        return res;
+    }
+
     private handleError(error: Response | any) {
+        console.error(error);
         // In a real world app, you might use a remote logging infrastructure
         let errMsg: string;
         if (error instanceof Response) {

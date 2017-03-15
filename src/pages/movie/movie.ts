@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, SimpleChanges } from '@angular/core';
 
 import { App, NavController, NavParams } from 'ionic-angular';
 import { StatusBar } from 'ionic-native';
@@ -54,5 +54,4 @@ export class MoviePage {
             movie: this.movie
         });
     }
-
 }
