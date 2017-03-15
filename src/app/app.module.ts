@@ -8,6 +8,7 @@ import { MyApp } from './app.component';
 import { CoreModule } from './../core/core.module';
 
 import { MoviesPage } from '../pages/movies/movies';
+import { MoviePage } from '../pages/movie/movie';
 import { TabsPage } from '../pages/tabs/tabs';
 import { NewsPage } from '../pages/news/news';
 import { AccountPage } from '../pages/account/account';
@@ -26,6 +27,7 @@ import { JoinPipe } from './../shared/join.pipe';
     MyApp,
 
     MoviesPage,
+    MoviePage,
     TabsPage,
     NewsPage,
     AccountPage,
@@ -35,6 +37,7 @@ import { JoinPipe } from './../shared/join.pipe';
     MyApp,
 
     MoviesPage,
+    MoviePage,
     TabsPage,
     NewsPage,
     AccountPage

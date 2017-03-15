@@ -33,7 +33,7 @@ export class MovieService {
                 var x2js = new X2JS();
                 var text = res.text();
                 var jsonObj: any = x2js.xml2js<any>(text).response;
-                console.log('response ojb', jsonObj);
+                console.log('response ojb1', jsonObj);
 
                 var movies: any[] = jsonObj.inTheaters.movie;
                 var current = movies.map(m => this.parseMovie(m));
@@ -43,12 +43,12 @@ export class MovieService {
                 return current.concat(future);
             })
             .catch(this.handleError);
-
+ 
         return a;
     }
 
     private parseMovie(movieObj: any, soon: boolean = false): Movie {
-        return {
+        var result: Movie = {
             id: movieObj.id,
             name: movieObj.name,
             originalName: movieObj.nameOriginal,
@@ -71,12 +71,17 @@ export class MovieService {
 
             showtimes: movieObj["has-showtimes"] !== undefined,
 
+            director: movieObj.director,
+            cast: (<string>movieObj.stars).split(","),
+
             ratings: {
                 imdb: {
                     rating: "8.9",
                 },
             },
         };
+
+        return result;
     }
 
     private handleError(error: Response | any) {

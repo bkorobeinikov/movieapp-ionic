@@ -1,9 +1,11 @@
 ﻿import { Component, OnInit, OnDestroy } from '@angular/core';
 
-import { ViewController, NavController } from 'ionic-angular';
+import { App, ViewController, NavController } from 'ionic-angular';
 
 import { MovieService } from './../../core/movie.service';
 import { Movie, MovieScreening } from './../../core/movie.model';
+
+import { MoviePage } from './../movie/movie';
 
 import * as _ from 'lodash';
 import moment from 'moment';
@@ -22,6 +24,7 @@ export class MoviesPage implements OnInit, OnDestroy {
     public loading: boolean;
 
     constructor(
+        private appCtrl: App,
         private viewCtrl: ViewController,
         private navCtrl: NavController,
         private movieService: MovieService) {
@@ -95,6 +98,12 @@ export class MoviesPage implements OnInit, OnDestroy {
     duration(duration: number) {
         var d = moment.duration(duration, "minutes");
         return d.hours() + "h " + d.minutes() + "min";
+    }
+
+    openMovie(movie: Movie) {
+        this.appCtrl.getRootNav().push(MoviePage, {
+            movie: movie
+        });
     }
 
 }

@@ -34,6 +34,9 @@ export interface Movie {
     ageLimit?: string;
 
     showtimes: boolean;
+
+    director: string;
+    cast: string[];
  
     ratings?: {
         imdb: MovieRating

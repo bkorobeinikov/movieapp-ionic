@@ -1,4 +1,4 @@
-<ion-content padding [ngClass]="{'loading': loading}">
+<ion-content padding class="page-content" [ngClass]="{'loading': loading}">
 
     <ng-container *ngIf="loading == true">
         <div class="movies current">
@@ -22,7 +22,7 @@
 
     <ng-container *ngIf="loading == false">
         <div class="movies current">
-            <div *ngFor="let movie of current" class="movie-detail">
+            <div *ngFor="let movie of current" class="movie-detail" (tap)="openMovie(movie)">
                 <div class="poster">
                     <div class="content">
                         <img src="{{movie.poster}}">
@@ -49,7 +49,7 @@
             Comming Soon
         </div>
         <div class="movies future">
-            <div *ngFor="let movie of future" class="movie-icon future">
+            <div *ngFor="let movie of future" class="movie-icon future" (tap)="openMovie(movie)">
                 <div class="poster">
                     <div class="content">
                         <img src="{{movie.poster}}">
