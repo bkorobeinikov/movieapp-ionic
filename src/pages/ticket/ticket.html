@@ -1,0 +1,29 @@
+<ion-header>
+    <ion-navbar>
+        <ion-title>
+            Купівля квитка
+        </ion-title>
+    </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+
+    <div class="movie-summary">
+        <div class="poster">
+            <div class="content">
+                <img src="{{movie.poster}}">
+            </div>
+        </div>
+        <div class="item-content">
+            <span class="title">{{movie.name}}</span>
+            <span class="country">{{movie.countries | join: ", "}}</span>
+            <span class="genre ">{{movie.genres | join:" | "}}</span>
+            <span class="line"> 
+                    <span class="time">{{duration(movie.duration)}}</span>
+            </span>
+        </div>
+    </div>
+    <div class="booking">
+    </div>
+
+</ion-content>

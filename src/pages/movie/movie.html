@@ -17,6 +17,7 @@
             </div>
             <div class="item-content">
                 <span class="title">{{movie.name}}</span>
+                <span class="country">{{movie.countries | join: ", "}}</span>
                 <span class="genre ">{{movie.genres | join:" | "}}</span>
                 <span class="line"> 
                     <span class="date">{{movie.sinceDate | date:"yMMMd"}}</span>
@@ -38,3 +39,9 @@
     </div>
 
 </ion-content>
+
+<ion-footer>
+    <ion-toolbar>
+        <button ion-button primary (click)="goToBuyTicket()">Buy Ticket</button>
+    </ion-toolbar>
+</ion-footer>

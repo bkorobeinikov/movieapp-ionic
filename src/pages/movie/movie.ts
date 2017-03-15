@@ -7,6 +7,7 @@ import { Movie } from './../../core/movie.model'
 import { MovieService } from './../../core/movie.service'
 
 import moment from 'moment';
+import { TicketPage } from "../ticket/ticket";
 
 @Component({
     selector: 'page-movie',
@@ -46,6 +47,12 @@ export class MoviePage {
 
     goBack() {
         this.appCtrl.getRootNav().pop();
+    }
+
+    goToBuyTicket() {
+        this.appCtrl.getRootNav().push(TicketPage, {
+            movie: this.movie
+        });
     }
 
 }

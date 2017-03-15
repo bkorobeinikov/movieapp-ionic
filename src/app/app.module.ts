@@ -9,6 +9,7 @@ import { CoreModule } from './../core/core.module';
 
 import { MoviesPage } from '../pages/movies/movies';
 import { MoviePage } from '../pages/movie/movie';
+import { TicketPage } from '../pages/ticket/ticket';
 import { TabsPage } from '../pages/tabs/tabs';
 import { NewsPage } from '../pages/news/news';
 import { AccountPage } from '../pages/account/account';
@@ -30,6 +31,7 @@ import { JoinPipe } from './../shared/join.pipe';
 
     MoviesPage,
     MoviePage,
+    TicketPage,
     TabsPage,
     NewsPage,
     AccountPage,
@@ -40,6 +42,7 @@ import { JoinPipe } from './../shared/join.pipe';
 
     MoviesPage,
     MoviePage,
+    TicketPage,
     TabsPage,
     NewsPage,
     AccountPage
