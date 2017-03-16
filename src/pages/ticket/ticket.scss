@@ -1,117 +1,53 @@
 page-ticket {
 
+    font-size: 16px;
+
     .movie-summary {
-        overflow: visible;
-        
-        margin-bottom: 1em;
-        padding: 0;
+        text-align: center;
 
-        align-items: flex-start;
-
-        display: flex;
-        flex-direction: row;
-
-        .poster {
-            margin-right: 1em;
-
-            @include aspect-ratio(1, 1.5);
-
-            flex: 1;
-            min-width: auto;
-            min-height: auto;
-
-            padding: 0;
-
-            img {
-                width: auto;
-                height: auto;
-
-                border-radius: 2px;
-            }
-        }
-
-        .item-content {
-            overflow: hidden;
-
-            flex: 3;
-
-            display: flex;
-            flex-direction: column;
-
-            padding: 0;
-        }
-
-        .title {
-            margin-bottom: .5em;
-
-            font-size: 1em;
+        .movie-title {
+            font-size: 1.2em;
             font-weight: bold;
-
-            color: $color-title;
         }
+    }
 
-        .country {
-            margin-bottom: .2em;
+    ion-footer {
+        ion-toolbar.toolbar {
+            overflow: visible;
+            contain: none;
 
-            font-size: .8em;
+            .toolbar-content {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+            }
 
-            color: $color-subtitle;
-        }
+            .cart-total {
+                align-self: flex-start;
 
-        .genre {
-            margin-bottom: .5em;
+                display: flex;
+                flex-direction: column;
 
-            font-size: .8em;
+                margin-top: .4em;
+                margin-bottom: .4em;
 
-            color: $color-subsubtitle;
-        }
-
-        .ratings {
-            margin-bottom: .5em;
-
-            display: flex;
-            flex-direction: row;
-            
-            font-size: .8em;
-            
-            .imdb {
-                margin-right: 4px;
-                padding: 4px 6px;
-                border-radius: 2px;
-
-                background-color:#FFB10A;
-                color: black;
-
-                font-weight: bold;
-
-                .nb {
-                    color: white;
+                .cart-seats {
+                    color: #313131;
                 }
+
+                .cart-price { 
+                    color: black;
+                    font-size: 1.2em;
+                    font-weight: bold;
+                }
+
             }
-        }
+            .checkout {
+                align-self: flex-end;
 
-        .line {
-            margin-bottom: .5em;
-
-            display: flex;
-            flex-direction: row;
-
-            >* {
-                margin: 0 .4em 0 0;
+                margin-top: -2.6em;
+                margin-bottom: .6em;
             }
-        }           
-
-        .date {
-                font-size: .8em;
-
-                color: $color-subtitle;
-        }
-
-        .time {
-                font-size: .8em;
-                font-weight: bold;
-
-                color: $color-subtitle;
         }
     }
 

@@ -1,28 +1,14 @@
 <ion-header>
     <ion-navbar>
         <ion-title>
-            Купівля квитка
+            {{movie.name}}
         </ion-title>
     </ion-navbar>
 </ion-header>
 
+
 <ion-content padding>
 
-    <div class="movie-summary">
-        <div class="poster">
-            <div class="content">
-                <img src="{{movie.poster}}">
-            </div>
-        </div>
-        <div class="item-content">
-            <span class="title">{{movie.name}}</span>
-            <span class="country">{{movie.countries | join: ", "}}</span>
-            <span class="genre ">{{movie.genres | join:" | "}}</span>
-            <span class="line"> 
-                    <span class="time">{{duration(movie.duration)}}</span>
-            </span>
-        </div>
-    </div>
     <div class="booking">
         <ion-item>
             <ion-select [(ngModel)]="selectedTechId" (ionChange)="onTechChange()">
@@ -40,8 +26,8 @@
                     <ion-slide>
                         <ion-item style="width: 100px; display: flex; flex-direction: column">
                             <ion-label>
-                            <div>{{date.value | moment: "ddd"}}</div>
-                            <div>{{date.value | moment: "D"}}</div>
+                                <div>{{date.value | moment: "ddd"}}</div>
+                                <div>{{date.value | moment: "D"}}</div>
                             </ion-label>
                             <ion-radio value="{{date.id}}">
                                 <span>{{date.value | moment: "D"}}</span>
@@ -61,3 +47,16 @@
     </div>
 
 </ion-content>
+
+<ion-footer>
+    <ion-toolbar padding-left padding-right>
+        <div class="cart-total"> 
+            <span class="cart-seats">{{seats.length}} seats</span>
+            <span class="cart-price">{{total}}грн.</span>
+        </div>
+        <button class="checkout" ion-button color="secondary" (click)="checkout()" icon-right large>
+            Checkout
+            <ion-icon name="cart"></ion-icon>
+        </button>
+    </ion-toolbar>
+</ion-footer>

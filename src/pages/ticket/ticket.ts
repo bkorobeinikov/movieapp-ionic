@@ -1,6 +1,6 @@
 import { Component, SimpleChanges, ViewChild } from '@angular/core';
 
-import { NavParams, Segment, Slides } from 'ionic-angular';
+import { NavParams, Segment, Slides, App } from 'ionic-angular';
 
 import { Movie } from "../../core/movie.model";
 
@@ -32,9 +32,16 @@ export class TicketPage {
 
     public showtimes: MovieShowtime[];
 
+    public seats: any[];
+    public total: number;
+
     constructor(
+        private appCtrl: App,
         private navParams: NavParams,
         private movieService: MovieService) {
+
+        this.seats = [{}, {}, {}];
+        this.total = 750;
 
     }
 
@@ -91,7 +98,7 @@ export class TicketPage {
     onDateChange() {
         if (this.technologies == null || this.dates == null)
             return;
-            
+
         var selectedTech = this.technologies.find(t => t.id == this.selectedTechId);
         var selectedDate = this.dates.find(d => d.id == this.selectedDateId);
         this.selectedDate = selectedDate.value;
@@ -112,6 +119,11 @@ export class TicketPage {
 
     onTimeChange() {
         // refresh sits
+    }
+
+    checkout() {
+        // go ot checkout page
+        //this.appCtrl.getRootNav().push()
     }
 
 }
