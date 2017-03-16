@@ -1,0 +1,62 @@
+<ion-header>
+    <ion-navbar>
+        <ion-title>
+            {{movie.name}}
+        </ion-title>
+    </ion-navbar>
+</ion-header>
+
+
+<ion-content padding>
+
+    <div class="booking">
+        <ion-item>
+            <ion-select [(ngModel)]="selectedTechId" (ionChange)="onTechChange()">
+                <ng-container *ngFor="let tech of technologies">
+                    <ion-option value="{{tech.id}}">
+                        {{tech.title}}
+                    </ion-option>
+                </ng-container>
+            </ion-select>
+        </ion-item>
+        <ion-item>
+            <span>{{selectedDate | moment:"ddd, D MMMM"}}</span>
+            <ion-slides #datepicker slidesPerView="4" radio-group [(ngModel)]="selectedDateId" (ionChange)="onDateChange()">
+                <ng-container *ngFor="let date of dates">
+                    <ion-slide>
+                        <ion-item style="width: 100px; display: flex; flex-direction: column">
+                            <ion-label>
+                                <div>{{date.value | moment: "ddd"}}</div>
+                                <div>{{date.value | moment: "D"}}</div>
+                            </ion-label>
+                            <ion-radio value="{{date.id}}">
+                                <span>{{date.value | moment: "D"}}</span>
+                            </ion-radio>
+                        </ion-item>
+                    </ion-slide>
+                </ng-container>
+            </ion-slides>
+        </ion-item>
+        <ion-item>
+            <ion-select [(ngModel)]="selectedTimeId" (ionChange)="onTimeChange()">
+                <ion-option *ngFor="let item of times" value="{{item.id}}">
+                    {{item.value | moment:"HH:mm"}}
+                </ion-option>
+            </ion-select>
+        </ion-item>
+    </div>
+
+</ion-content>
+
+<ion-footer>
+    <ion-toolbar padding-left padding-right>
+        <div class="cart-total"> 
+            <span class="cart-seats">{{seats.length}} seats</span>
+            <span class="cart-price">{{total}}грн.</span>
+        </div>
+        <button class="checkout" ion-button color="secondary" (click)="checkout()" icon-right large>
+            Checkout
+            <ion-icon name="cart"></ion-icon>
+        </button>
+    </ion-toolbar>
+</ion-footer>

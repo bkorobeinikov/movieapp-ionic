@@ -202,4 +202,17 @@ page-movie {
         }
 
     }
+
+    ion-footer {
+        ion-toolbar.toolbar {
+            overflow: visible;
+            contain: none;
+
+            .toolbar-content {
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+            }
+        }
+    }
 }

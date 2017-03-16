@@ -1,0 +1,54 @@
+page-ticket {
+
+    font-size: 16px;
+
+    .movie-summary {
+        text-align: center;
+
+        .movie-title {
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+    }
+
+    ion-footer {
+        ion-toolbar.toolbar {
+            overflow: visible;
+            contain: none;
+
+            .toolbar-content {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+            }
+
+            .cart-total {
+                align-self: flex-start;
+
+                display: flex;
+                flex-direction: column;
+
+                margin-top: .4em;
+                margin-bottom: .4em;
+
+                .cart-seats {
+                    color: #313131;
+                }
+
+                .cart-price { 
+                    color: black;
+                    font-size: 1.2em;
+                    font-weight: bold;
+                }
+
+            }
+            .checkout {
+                align-self: flex-end;
+
+                margin-top: -2.6em;
+                margin-bottom: .6em;
+            }
+        }
+    }
+
+}

@@ -3,7 +3,7 @@
 import { App, ViewController, NavController, Content } from 'ionic-angular';
 
 import { MovieService } from './../../core/movie.service';
-import { Movie, MovieScreening } from './../../core/movie.model';
+import { Movie } from './../../core/movie.model';
 
 import { MoviePage } from './../movie/movie';
 
@@ -63,34 +63,6 @@ export class MoviesPage implements OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges) {
-    }
-
-    uniqueTimes(screening: MovieScreening[]): any[] {
-
-        if (screening == null || screening.length == 0)
-            return [];
-
-        var now = moment();
-        var times = _.chain(screening)
-            .map(s => {
-                var time = moment(s.time);
-                return {
-                    time: time.format("HH:mm"),
-                    active: time.isSame(now, 'day') && time.isAfter(now)
-                }
-            })
-            .uniqBy(t => t.time)
-            .value();
-
-        return times;
-    }
-
-    uniqueTech(screening: MovieScreening[]): any[] {
-
-        if (screening == null || screening.length == 0)
-            return [];
-
-        return _.chain(screening).map(s => s.tech).uniq().value();
     }
 
     duration(duration: number) {

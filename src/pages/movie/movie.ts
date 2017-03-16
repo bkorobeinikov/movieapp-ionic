@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, SimpleChanges } from '@angular/core';
 
 import { App, NavController, NavParams } from 'ionic-angular';
 import { StatusBar } from 'ionic-native';
@@ -7,6 +7,7 @@ import { Movie } from './../../core/movie.model'
 import { MovieService } from './../../core/movie.service'
 
 import moment from 'moment';
+import { TicketPage } from "../ticket/ticket";
 
 @Component({
     selector: 'page-movie',
@@ -48,4 +49,9 @@ export class MoviePage {
         this.appCtrl.getRootNav().pop();
     }
 
+    goToBuyTicket() {
+        this.appCtrl.getRootNav().push(TicketPage, {
+            movie: this.movie
+        });
+    }
 }

@@ -4,12 +4,6 @@ export interface MovieRating {
     rating: string; 
 } 
  
-export interface MovieScreening { 
-    type: string; 
-    time: string; 
-    tech?: string;
-} 
- 
 export interface Movie { 
     id: string; 
  
@@ -19,7 +13,7 @@ export interface Movie {
     picture: string;
     poster: string;
 
-    description: string;
+    description: string; 
 
     duration: number; 
 
