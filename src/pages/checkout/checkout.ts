@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 
 import { App, NavParams } from "ionic-angular";
+import { PaymentPage } from "../payment/payment";
 
 @Component({
     selector: 'page-checkout',
@@ -16,6 +17,7 @@ export class CheckoutPage {
     }
 
     pay() {
-        
+        this.appCtrl.getRootNav().push(PaymentPage, {
+        });
     }
 }

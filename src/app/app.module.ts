@@ -11,6 +11,7 @@ import { MoviesPage } from '../pages/movies/movies';
 import { MoviePage } from '../pages/movie/movie';
 import { TicketPage } from '../pages/ticket/ticket';
 import { CheckoutPage } from '../pages/checkout/checkout';
+import { PaymentPage } from '../pages/payment/payment';
 import { TabsPage } from '../pages/tabs/tabs';
 import { NewsPage } from '../pages/news/news';
 import { AccountPage } from '../pages/account/account';
@@ -36,6 +37,7 @@ import { MomentPipe } from './../shared/moment.pipe';
     MoviePage,
     TicketPage,
     CheckoutPage,
+    PaymentPage,
     TabsPage,
     NewsPage,
     AccountPage,
@@ -48,6 +50,7 @@ import { MomentPipe } from './../shared/moment.pipe';
     MoviePage,
     TicketPage,
     CheckoutPage,
+    PaymentPage,
     TabsPage,
     NewsPage,
     AccountPage
