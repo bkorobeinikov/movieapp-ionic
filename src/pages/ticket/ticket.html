@@ -24,23 +24,40 @@
         </div>
     </div>
     <div class="booking">
-        <ion-segment [(ngModel)]="tech" (ionChange)="onTechChange()">
-            <ng-container *ngFor="let item of techs">
-                <ion-segment-button value="{{item}}">
-                    {{item}}
-                </ion-segment-button>
-            </ng-container>
-        </ion-segment>
-        <ion-segment [(ngModel)]="date" (ionChange)="onDateChange()">
-            <ion-segment-button *ngFor="let item of dates" value="{{item}}">
-                {{item | date:"ddd D"}}
-            </ion-segment-button>
-        </ion-segment>
-        <ion-segment [(ngModel)]="time" (ionChange)="onTimeChange()">
-            <ion-segment-button *ngFor="let item of times" value="{{item}}">
-                {{item | date:"HH:mm"}}
-            </ion-segment-button>
-        </ion-segment>
+        <ion-item>
+            <ion-select [(ngModel)]="selectedTechId" (ionChange)="onTechChange()">
+                <ng-container *ngFor="let tech of technologies">
+                    <ion-option value="{{tech.id}}">
+                        {{tech.title}}
+                    </ion-option>
+                </ng-container>
+            </ion-select>
+        </ion-item>
+        <ion-item>
+            <span>{{selectedDate | moment:"ddd, D MMMM"}}</span>
+            <ion-slides #datepicker slidesPerView="4" radio-group [(ngModel)]="selectedDateId" (ionChange)="onDateChange()">
+                <ng-container *ngFor="let date of dates">
+                    <ion-slide>
+                        <ion-item style="width: 100px; display: flex; flex-direction: column">
+                            <ion-label>
+                            <div>{{date.value | moment: "ddd"}}</div>
+                            <div>{{date.value | moment: "D"}}</div>
+                            </ion-label>
+                            <ion-radio value="{{date.id}}">
+                                <span>{{date.value | moment: "D"}}</span>
+                            </ion-radio>
+                        </ion-item>
+                    </ion-slide>
+                </ng-container>
+            </ion-slides>
+        </ion-item>
+        <ion-item>
+            <ion-select [(ngModel)]="selectedTimeId" (ionChange)="onTimeChange()">
+                <ion-option *ngFor="let item of times" value="{{item.id}}">
+                    {{item.value | moment:"HH:mm"}}
+                </ion-option>
+            </ion-select>
+        </ion-item>
     </div>
 
 </ion-content>
