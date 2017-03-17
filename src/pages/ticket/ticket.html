@@ -9,7 +9,6 @@
 
 <ion-content padding>
 
-    <div class="booking">
         <ion-item>
             <ion-select [(ngModel)]="selectedTechId" (ionChange)="onTechChange()">
                 <ng-container *ngFor="let tech of technologies">
@@ -19,36 +18,45 @@
                 </ng-container>
             </ion-select>
         </ion-item>
-        <!--<ion-item>-->
         <span>{{selectedDate | moment:"ddd, D MMMM"}}</span>
-        <div class="booking-date-container">
+        <div class="slides-container">
             <ion-slides class="booking-date" #datepicker slidesPerView="4" radio-group [(ngModel)]="selectedDateId" (ionChange)="onDateChange()">
                 <ng-container *ngFor="let date of dates">
                     <ion-slide>
-                        <ion-item class="booking-date-item">
+                        <ion-item>
                             <ion-label>
                                 <div class="dayOfWeek"><span>{{date.value | moment: "ddd"}}</span></div>
                                 <div class="day"><span>{{date.value | moment: "D"}}</span></div>
                             </ion-label>
-                            <ion-radio value="{{date.id}}"></ion-radio>
+                            <ion-radio value="{{date.id}}" checked="{{date.id == selectedDateId}}"></ion-radio>
                         </ion-item>
                     </ion-slide>
                 </ng-container>
             </ion-slides>
-            <div #swiperBtnPrev class="booking-date-swipe swiper-prev">
+            <div #dateSwiperPrev class="slides-swiper slides-swiper-prev">
             </div>
-            <div #swiperBtnNext class="booking-date-swipe swiper-next">
+            <div #dateSwiperNext class="slides-swiper slides-swiper-next">
             </div>
         </div>
-        <!--</ion-item>-->
-        <ion-item>
-            <ion-select [(ngModel)]="selectedTimeId" (ionChange)="onTimeChange()">
-                <ion-option *ngFor="let item of times" value="{{item.id}}">
-                    {{item.value | moment:"HH:mm"}}
-                </ion-option>
-            </ion-select>
-        </ion-item>
-    </div>
+        <span>Time</span>
+        <div class="slides-container">
+            <ion-slides class="booking-time" #timepicker slidesPerView="4" radio-group [(ngModel)]="selectedTimeId" (ionChange)="onTimeChange()">
+                <ng-container *ngFor="let time of times">
+                    <ion-slide>
+                        <ion-item>
+                            <ion-label>
+                                {{time.value | moment:"HH:mm"}}
+                            </ion-label>
+                            <ion-radio value="{{time.id}}"></ion-radio>
+                        </ion-item>
+                    </ion-slide>
+                </ng-container>
+            </ion-slides>
+            <div #timeSwiperPrev class="slides-swiper slides-swiper-prev">
+            </div>
+            <div #timeSwiperNext class="slides-swiper slides-swiper-next">
+            </div>
+        </div>
 
 </ion-content>
 

@@ -19,8 +19,12 @@ import { CheckoutPage } from "./../checkout/checkout";
 export class TicketPage {
 
     @ViewChild('datepicker') datepicker: Slides;
-    @ViewChild('swiperBtnNext') btnNext: ElementRef;
-    @ViewChild('swiperBtnPrev') btnPrev: ElementRef;
+    @ViewChild('dateSwiperNext') dateSwiperNext: ElementRef;
+    @ViewChild('dateSwiperPrev') dateSwiperPrev: ElementRef;
+
+    @ViewChild('timepicker') timepicker: Slides;
+    @ViewChild('timeSwiperNext') timeSwiperNext: ElementRef;
+    @ViewChild('timeSwiperPrev') timeSwiperPrev: ElementRef;
 
     public movie: Movie;
 
@@ -46,7 +50,6 @@ export class TicketPage {
 
         this.seats = [{}, {}, {}];
         this.total = 750;
-
     }
 
     ngOnInit() {
@@ -54,13 +57,14 @@ export class TicketPage {
     }
 
     ngAfterViewInit() {
-        //this.datepicker.nextButton = '.swiper-button-next',
-        //this.datepicker.prevButton = '.swiper-button-prev',
-        this.datepicker.nextButton = this.btnNext.nativeElement;
-        this.datepicker.prevButton = this.btnPrev.nativeElement;
+        this.datepicker.nextButton = this.dateSwiperNext.nativeElement;
+        this.datepicker.prevButton = this.dateSwiperPrev.nativeElement;
+
+        this.timepicker.prevButton = this.timeSwiperPrev.nativeElement;
+        this.timepicker.nextButton = this.timeSwiperNext.nativeElement;
     }
 
-    ionViewDidEnter() {
+    ionViewWillEnter() {
         this.refreshShowtimes();
     }
 
@@ -93,7 +97,7 @@ export class TicketPage {
             })).uniqBy(d => d.id).value();
 
             this.dates = dates;
-            this.datepicker.update
+            this.datepicker.update();
             this.selectedDate = this.dates[0].value;
             this.selectedDateId = this.dates[0].id;
             this.onDateChange();
