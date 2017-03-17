@@ -205,8 +205,12 @@ page-ticket {
                         padding: .5em .2em .5em 0;
 
                         position: relative;
+                    }
 
-                        color: #1aa3e0;
+                    &.item-radio-checked {
+                        .label {
+                            color: #1aa3e0;                            
+                        }
                     }
 
                     .radio-icon {
@@ -242,6 +246,7 @@ page-ticket {
                 .item {
                     min-height: auto;
                     max-height: 2.5em;
+                    height: 2.5em;
 
                     margin-right: .4em;
                     margin-bottom: .4em;
