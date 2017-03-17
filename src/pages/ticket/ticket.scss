@@ -30,8 +30,46 @@ page-ticket {
 
     .booking {
 
-        .booking-date {
+        .booking-date-container {
+            position: relative;
 
+            .booking-date-swipe {
+                width: .6em;
+                height: .6em;
+
+                border-width: 0 .2em .2em 0;
+                border-style: solid;
+                border-color: #1EA1DC;
+
+                background: transparent;
+                
+                overflow: visible;
+
+                position: absolute;
+                top: 50%;
+                margin-top: 0;
+                z-index: 10;
+                cursor: pointer;
+
+                &.swiper-prev {
+                    transform: rotate(135deg); 
+                    left: 0;
+                }
+
+                &.swiper-next {
+                    transform: rotate(315deg);
+                    right: 0;
+                }
+
+                &.swiper-button-disabled {
+                    opacity: .35;
+                    cursor: auto;
+                    pointer-events: none;
+                }
+            }
+        }
+
+        .booking-date {
             .booking-date-item {
                 padding: 0;
 

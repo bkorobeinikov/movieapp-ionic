@@ -1,4 +1,4 @@
-import { Component, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, SimpleChanges, ViewChild, ElementRef } from '@angular/core';
 
 import { NavParams, Segment, Slides, App } from 'ionic-angular';
 
@@ -10,7 +10,7 @@ import _ from 'lodash';
 import { MovieShowtime } from "../../core/movie-showtime.model";
 import { MovieService } from "../../core/movie.service";
 
-import { CheckoutPage } from "../checkout/checkout";
+import { CheckoutPage } from "./../checkout/checkout";
 
 @Component({
     selector: 'page-ticket',
@@ -19,6 +19,8 @@ import { CheckoutPage } from "../checkout/checkout";
 export class TicketPage {
 
     @ViewChild('datepicker') datepicker: Slides;
+    @ViewChild('swiperBtnNext') btnNext: ElementRef;
+    @ViewChild('swiperBtnPrev') btnPrev: ElementRef;
 
     public movie: Movie;
 
@@ -52,6 +54,10 @@ export class TicketPage {
     }
 
     ngAfterViewInit() {
+        //this.datepicker.nextButton = '.swiper-button-next',
+        //this.datepicker.prevButton = '.swiper-button-prev',
+        this.datepicker.nextButton = this.btnNext.nativeElement;
+        this.datepicker.prevButton = this.btnPrev.nativeElement;
     }
 
     ionViewDidEnter() {

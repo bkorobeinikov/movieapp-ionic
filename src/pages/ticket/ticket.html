@@ -19,11 +19,12 @@
                 </ng-container>
             </ion-select>
         </ion-item>
-        <ion-item>
-            <span>{{selectedDate | moment:"ddd, D MMMM"}}</span>
+        <!--<ion-item>-->
+        <span>{{selectedDate | moment:"ddd, D MMMM"}}</span>
+        <div class="booking-date-container">
             <ion-slides class="booking-date" #datepicker slidesPerView="4" radio-group [(ngModel)]="selectedDateId" (ionChange)="onDateChange()">
                 <ng-container *ngFor="let date of dates">
-                    <ion-slide> 
+                    <ion-slide>
                         <ion-item class="booking-date-item">
                             <ion-label>
                                 <div class="dayOfWeek"><span>{{date.value | moment: "ddd"}}</span></div>
@@ -34,7 +35,12 @@
                     </ion-slide>
                 </ng-container>
             </ion-slides>
-        </ion-item>
+            <div #swiperBtnPrev class="booking-date-swipe swiper-prev">
+            </div>
+            <div #swiperBtnNext class="booking-date-swipe swiper-next">
+            </div>
+        </div>
+        <!--</ion-item>-->
         <ion-item>
             <ion-select [(ngModel)]="selectedTimeId" (ionChange)="onTimeChange()">
                 <ion-option *ngFor="let item of times" value="{{item.id}}">
@@ -48,7 +54,7 @@
 
 <ion-footer>
     <ion-toolbar padding-left padding-right>
-        <div class="cart-total"> 
+        <div class="cart-total">
             <span class="cart-seats">{{seats.length}} seats</span>
             <span class="cart-price">{{total}}грн.</span>
         </div>
