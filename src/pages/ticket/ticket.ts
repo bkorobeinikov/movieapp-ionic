@@ -26,6 +26,10 @@ export class TicketPage {
     @ViewChild('timeSwiperNext') timeSwiperNext: ElementRef;
     @ViewChild('timeSwiperPrev') timeSwiperPrev: ElementRef;
 
+    @ViewChild('techpicker') techpicker: Slides;
+    @ViewChild('techSwiperNext') techSwiperNext: ElementRef;
+    @ViewChild('techSwiperPrev') techSwiperPrev: ElementRef;
+
     public movie: Movie;
 
     public technologies: { id: string, title: string }[];
@@ -37,6 +41,7 @@ export class TicketPage {
 
     public times: { id: string, value: moment.Moment, showtime: MovieShowtime }[];
     public selectedTimeId: string;
+    public selectedTime: moment.Moment;
 
     public showtimes: MovieShowtime[];
 
@@ -62,6 +67,9 @@ export class TicketPage {
 
         this.timepicker.prevButton = this.timeSwiperPrev.nativeElement;
         this.timepicker.nextButton = this.timeSwiperNext.nativeElement;
+
+        this.techpicker.prevButton = this.techSwiperPrev.nativeElement;
+        this.techpicker.nextButton = this.techSwiperNext.nativeElement;
     }
 
     ionViewWillEnter() {
@@ -126,11 +134,13 @@ export class TicketPage {
 
         this.times = times;
         this.selectedTimeId = this.times[0].id;
+        this.selectedTime = this.times[0].value;
         this.onTimeChange();
     }
 
     onTimeChange() {
-        // refresh sits
+        var selectedTime = this.times.find(t => t.id == this.selectedTimeId);
+        this.selectedTime = selectedTime.value;
     }
 
     checkout() {

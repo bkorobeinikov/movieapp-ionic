@@ -9,9 +9,8 @@
 
 <ion-content padding>
 
-        <span>Technologies</span>
         <div class="slides-container">
-            <ion-slides class="booking-tech" #techpicker slidesPerView="4" radio-group [(ngModel)]="selectedTechId" (ionChange)="onTechChange()">
+            <ion-slides class="booking-tech" #techpicker slidesPerView="3" radio-group [(ngModel)]="selectedTechId" (ionChange)="onTechChange()">
                 <ng-container *ngFor="let tech of technologies">
                     <ion-slide>
                         <ion-item>
@@ -29,7 +28,7 @@
             </div>
         </div>
 
-        <span>{{selectedDate | moment:"ddd, D MMMM"}}</span>
+        <span>{{selectedDate | moment:"ddd, D MMMM"}} at {{selectedTime | moment:"HH:mm"}}</span>
         <div class="slides-container">
             <ion-slides class="booking-date" #datepicker slidesPerView="4" radio-group [(ngModel)]="selectedDateId" (ionChange)="onDateChange()">
                 <ng-container *ngFor="let date of dates">
@@ -49,9 +48,8 @@
             <div #dateSwiperNext class="slides-swiper slides-swiper-next">
             </div>
         </div>
-        <span>Time</span>
         <div class="slides-container">
-            <ion-slides class="booking-time" #timepicker slidesPerView="4" radio-group [(ngModel)]="selectedTimeId" (ionChange)="onTimeChange()">
+            <ion-slides class="booking-time" #timepicker slidesPerView="5" radio-group [(ngModel)]="selectedTimeId" (ionChange)="onTimeChange()">
                 <ng-container *ngFor="let time of times">
                     <ion-slide>
                         <ion-item>
