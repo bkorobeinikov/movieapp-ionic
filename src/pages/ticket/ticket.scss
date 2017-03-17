@@ -1,3 +1,20 @@
+@mixin aspect-ratio($width, $height) {
+  position: relative;
+  &:before {
+    display: block;
+    content: "";
+    width: 100%;
+    padding-top: ($height / $width) * 100%;
+  }
+  > .content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+}
+
 page-ticket {
 
     font-size: 16px;
@@ -8,6 +25,70 @@ page-ticket {
         .movie-title {
             font-size: 1.2em;
             font-weight: bold;
+        }
+    }
+
+    .booking {
+
+        .booking-date {
+
+            .booking-date-item {
+                padding: 0;
+
+                .item-inner {
+                    padding: 0;
+
+                    border: none;
+
+                    .input-wrapper {
+                        overflow: visible;
+                    }
+                }
+
+                .label {
+                    margin: 0;
+                }
+
+                .dayOfWeek {
+                    color: #aaa;
+                    
+                    text-align: center;
+
+                    span {
+                        font-size: .6em;
+                        text-transform: uppercase;
+                    }
+                }
+
+                .day {
+                    margin: 0 auto;
+
+                    width: 2em;
+                    height: 2em;
+                    line-height: 2em;
+
+                    color: #222;
+
+                    text-align: center;
+                }
+
+                &.item-radio-checked {
+                    .day {
+                        border-radius: 50%;
+                        background-color: #1EA1DC;
+                        color: white;
+                        text-shadow: 0 0 1px white;
+                    }
+                }
+
+                .radio {
+                    margin: 0;
+                    .radio-icon {
+                        display: none;
+                    }
+                }
+            }
+
         }
     }
 

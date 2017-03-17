@@ -21,17 +21,15 @@
         </ion-item>
         <ion-item>
             <span>{{selectedDate | moment:"ddd, D MMMM"}}</span>
-            <ion-slides #datepicker slidesPerView="4" radio-group [(ngModel)]="selectedDateId" (ionChange)="onDateChange()">
+            <ion-slides class="booking-date" #datepicker slidesPerView="4" radio-group [(ngModel)]="selectedDateId" (ionChange)="onDateChange()">
                 <ng-container *ngFor="let date of dates">
-                    <ion-slide>
-                        <ion-item style="width: 100px; display: flex; flex-direction: column">
+                    <ion-slide> 
+                        <ion-item class="booking-date-item">
                             <ion-label>
-                                <div>{{date.value | moment: "ddd"}}</div>
-                                <div>{{date.value | moment: "D"}}</div>
+                                <div class="dayOfWeek"><span>{{date.value | moment: "ddd"}}</span></div>
+                                <div class="day"><span>{{date.value | moment: "D"}}</span></div>
                             </ion-label>
-                            <ion-radio value="{{date.id}}">
-                                <span>{{date.value | moment: "D"}}</span>
-                            </ion-radio>
+                            <ion-radio value="{{date.id}}"></ion-radio>
                         </ion-item>
                     </ion-slide>
                 </ng-container>
