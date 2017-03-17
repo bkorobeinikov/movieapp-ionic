@@ -190,11 +190,13 @@ page-ticket {
             align-items: stretch;
 
             .tech {
+                width: 7.4em;
+                max-width: 7.4em;
+                margin-right: 1em;
+
                 display: flex;
                 flex-direction: column;
-                justify-content: center;
-
-                margin-right: 1em;
+                justify-content: flex-start;
 
                 border-right: 1px solid #1EA1DC;
 
@@ -205,6 +207,9 @@ page-ticket {
                         padding: .5em .2em .5em 0;
 
                         position: relative;
+
+                        font-size: .9em;
+                        text-transform: uppercase;
                     }
 
                     &.item-radio-checked {
@@ -235,6 +240,7 @@ page-ticket {
             }
 
             .time {
+                margin-bottom: -.4em;
                 padding: .3em 0;
 
                 flex: 1;
@@ -245,8 +251,7 @@ page-ticket {
 
                 .item {
                     min-height: auto;
-                    max-height: 2.5em;
-                    height: 2.5em;
+                    max-height: 2.3em;
 
                     margin-right: .4em;
                     margin-bottom: .4em;
