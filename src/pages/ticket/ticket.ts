@@ -1,4 +1,4 @@
-import { Component, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, SimpleChanges, ViewChild, ElementRef } from '@angular/core';
 
 import { NavParams, Segment, Slides, App } from 'ionic-angular';
 
@@ -10,7 +10,7 @@ import _ from 'lodash';
 import { MovieShowtime } from "../../core/movie-showtime.model";
 import { MovieService } from "../../core/movie.service";
 
-import { CheckoutPage } from "../checkout/checkout";
+import { CheckoutPage } from "./../checkout/checkout";
 
 @Component({
     selector: 'page-ticket',
@@ -19,18 +19,22 @@ import { CheckoutPage } from "../checkout/checkout";
 export class TicketPage {
 
     @ViewChild('datepicker') datepicker: Slides;
+    @ViewChild('dateSwiperNext') dateSwiperNext: ElementRef;
+    @ViewChild('dateSwiperPrev') dateSwiperPrev: ElementRef;
 
     public movie: Movie;
 
-    public technologies: { id: string, title: string }[];
-    public selectedTechId: string;
-
-    public dates: { id: string, value: moment.Moment }[];
+    public dates: { id: number, value: moment.Moment }[];
     public selectedDate: moment.Moment;
-    public selectedDateId: string;
+    public selectedDateId: number;
 
-    public times: { id: string, value: moment.Moment, showtime: MovieShowtime }[];
+    public technologies: { id: string, value: string }[];
+    public selectedTechId: string;
+    public selectedTech: string;
+
+    public times: { id: string, value: moment.Moment, active: boolean, showtime: MovieShowtime }[];
     public selectedTimeId: string;
+    public selectedTime: moment.Moment;
 
     public showtimes: MovieShowtime[];
 
@@ -44,7 +48,6 @@ export class TicketPage {
 
         this.seats = [{}, {}, {}];
         this.total = 750;
-
     }
 
     ngOnInit() {
@@ -52,9 +55,11 @@ export class TicketPage {
     }
 
     ngAfterViewInit() {
+        this.datepicker.nextButton = this.dateSwiperNext.nativeElement;
+        this.datepicker.prevButton = this.dateSwiperPrev.nativeElement;
     }
 
-    ionViewDidEnter() {
+    ionViewWillEnter() {
         this.refreshShowtimes();
     }
 
@@ -68,59 +73,80 @@ export class TicketPage {
             var showtimes = res.filter(s => s.movieId == this.movie.id);
             this.showtimes = showtimes;
 
-            this.technologies = _.chain(this.showtimes).map(s => s.techId).uniq().map((t, index) => ({
-                id: index + '',
-                title: t
-            })).value();
-
-            this.selectedTechId = this.technologies[0].id;
-            this.onTechChange();
+            this.onShowtimesChange();
+            return;
         });
+    }
+
+    private onShowtimesChange() {
+        var dates = _.chain(this.showtimes).map(s => ({
+            id: moment(s.time).startOf('date').valueOf(),
+            value: s.time,
+        })).uniqBy(d => d.id).value();
+
+        this.dates = dates;
+        this.selectedDate = this.dates[0].value;
+        this.selectedDateId = this.dates[0].id;
+        this.onDateChange();
+    }
+
+    onDateChange() {
+        if (this.dates == null)
+            return;
+
+        var selectedDate = this.dates.find(d => d.id == this.selectedDateId);
+        this.selectedDate = selectedDate.value;
+
+        var techs = _.chain(this.showtimes)
+            .filter(s => s.time.isSame(selectedDate.value, 'day'))
+            .map(s => ({
+                id: s.techId,
+                value: s.techId
+            }))
+            .uniqBy(t => t.id)
+            .value();
+
+        this.technologies = techs;
+        this.selectedTechId = this.technologies[0].id;
+        this.selectedTech = this.technologies[0].value;
+        this.onTechChange();
     }
 
     onTechChange() {
         try {
             var selectedTech = this.technologies.find(t => t.id == this.selectedTechId);
-            var dates = _.chain(this.showtimes).filter(s => s.techId == selectedTech.title).map(s => ({
-                id: s.time.format('ddd D'),
-                value: s.time,
-            })).uniqBy(d => d.id).value();
+            this.selectedTech = selectedTech.value;
 
-            this.dates = dates;
-            this.datepicker.update
-            this.selectedDate = this.dates[0].value;
-            this.selectedDateId = this.dates[0].id;
-            this.onDateChange();
+            console.log(this.selectedDate);
+
+            var now = moment();
+            var times = _.chain(this.showtimes)
+                .filter(s => s.time.isSame(this.selectedDate, 'day') && s.techId == this.selectedTechId)
+                .map(s => ({
+                    id: s.time.format("HH:mm") + '_' + s.hallId,
+                    active: s.time.isAfter(now),
+                    value: s.time,
+                    showtime: s
+                }))
+                .uniqBy(t => t.id)
+                .value();
+            console.log('filtered', times);
+
+            this.times = times;
+            this.selectedTime = null;
+            this.selectedTimeId = null;
         }
         catch (err) {
 
         }
     }
 
-    onDateChange() {
-        if (this.technologies == null || this.dates == null)
+    onTimeChange() {
+        if (this.times == null || this.selectedTimeId == null)
             return;
 
-        var selectedTech = this.technologies.find(t => t.id == this.selectedTechId);
-        var selectedDate = this.dates.find(d => d.id == this.selectedDateId);
-        this.selectedDate = selectedDate.value;
-
-        var times = _.chain(this.showtimes)
-            .filter(s => s.techId == selectedTech.title && s.time.isSame(selectedDate.value, 'day'))
-            .map(s => ({
-                id: s.time.format("HH:mm") + '_' + s.hallId,
-                value: s.time,
-                showtime: s
-            }))
-            .value();
-
-        this.times = times;
-        this.selectedTimeId = this.times[0].id;
-        this.onTimeChange();
-    }
-
-    onTimeChange() {
-        // refresh sits
+        var selectedTime = this.times.find(t => t.id == this.selectedTimeId);
+        this.selectedTime = selectedTime.value;
     }
 
     checkout() {

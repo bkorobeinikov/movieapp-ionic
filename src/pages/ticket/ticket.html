@@ -7,50 +7,72 @@
 </ion-header>
 
 
-<ion-content padding>
+<ion-content padding-left padding-right padding-bottom>
 
-    <div class="booking">
-        <ion-item>
-            <ion-select [(ngModel)]="selectedTechId" (ionChange)="onTechChange()">
-                <ng-container *ngFor="let tech of technologies">
-                    <ion-option value="{{tech.id}}">
-                        {{tech.title}}
-                    </ion-option>
-                </ng-container>
-            </ion-select>
-        </ion-item>
-        <ion-item>
-            <span>{{selectedDate | moment:"ddd, D MMMM"}}</span>
-            <ion-slides #datepicker slidesPerView="4" radio-group [(ngModel)]="selectedDateId" (ionChange)="onDateChange()">
-                <ng-container *ngFor="let date of dates">
-                    <ion-slide>
-                        <ion-item style="width: 100px; display: flex; flex-direction: column">
-                            <ion-label>
-                                <div>{{date.value | moment: "ddd"}}</div>
-                                <div>{{date.value | moment: "D"}}</div>
-                            </ion-label>
-                            <ion-radio value="{{date.id}}">
-                                <span>{{date.value | moment: "D"}}</span>
-                            </ion-radio>
-                        </ion-item>
-                    </ion-slide>
-                </ng-container>
-            </ion-slides>
-        </ion-item>
-        <ion-item>
-            <ion-select [(ngModel)]="selectedTimeId" (ionChange)="onTimeChange()">
-                <ion-option *ngFor="let item of times" value="{{item.id}}">
-                    {{item.value | moment:"HH:mm"}}
-                </ion-option>
-            </ion-select>
-        </ion-item>
+    <div class="slides-container">
+        <ion-slides class="booking-date" #datepicker slidesPerView="{{dates?.length < 7 ? dates?.length : 7}}" radio-group [(ngModel)]="selectedDateId"
+            (ionChange)="onDateChange()">
+            <ng-container *ngFor="let date of dates">
+                <ion-slide>
+                    <ion-item>
+                        <ion-label>
+                            <div class="dayOfWeek"><span>{{date.value | moment: "ddd"}}</span></div>
+                            <div class="day"><span>{{date.value | moment: "D"}}</span></div>
+                        </ion-label>
+                        <ion-radio value="{{date.id}}" checked="{{date.id == selectedDateId}}"></ion-radio>
+                    </ion-item>
+                </ion-slide>
+            </ng-container>
+        </ion-slides>
+        <div #dateSwiperPrev class="slides-swiper slides-swiper-prev">
+        </div>
+        <div #dateSwiperNext class="slides-swiper slides-swiper-next">
+        </div>
+    </div>
+
+    <div class="booking-time">
+        <div class="tech" radio-group [(ngModel)]="selectedTechId" (ionChange)="onTechChange()">
+            <ng-container *ngFor="let tech of technologies">
+                <ion-item>
+                    <ion-label>
+                        {{tech.value}}
+                    </ion-label>
+                    <ion-radio value="{{tech.id}}" checked="{{tech.id == selectedTechId}}"></ion-radio>
+                </ion-item>
+            </ng-container>
+        </div>
+        <div class="time" radio-group [(ngModel)]="selectedTimeId" (ionChange)="onTimeChange()">
+            <ng-container *ngFor="let time of times">
+                <ion-item>
+                    <ion-label>
+                        {{time.value | moment:"HH:mm"}}
+                    </ion-label>
+                    <ion-radio value="{{time.id}}" checked="{{time.id == selectedTimeId}}" disabled="{{time.active == false}}"></ion-radio>
+                </ion-item>
+            </ng-container>
+            <div *ngIf="times?.length % 3 == 2">
+                <ion-item style="visibility: hidden">
+                    <ion-label>
+                        00:00
+                    </ion-label>
+                </ion-item>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <div *ngIf="selectedTimeId == null">
+
+            Please select time to be able to select seats
+
+        </div>
     </div>
 
 </ion-content>
 
 <ion-footer>
     <ion-toolbar padding-left padding-right>
-        <div class="cart-total"> 
+        <div class="cart-total">
             <span class="cart-seats">{{seats.length}} seats</span>
             <span class="cart-price">{{total}}грн.</span>
         </div>

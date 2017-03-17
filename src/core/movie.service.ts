@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Http, Headers, Response } from '@angular/http';
 
 import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 
@@ -19,6 +20,8 @@ export class MovieService {
     private showtimeUrl = "http://planetakino.ua/lvov/ua/showtimes/xml/";
     private headers: Headers;
     private headers1: Headers;
+
+    private showtimes: MovieShowtime[];
 
     constructor(private http: Http) {
 
@@ -55,6 +58,9 @@ export class MovieService {
     }
 
     getShowtimes(): Observable<MovieShowtime[]> {
+        if (this.showtimes != null)
+            return Observable.of(this.showtimes);
+
         return this.getData<any>(this.showtimeUrl).map(res => {
             var days: any[] = res.showtimes.day;
 
@@ -69,6 +75,8 @@ export class MovieService {
             });
 
             console.log('result', result);
+
+            this.showtimes = result;
 
             return result;
         });
