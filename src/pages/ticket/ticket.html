@@ -9,15 +9,26 @@
 
 <ion-content padding>
 
-        <ion-item>
-            <ion-select [(ngModel)]="selectedTechId" (ionChange)="onTechChange()">
+        <span>Technologies</span>
+        <div class="slides-container">
+            <ion-slides class="booking-tech" #techpicker slidesPerView="4" radio-group [(ngModel)]="selectedTechId" (ionChange)="onTechChange()">
                 <ng-container *ngFor="let tech of technologies">
-                    <ion-option value="{{tech.id}}">
-                        {{tech.title}}
-                    </ion-option>
+                    <ion-slide>
+                        <ion-item>
+                            <ion-label>
+                                {{tech.title}}
+                            </ion-label>
+                            <ion-radio value="{{tech.id}}" checked="{{tech.id == selectedTechId}}"></ion-radio>
+                        </ion-item>
+                    </ion-slide>
                 </ng-container>
-            </ion-select>
-        </ion-item>
+            </ion-slides>
+            <div #techSwiperPrev class="slides-swiper slides-swiper-prev">
+            </div>
+            <div #techSwiperNext class="slides-swiper slides-swiper-next">
+            </div>
+        </div>
+
         <span>{{selectedDate | moment:"ddd, D MMMM"}}</span>
         <div class="slides-container">
             <ion-slides class="booking-date" #datepicker slidesPerView="4" radio-group [(ngModel)]="selectedDateId" (ionChange)="onDateChange()">
@@ -47,7 +58,7 @@
                             <ion-label>
                                 {{time.value | moment:"HH:mm"}}
                             </ion-label>
-                            <ion-radio value="{{time.id}}"></ion-radio>
+                            <ion-radio value="{{time.id}}" checked="{{time.id == selectedTimeId}}"></ion-radio>
                         </ion-item>
                     </ion-slide>
                 </ng-container>

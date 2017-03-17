@@ -149,8 +149,18 @@ page-ticket {
                         border-bottom: 1px solid black;
                     }
                 }
+            }
+        }
 
+        .booking-tech {
+            .item {
+                &.item-radio-checked {
+                    font-weight: bold;
 
+                    &.item-inner {
+                        border-bottom: 1px solid black;
+                    }
+                }
             }
         }
     }
