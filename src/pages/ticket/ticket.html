@@ -7,65 +7,67 @@
 </ion-header>
 
 
-<ion-content padding>
+<ion-content padding-left padding-right padding-bottom>
 
-        <div class="slides-container">
-            <ion-slides class="booking-tech" #techpicker slidesPerView="3" radio-group [(ngModel)]="selectedTechId" (ionChange)="onTechChange()">
-                <ng-container *ngFor="let tech of technologies">
-                    <ion-slide>
-                        <ion-item>
-                            <ion-label>
-                                {{tech.title}}
-                            </ion-label>
-                            <ion-radio value="{{tech.id}}" checked="{{tech.id == selectedTechId}}"></ion-radio>
-                        </ion-item>
-                    </ion-slide>
-                </ng-container>
-            </ion-slides>
-            <div #techSwiperPrev class="slides-swiper slides-swiper-prev">
-            </div>
-            <div #techSwiperNext class="slides-swiper slides-swiper-next">
-            </div>
+    <div class="slides-container" [ngClass]="{'no-swiper': (dates?.length <= 7)}">
+        <ion-slides class="booking-date" #datepicker slidesPerView="7" radio-group [(ngModel)]="selectedDateId" (ionChange)="onDateChange()">
+            <ng-container *ngFor="let date of dates">
+                <ion-slide>
+                    <ion-item>
+                        <ion-label>
+                            <div class="dayOfWeek"><span>{{date.value | moment: "ddd"}}</span></div>
+                            <div class="day"><span>{{date.value | moment: "D"}}</span></div>
+                        </ion-label>
+                        <ion-radio value="{{date.id}}" checked="{{date.id == selectedDateId}}"></ion-radio>
+                    </ion-item>
+                </ion-slide>
+            </ng-container>
+        </ion-slides>
+        <div #dateSwiperPrev class="slides-swiper slides-swiper-prev">
         </div>
+        <div #dateSwiperNext class="slides-swiper slides-swiper-next">
+        </div>
+    </div>
 
-        <span>{{selectedDate | moment:"ddd, D MMMM"}} at {{selectedTime | moment:"HH:mm"}}</span>
-        <div class="slides-container">
-            <ion-slides class="booking-date" #datepicker slidesPerView="4" radio-group [(ngModel)]="selectedDateId" (ionChange)="onDateChange()">
-                <ng-container *ngFor="let date of dates">
-                    <ion-slide>
-                        <ion-item>
-                            <ion-label>
-                                <div class="dayOfWeek"><span>{{date.value | moment: "ddd"}}</span></div>
-                                <div class="day"><span>{{date.value | moment: "D"}}</span></div>
-                            </ion-label>
-                            <ion-radio value="{{date.id}}" checked="{{date.id == selectedDateId}}"></ion-radio>
-                        </ion-item>
-                    </ion-slide>
-                </ng-container>
-            </ion-slides>
-            <div #dateSwiperPrev class="slides-swiper slides-swiper-prev">
-            </div>
-            <div #dateSwiperNext class="slides-swiper slides-swiper-next">
-            </div>
+    <div>Technology</div>
+    <div class="slides-container" [ngClass]="{'no-swiper': (technologies?.length <= 3)}">
+        <ion-slides class="booking-tech" #techpicker slidesPerView="3" radio-group [(ngModel)]="selectedTechId" (ionChange)="onTechChange()">
+            <ng-container *ngFor="let tech of technologies">
+                <ion-slide>
+                    <ion-item>
+                        <ion-label>
+                            {{tech.value}}
+                        </ion-label>
+                        <ion-radio value="{{tech.id}}" checked="{{tech.id == selectedTechId}}"></ion-radio>
+                    </ion-item>
+                </ion-slide>
+            </ng-container>
+        </ion-slides>
+        <div #techSwiperPrev class="slides-swiper slides-swiper-prev">
         </div>
-        <div class="slides-container">
-            <ion-slides class="booking-time" #timepicker slidesPerView="5" radio-group [(ngModel)]="selectedTimeId" (ionChange)="onTimeChange()">
-                <ng-container *ngFor="let time of times">
-                    <ion-slide>
-                        <ion-item>
-                            <ion-label>
-                                {{time.value | moment:"HH:mm"}}
-                            </ion-label>
-                            <ion-radio value="{{time.id}}" checked="{{time.id == selectedTimeId}}"></ion-radio>
-                        </ion-item>
-                    </ion-slide>
-                </ng-container>
-            </ion-slides>
-            <div #timeSwiperPrev class="slides-swiper slides-swiper-prev">
-            </div>
-            <div #timeSwiperNext class="slides-swiper slides-swiper-next">
-            </div>
+        <div #techSwiperNext class="slides-swiper slides-swiper-next">
         </div>
+    </div>
+
+
+    <div class="slides-container" [ngClass]="{'no-swiper': (times?.length <= 5)}">
+        <ion-slides class="booking-time" #timepicker slidesPerView="5" radio-group [(ngModel)]="selectedTimeId" (ionChange)="onTimeChange()">
+            <ng-container *ngFor="let time of times">
+                <ion-slide>
+                    <ion-item>
+                        <ion-label>
+                            {{time.value | moment:"HH:mm"}}
+                        </ion-label>
+                        <ion-radio value="{{time.id}}" checked="{{time.id == selectedTimeId}}"></ion-radio>
+                    </ion-item>
+                </ion-slide>
+            </ng-container>
+        </ion-slides>
+        <div #timeSwiperPrev class="slides-swiper slides-swiper-prev">
+        </div>
+        <div #timeSwiperNext class="slides-swiper slides-swiper-next">
+        </div>
+    </div>
 
 </ion-content>
 

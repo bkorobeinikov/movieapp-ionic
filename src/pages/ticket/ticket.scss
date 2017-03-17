@@ -34,9 +34,16 @@ page-ticket {
 
             padding: 0 1em;
 
+            &.no-swiper {
+                .slides-swiper {
+                    display: none;
+                }
+            }
+
             .slides-swiper {
-                width: .6em;
-                height: .6em;
+
+                width: .5em;
+                height: .5em;
 
                 border-width: 0 .2em .2em 0;
                 border-style: solid;
@@ -48,7 +55,7 @@ page-ticket {
 
                 position: absolute;
                 top: 50%;
-                margin-top: -.3em;
+                margin-top: -.25em;
                 z-index: 10;
                 cursor: pointer;
 
@@ -63,7 +70,8 @@ page-ticket {
                 }
 
                 &.swiper-button-disabled {
-                    opacity: .35;
+                    opacity: .5;
+
                     cursor: auto;
                     pointer-events: none;
                 }
