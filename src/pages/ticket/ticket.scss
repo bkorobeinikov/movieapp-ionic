@@ -115,6 +115,9 @@ page-ticket {
         }
 
         .booking-date {
+
+            margin-bottom: 1.5em;
+
             .item {
                 .dayOfWeek {
                     color: #aaa;
@@ -151,33 +154,128 @@ page-ticket {
         }
 
         .booking-time {
+
             .item {
-                .label {
-                    font-size: .9em;
+                width: auto;
+                min-height: auto;
+
+                padding: 0;
+
+                .item-inner {
+                    padding: 0;
+
+                    border: none;
+
+                    .input-wrapper {
+                        overflow: visible;
+                    }
                 }
 
+                .label {
+                    margin: 0;
+                }
                 &.item-radio-checked {
-                    font-weight: bold;
+                }
 
-                    &.item-inner {
-                        border-bottom: 1px solid black;
+                .radio {
+                    margin: 0;
+                    .radio-icon {
+                        display: none;
                     }
                 }
             }
-        }
 
-        .booking-tech {
-            .item {
-                .label {
-                    font-size: .9em;
-                }
+            display: flex;
+            flex-direction: row;
+            align-items: stretch;
 
-                &.item-radio-checked {
-                    font-weight: bold;
+            .tech {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
 
-                    &.item-inner {
-                        border-bottom: 1px solid black;
+                margin-right: 1em;
+
+                border-right: 1px solid #1EA1DC;
+
+                .item {
+                    text-align: right;
+                    
+                    .label {
+                        padding: .5em .2em .5em 0;
+
+                        position: relative;
+
+                        color: #1aa3e0;
                     }
+
+                    .radio-icon {
+                        display: block;
+                        visibility: hidden;
+
+                        &.radio-checked {
+                            visibility: visible;
+                        }
+
+                        .radio-inner {
+                            width: 12px;
+                            height: 12px;
+
+                            left: 11px;
+
+                            background-color: #1EA1DC;
+                            border-color: #1EA1DC;
+                        }
+                    }
+                }
+            }
+
+            .time {
+                padding: .3em 0;
+
+                flex: 1;
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: space-between;
+
+                .item {
+                    min-height: auto;
+                    max-height: 2.5em;
+
+                    margin-right: .4em;
+                    margin-bottom: .4em;
+                    padding: .2em .4em;
+
+                    border-radius: 2px;
+
+                    background-color: white;
+                    border: 1px solid #1aa3e0;
+                    color: #1aa3e0;
+
+                    text-align: center;
+
+                    &.item-radio-disabled {
+                        background-color: white;
+                        border: 1px solid #e1e1e1;
+                        color: #e1e1e1;
+
+                        .label {
+                            opacity: 1;
+                        }
+                    }
+
+                    &.item-radio-checked {
+                        border-color: #1aa3e0;
+                        background-color: #1aa3e0;
+                        color: white;
+
+                        .label {
+                            color: white;
+                        }
+                    }
+
+
                 }
             }
         }

@@ -22,14 +22,6 @@ export class TicketPage {
     @ViewChild('dateSwiperNext') dateSwiperNext: ElementRef;
     @ViewChild('dateSwiperPrev') dateSwiperPrev: ElementRef;
 
-    @ViewChild('timepicker') timepicker: Slides;
-    @ViewChild('timeSwiperNext') timeSwiperNext: ElementRef;
-    @ViewChild('timeSwiperPrev') timeSwiperPrev: ElementRef;
-
-    @ViewChild('techpicker') techpicker: Slides;
-    @ViewChild('techSwiperNext') techSwiperNext: ElementRef;
-    @ViewChild('techSwiperPrev') techSwiperPrev: ElementRef;
-
     public movie: Movie;
 
     public dates: { id: number, value: moment.Moment }[];
@@ -40,7 +32,7 @@ export class TicketPage {
     public selectedTechId: string;
     public selectedTech: string;
 
-    public times: { id: string, value: moment.Moment, showtime: MovieShowtime }[];
+    public times: { id: string, value: moment.Moment, active: boolean, showtime: MovieShowtime }[];
     public selectedTimeId: string;
     public selectedTime: moment.Moment;
 
@@ -65,12 +57,6 @@ export class TicketPage {
     ngAfterViewInit() {
         this.datepicker.nextButton = this.dateSwiperNext.nativeElement;
         this.datepicker.prevButton = this.dateSwiperPrev.nativeElement;
-
-        this.timepicker.prevButton = this.timeSwiperPrev.nativeElement;
-        this.timepicker.nextButton = this.timeSwiperNext.nativeElement;
-
-        this.techpicker.prevButton = this.techSwiperPrev.nativeElement;
-        this.techpicker.nextButton = this.techSwiperNext.nativeElement;
     }
 
     ionViewWillEnter() {
@@ -133,10 +119,12 @@ export class TicketPage {
 
             console.log(this.selectedDate);
 
+            var now = moment();
             var times = _.chain(this.showtimes)
                 .filter(s => s.time.isSame(this.selectedDate, 'day') && s.techId == this.selectedTechId)
                 .map(s => ({
                     id: s.time.format("HH:mm") + '_' + s.hallId,
+                    active: s.time.isAfter(now),
                     value: s.time,
                     showtime: s
                 }))
@@ -145,9 +133,8 @@ export class TicketPage {
             console.log('filtered', times);
 
             this.times = times;
-            this.selectedTimeId = this.times[0].id;
-            this.selectedTime = this.times[0].value;
-            this.onTimeChange();
+            this.selectedTime = null;
+            this.selectedTimeId = null;
         }
         catch (err) {
 
@@ -155,8 +142,9 @@ export class TicketPage {
     }
 
     onTimeChange() {
-        if (this.times == null)
+        if (this.times == null || this.selectedTimeId == null)
             return;
+
         var selectedTime = this.times.find(t => t.id == this.selectedTimeId);
         this.selectedTime = selectedTime.value;
     }
