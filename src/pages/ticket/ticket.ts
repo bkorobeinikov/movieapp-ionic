@@ -10,6 +10,8 @@ import _ from 'lodash';
 import { MovieShowtime } from "../../core/movie-showtime.model";
 import { MovieService } from "../../core/movie.service";
 
+import { CheckoutPage } from "../checkout/checkout";
+
 @Component({
     selector: 'page-ticket',
     templateUrl: "ticket.html"
@@ -122,8 +124,12 @@ export class TicketPage {
     }
 
     checkout() {
-        // go ot checkout page
-        //this.appCtrl.getRootNav().push()
+        var tickets = [{}, {}];
+
+        this.appCtrl.getRootNav().push(CheckoutPage, {
+            movie: this.movie,
+            tickets: tickets
+        });
     }
 
 }

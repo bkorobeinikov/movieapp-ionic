@@ -1,0 +1,25 @@
+page-checkout {
+
+    font-size: 16px;
+
+    ion-footer {
+        ion-toolbar.toolbar {
+            overflow: visible;
+            contain: none;
+
+            .toolbar-content {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+            }
+
+            .pay {
+                align-self: flex-end;
+
+                //margin-top: -2.6em;
+                //margin-bottom: .6em;
+            }
+        }
+    }
+
+}
