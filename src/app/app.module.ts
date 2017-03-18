@@ -19,6 +19,8 @@ import { AccountPage } from '../pages/account/account';
 import { JoinPipe } from './../shared/join.pipe';
 import { MomentPipe } from './../shared/moment.pipe';
 
+import { Scroll } from './../shared/scrollzoom/scrollzoom.component';
+
 @NgModule({
   imports: [
     IonicModule.forRoot(MyApp, {
@@ -41,6 +43,8 @@ import { MomentPipe } from './../shared/moment.pipe';
     TabsPage,
     NewsPage,
     AccountPage,
+
+    Scroll,
   ],
   bootstrap: [IonicApp],
   entryComponents: [

@@ -48,10 +48,29 @@ export class TicketPage {
 
         this.seats = [{}, {}, {}];
         this.total = 750;
+
+        var seats = [];
+
+        for (var r = 0; r < 15; r++) {
+            let row = {
+                seats: []
+            };
+            seats.push(row);
+            for (var c = 0; c < 25; c++) {
+                row.seats.push({
+                    row: r + 1,
+                    seat: c + 1
+                });
+            }
+        }
+
+        this.seats = seats;
     }
 
     ngOnInit() {
         this.movie = this.navParams.get("movie");
+
+
     }
 
     ngAfterViewInit() {
@@ -61,6 +80,8 @@ export class TicketPage {
 
     ionViewWillEnter() {
         this.refreshShowtimes();
+
+
     }
 
     duration(duration: number) {

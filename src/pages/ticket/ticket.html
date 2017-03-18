@@ -7,7 +7,7 @@
 </ion-header>
 
 
-<ion-content padding-left padding-right padding-bottom>
+<ion-content padding-left padding-right padding-bottom scroll="false">
 
     <div class="slides-container">
         <ion-slides class="booking-date" #datepicker slidesPerView="{{dates?.length < 7 ? dates?.length : 7}}" radio-group [(ngModel)]="selectedDateId"
@@ -60,12 +60,18 @@
         </div>
     </div>
 
-    <div>
+    <div class="seats-container">
         <div *ngIf="selectedTimeId == null">
-
             Please select time to be able to select seats
-
         </div>
+        <ion-scrollzoom *ngIf="selectedTimeId != null" zoom="true" scrollX="true" scrollY="true">
+            <svg height="500" width="500"> 
+                <rect width="500" height="500" style="fill:gray;stroke-width:2;stroke:rgb(0,0,0)" />
+                <rect y="200" x="200" width="100" height="100" style="fill:darkgray;stroke-width:2;stroke:rgb(0,0,0)" />
+                <line x1="0" y1="249" x2="500" y2="249" style="stroke:yellow;stroke-width:2" />
+                <line x1="249" y1="0" x2="249" y2="500" style="stroke:yellow;stroke-width:2" />
+            </svg>
+        </ion-scrollzoom>
     </div>
 
 </ion-content>
@@ -76,7 +82,7 @@
             <span class="cart-seats">{{seats.length}} seats</span>
             <span class="cart-price">{{total}}грн.</span>
         </div>
-        <button class="checkout" ion-button color="secondary" (click)="checkout()" icon-left large>
+        <button class="checkout" ion-button color="secondary" (click)="checkout()" icon-left>
             <ion-icon name="cart"></ion-icon>
             Checkout
         </button>
