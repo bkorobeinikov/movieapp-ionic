@@ -18,6 +18,8 @@ export class HallComponent implements OnInit, OnChanges {
     public width: number;
     public height: number;
 
+    public colors: any = null;
+
     constructor(private el: ElementRef) {
 
     }
@@ -35,6 +37,13 @@ export class HallComponent implements OnInit, OnChanges {
         if (this.hall == null || this.hall.seats == null)
             return;
 
+        if (this.colors == null) {
+            this.colors = {};
+            this.hall.seats.forEach(s => {
+                this.colors[s.row + '_' + s.seat] = this.randomColor();
+            });
+        }
+
         var seats = this.hall.seats;
 
         var lastRight = _.maxBy(seats, s => s.x);
@@ -45,6 +54,10 @@ export class HallComponent implements OnInit, OnChanges {
 
         this.width = canvaWidth;
         this.height = canvaHeight;
+    }
+
+    randomColor() {
+        return ('#' + Math.floor(Math.random() * 16777215).toString(16));
     }
 
 }
