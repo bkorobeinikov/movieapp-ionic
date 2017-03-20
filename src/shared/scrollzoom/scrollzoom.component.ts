@@ -122,6 +122,7 @@ export class Scroll {
     private contentSize: Size;
     private contentPosition: { left: number, top: number };
     private centerStart: { x: number, y: number } = { x: 0, y: 0 };
+    private panCenterStart: { x: number, y: number } = { x: 0, y: 0 };
     private centerRatio: { x: number, y: number } = { x: 0, y: 0 };
 
     constructor(private _elementRef: ElementRef) { }
@@ -194,6 +195,7 @@ export class Scroll {
         this.gesture.on('pinch', e => this.onPinch(e));
         this.gesture.on('pinchend', e => this.onPinchEnd(e));
         this.gesture.on('doubletap', e => this.doubleTapEvent(e));
+        this.gesture.on('pan', e => this.panEvent(e));
     }
 
     private doubleTapEvent(event) {
@@ -208,10 +210,12 @@ export class Scroll {
     }
 
     private onPinchStart(event: any) {
-        console.log('pinch-start', event, event.center.x, event.center.y);
+        //console.log('pinch-start', event, event.center.x, event.center.y);
 
         this.startScale = this.scale;
         this.setCenter(event);
+
+        event.preventDefault();
     }
 
     private onPinchEnd(event: any) {
@@ -220,6 +224,8 @@ export class Scroll {
         } else if (this.scale < this.minScale) {
             this.animateScale(this.minScale);
         }
+
+        event.preventDefault();
     }
 
     /**
@@ -246,7 +252,7 @@ export class Scroll {
     private setCenter(event: any) {
 
         var offset = this.getGlobalOffset(this.scrollElement)
-        console.log('offset and event', offset, event);
+        //console.log('offset and event', offset, event);
 
         let contentSize = this.contentSize;
         let scale = this.scale;
@@ -257,16 +263,21 @@ export class Scroll {
             y: Math.max(event.center.y - offset.top - position.top * scale, 0)
         };
 
+        this.panCenterStart = {
+            x: this.centerStart.x,
+            y: this.centerStart.y,
+        };
+
         this.centerRatio = {
             x: Math.min((this.centerStart.x + this.scrollElement.scrollLeft) / contentSize.width, 1),
             y: Math.min((this.centerStart.y + this.scrollElement.scrollTop) / contentSize.height, 1),
         }
 
-        console.log('center: ', this.centerStart.x, this.centerStart.y, this.centerRatio);
+        //console.log('center: ', this.centerStart.x, this.centerStart.y, this.centerRatio);
     }
 
     private onPinch(event: any) {
-        console.log('pinch', event.scale);
+        //console.log('pinch', event.scale);
         let scale = this.startScale * event.scale;
 
         if (scale > this.maxScale) {
@@ -313,7 +324,7 @@ export class Scroll {
     }
 
 
-    private getGlobalOffset(el:HTMLElement) {
+    private getGlobalOffset(el: HTMLElement) {
         var x = 0, y = 0
         while (el) {
             x += el.offsetLeft
@@ -321,6 +332,22 @@ export class Scroll {
             el = <any>el.offsetParent
         }
         return { left: x, top: y }
+    }
+
+    private panEvent(event) {
+        // calculate center x,y since pan started
+        const x = Math.max(Math.floor(this.panCenterStart.x + event.deltaX), 0);
+        const y = Math.max(Math.floor(this.panCenterStart.y + event.deltaY), 0);
+
+        this.centerStart.x = x;
+        this.centerStart.y = y;
+
+        if (event.isFinal) {
+            this.panCenterStart.x = x;
+            this.panCenterStart.y = y;
+        }
+
+        this.applyScale();
     }
 
 }

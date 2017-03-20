@@ -2,14 +2,16 @@
 ion-scrollzoom {
   position: relative;
   display: block;
+
+  touch-action: none;
 }
 
 ion-scrollzoom.scroll-x .scroll-content {
-  overflow-x: auto;
+  //overflow-x: auto;
 }
 
 ion-scrollzoom.scroll-y .scroll-content {
-  overflow-y: auto;
+  //overflow-y: auto;
 }
 
 ion-scrollzoom[center] .scroll-content {
@@ -28,10 +30,12 @@ ion-scrollzoom .scroll-content {
 
   overflow-y: hidden;
   overflow-x: hidden;
-  -webkit-overflow-scrolling: touch;
-  will-change: scroll-position;
+  //-webkit-overflow-scrolling: touch;
+  //will-change: scroll-position;
 
   background-color: azure;
+
+  touch-action: none;
 }
 
 ion-scrollzoom {

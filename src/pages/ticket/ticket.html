@@ -65,12 +65,13 @@
             Please select time to be able to select seats
         </div>
         <ion-scrollzoom *ngIf="selectedTimeId != null" zoom="true" scrollX="true" scrollY="true">
-            <svg height="500" width="500"> 
-                <rect width="500" height="500" style="fill:gray;stroke-width:2;stroke:rgb(0,0,0)" />
-                <rect y="200" x="200" width="100" height="100" style="fill:darkgray;stroke-width:2;stroke:rgb(0,0,0)" />
-                <line x1="0" y1="249" x2="500" y2="249" style="stroke:yellow;stroke-width:2" />
-                <line x1="249" y1="0" x2="249" y2="500" style="stroke:yellow;stroke-width:2" />
-            </svg>
+            <div class="seats">
+                <div *ngFor="let row of seats" class="row">
+                    <div class="seat" *ngFor="let seat of row.seats">
+                        <span>{{seat.seat}}</span>
+                    </div> 
+                </div>
+            </div>
         </ion-scrollzoom>
     </div>
 
