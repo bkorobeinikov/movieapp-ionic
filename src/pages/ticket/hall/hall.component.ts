@@ -7,7 +7,7 @@ import _ from 'lodash';
 @Component({
     selector: 'hall',
     templateUrl: 'hall.component.html',
-    //changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HallComponent implements OnInit, OnChanges {
 

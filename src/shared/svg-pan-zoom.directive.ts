@@ -13,15 +13,12 @@ export class SvgPanZoomDirective implements OnInit, OnChanges {
     @Input() originalWidth: number;
     @Input() originalHeight: number;
 
-    @HostBinding("attr.viewBox") viewBox: string;
-
     private gesture: any;
 
     private originalScale: number = 0;
     private scale: number = 1;
 
     private centerStart: { x: number, y: number } = { x: 0, y: 0 };
-    //private panCenterStart: { x: number, y: number } = { x: 0, y: 0 };
     private panCenterStart: { x: number, y: number } = null;
     private centerRatio: { x: number, y: number } = { x: 1, y: 1 };
 
@@ -93,14 +90,15 @@ export class SvgPanZoomDirective implements OnInit, OnChanges {
         this.size = size;
         this.position = position;
 
-        this.viewBox = `${position.x} ${position.y} ${size.width} ${size.height}`;
+        this.el.nativeElement.setAttribute('viewBox', `${position.x} ${position.y} ${size.width} ${size.height}`);
+        //this.viewBox = `${position.x} ${position.y} ${size.width} ${size.height}`;
     }
 
     private attachEvents() {
 
         var mc = this.gesture = new Hammer.Manager(this.el.nativeElement.parentNode, {
             recognizers: [
-                [Hammer.Pan, { direction: Hammer.DIRECTION_ALL}],
+                [Hammer.Pan, { threshold: 1, direction: Hammer.DIRECTION_ALL}],
                 [Hammer.Tap, { event: 'doubletap', taps: 2}]
             ]
         });
