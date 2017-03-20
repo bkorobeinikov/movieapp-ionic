@@ -23,6 +23,8 @@ export class SvgPanZoomDirective implements OnInit, OnChanges {
     private panCenterStart: { x: number, y: number } = { x: 0, y: 0 };
     private centerRatio: { x: number, y: number } = { x: 1, y: 1 };
 
+    private panDelta: { x: number, y: number } = { x: 0, y: 0 };
+
     private size: { width: number, height: number };
     private position: { x: number, y: number } = { x: 0, y: 0 };
 
@@ -52,7 +54,8 @@ export class SvgPanZoomDirective implements OnInit, OnChanges {
             this.scale = this.originalScale;
         }
 
-        let svgScale = _.round(1 / (this.scale / this.originalScale), 2);
+        let humanScale = _.round(this.scale / this.originalScale, 2)
+        let svgScale = _.round(1 / humanScale, 2);
 
         //console.log('applyScale: ', svgScale, this.scale, this.originalScale);
 
@@ -62,14 +65,29 @@ export class SvgPanZoomDirective implements OnInit, OnChanges {
         };
 
         let size = this.size = {
-            width: _.round(this.originalWidth * svgScale, 0),
-            height: _.round(this.originalHeight * svgScale)
+            width: _.round(original.width * svgScale, 0),
+            height: _.round(original.height * svgScale, 0)
         };
 
-        let position = this.position = {
-            x: _.round((original.width - size.width) * this.centerRatio.x, 0),
-            y: _.round((original.height - size.height) * this.centerRatio.y, 0),
+        let maxPosition = {
+            x: original.width - size.width,
+            y: original.height - size.height,
+            //y: Math.max((original.height * humanScale) - (this.el.nativeElement.clientHeight), 0)
         };
+        let position = this.position = {
+            x: _.round(maxPosition.x * this.centerRatio.x, 0),
+            y: _.round(maxPosition.y * this.centerRatio.y, 0),
+        };
+
+        // if (this.panDelta) {
+        //     position.x += -this.panDelta.x;
+        //     position.y += -this.panDelta.y;
+        // }
+
+        console.log('applyScale pos', position);
+
+        position.x = Math.min(Math.max(position.x, 0), maxPosition.x);
+        position.y = Math.min(Math.max(position.y, 0), maxPosition.y);
 
         this.viewBox = `${position.x} ${position.y} ${size.width} ${size.height}`;
     }
@@ -81,38 +99,53 @@ export class SvgPanZoomDirective implements OnInit, OnChanges {
         // this.gesture.on('pinch', e => this.onPinch(e));
         // this.gesture.on('pinchend', e => this.onPinchEnd(e));
         this.gesture.on('doubletap', e => this.doubleTapEvent(e));
-        //this.gesture.on('pan', e => this.panEvent(e));
+        this.gesture.on('pan', e => this.panEvent(e));
     }
 
     private setCenter(event: any) {
-        var offset = this.getGlobalOffset(this.el.nativeElement)
+        var elOffset = this.getGlobalOffset(this.el.nativeElement);
 
-        this.centerStart = {
-            x: Math.round(Math.max(event.center.x - offset.left, 0)),
-            y: Math.round(Math.max(event.center.y - offset.top, 0))
+        // because svg has inverse scale, this is needed to calculate point relative to actual svg content size
+        var inverseScale = 1 / this.scale;
+
+        // svg centers content automatically, need to find this offset
+        let svgAutoOffset = {
+            x: (this.el.nativeElement.clientWidth - (this.originalWidth * this.scale)) / 2,
+            y: (this.el.nativeElement.clientHeight - (this.originalHeight * this.scale)) / 2
         };
+        svgAutoOffset.x = Math.max(Math.round(svgAutoOffset.x), 0);
+        svgAutoOffset.y = Math.max(Math.round(svgAutoOffset.y), 0);
+
+        // calculating actual point relative to svg content and not element dimensions
+        this.centerStart = {
+            x: (event.center.x - elOffset.left + this.position.x) * inverseScale - svgAutoOffset.x * inverseScale,
+            y: (event.center.y - elOffset.top + this.position.y) * inverseScale - svgAutoOffset.y * inverseScale,
+        };
+        this.centerStart.x = Math.round(Math.max(this.centerStart.x, 0));
+        this.centerStart.y = Math.round(Math.max(this.centerStart.y, 0));
 
         this.panCenterStart = _.clone(this.centerStart);
 
         this.centerRatio = {
-            x: _.round(Math.min((this.centerStart.x) / this.el.nativeElement.clientWidth, 1), 2),
-            y: _.round(Math.min((this.centerStart.y) / this.el.nativeElement.clientHeight, 1), 2),
+            x: _.round(Math.min((this.centerStart.x) / this.originalWidth, 1), 2),
+            y: _.round(Math.min((this.centerStart.y) / this.originalHeight, 1), 2),
         }
+
+        console.log('center: ', svgAutoOffset, this.centerStart, this.scale, this.centerRatio);
 
         if (this.centerRatio.x <= .1)
             this.centerRatio.x = 0;
         else if (this.centerRatio.x >= .9)
             this.centerRatio.x = 1;
+
         if (this.centerRatio.y <= .1)
             this.centerRatio.y = 0;
         else if (this.centerRatio.y >= .9)
             this.centerRatio.y = 1;
-
-        console.log('center: ', this.centerStart.x, this.centerStart.y, this.centerRatio);
     }
 
     private doubleTapEvent(event) {
-        console.log('double-tap: ', event);
+        //console.log('double-tap: ', event);
 
         this.setCenter(event);
 
@@ -125,9 +158,19 @@ export class SvgPanZoomDirective implements OnInit, OnChanges {
     }
 
     private panEvent(event) {
+        var offset = this.getGlobalOffset(this.el.nativeElement);
+
+        var deltaX = event.deltaX;
+        var deltaY = event.deltaY;
+
         // calculate center x,y since pan started
-        const x = Math.max(Math.floor(this.panCenterStart.x + event.deltaX), 0);
-        const y = Math.max(Math.floor(this.panCenterStart.y + event.deltaY), 0);
+        const x = Math.floor(this.panCenterStart.x + deltaX);
+        const y = Math.floor(this.panCenterStart.y + deltaY);
+
+        this.panDelta = {
+            x: x,
+            y: y
+        };
 
         this.centerStart.x = x;
         this.centerStart.y = y;
@@ -136,6 +179,8 @@ export class SvgPanZoomDirective implements OnInit, OnChanges {
             this.panCenterStart.x = x;
             this.panCenterStart.y = y;
         }
+
+        console.log('pan', deltaX, deltaY, this.panDelta, this.centerStart, this.panCenterStart);
 
         this.applyScale();
     }
