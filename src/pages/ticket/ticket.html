@@ -64,15 +64,7 @@
         <div *ngIf="selectedTimeId == null">
             Please select time to be able to select seats
         </div>
-        <ion-scrollzoom *ngIf="selectedTimeId != null" zoom="true" scrollX="true" scrollY="true">
-            <div class="seats">
-                <div *ngFor="let row of seats" class="row">
-                    <div class="seat" *ngFor="let seat of row.seats">
-                        <span>{{seat.seat}}</span>
-                    </div> 
-                </div>
-            </div>
-        </ion-scrollzoom>
+        <hall *ngIf="selectedTimeId != null" [hall]="hall"></hall>
     </div>
 
 </ion-content>

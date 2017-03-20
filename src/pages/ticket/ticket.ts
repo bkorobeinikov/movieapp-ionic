@@ -11,6 +11,8 @@ import { MovieShowtime } from "../../core/movie-showtime.model";
 import { MovieService } from "../../core/movie.service";
 
 import { CheckoutPage } from "./../checkout/checkout";
+import { CinemaHall } from "../../core/models";
+import { CinemaHallSeat } from "../../core/cinema-hall-seat.model";
 
 @Component({
     selector: 'page-ticket',
@@ -41,6 +43,8 @@ export class TicketPage {
     public seats: any[];
     public total: number;
 
+    public hall: CinemaHall;
+
     constructor(
         private appCtrl: App,
         private navParams: NavParams,
@@ -70,7 +74,39 @@ export class TicketPage {
     ngOnInit() {
         this.movie = this.navParams.get("movie");
 
+        var seats = [];
 
+        for (let r = 0; r < 15; r++) {
+            for (let c = 0; c < 20; c++) {
+                let style = {
+                    width: 30,
+                    height: 30,
+                    marginLeft: 4,
+                    marginRight: 4,
+                    marginTop: 4,
+                    marginBottom: 4
+                };
+
+                var seat: CinemaHallSeat = {
+                    x: c * (style.width + style.marginLeft + style.marginRight),
+                    y: r * (style.height + style.marginBottom + style.marginTop),
+                    width: style.width,
+                    height: style.height,
+
+                    row: r + 1,
+                    seat: c + 1,
+
+                    available: c % 4 != 0 && r % 3 != 0
+                };
+                seats.push(seat);
+            }
+
+        }
+
+        this.hall = {
+            id: 'hall_1',
+            seats: seats
+        };
     }
 
     ngAfterViewInit() {

@@ -1,0 +1,4 @@
+<svg [attr.viewBox]="viewBox" panZoom [originalWidth]="width" [originalHeight]="height">
+    <rect *ngFor="let seat of hall.seats" [attr.width]="seat.width" [attr.height]="seat.height" [attr.x]="seat.x" [attr.y]="seat.y"
+        style="fill: black;" />
+</svg>

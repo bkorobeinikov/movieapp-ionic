@@ -20,6 +20,8 @@ import { JoinPipe } from './../shared/join.pipe';
 import { MomentPipe } from './../shared/moment.pipe';
 
 import { Scroll } from './../shared/scrollzoom/scrollzoom.component';
+import { HallComponent } from './../pages/ticket/hall/hall.component';
+import { SvgPanZoomDirective } from './../shared/svg-pan-zoom.directive';
 
 @NgModule({
   imports: [
@@ -45,6 +47,8 @@ import { Scroll } from './../shared/scrollzoom/scrollzoom.component';
     AccountPage,
 
     Scroll,
+    HallComponent,
+    SvgPanZoomDirective,
   ],
   bootstrap: [IonicApp],
   entryComponents: [
