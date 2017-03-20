@@ -3,6 +3,7 @@ import { Directive, Input, ElementRef, OnInit, HostBinding, OnChanges, SimpleCha
 import { Gesture } from "ionic-angular";
 
 import _ from 'lodash';
+import hammer from 'hammerjs';
 
 @Directive({
     selector: "[panZoom]"
@@ -96,13 +97,16 @@ export class SvgPanZoomDirective implements OnInit, OnChanges {
     }
 
     private attachEvents() {
-        this.gesture = new Gesture(this.el.nativeElement);
-        this.gesture.listen();
-        // this.gesture.on('pinchstart', e => this.onPinchStart(e));
-        // this.gesture.on('pinch', e => this.onPinch(e));
-        // this.gesture.on('pinchend', e => this.onPinchEnd(e));
-        this.gesture.on('doubletap', e => this.doubleTapEvent(e));
-        this.gesture.on('pan', e => this.panEvent(e));
+
+        var mc = this.gesture = new Hammer.Manager(this.el.nativeElement.parentNode, {
+            recognizers: [
+                [Hammer.Pan, { direction: Hammer.DIRECTION_ALL}],
+                [Hammer.Tap, { event: 'doubletap', taps: 2}]
+            ]
+        });
+        
+        mc.on('doubletap', e => this.doubleTapEvent(e));
+        mc.on('pan', e => this.panEvent(e));
     }
 
     private setCenter(event: any) {
@@ -161,7 +165,7 @@ export class SvgPanZoomDirective implements OnInit, OnChanges {
         return point;
     }
 
-    private doubleTapEvent(event) {
+    private doubleTapEvent(event: HammerInput) {
         //console.log('double-tap: ', event);
 
         this.setCenter(event);

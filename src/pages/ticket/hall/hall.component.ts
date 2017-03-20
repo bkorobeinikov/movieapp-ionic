@@ -1,4 +1,4 @@
-import { Component, Input, EventEmitter, Output, OnInit, OnChanges, SimpleChanges, ElementRef } from '@angular/core';
+import { Component, Input, EventEmitter, Output, OnInit, OnChanges, SimpleChanges, ElementRef, ChangeDetectionStrategy } from '@angular/core';
 
 import { CinemaHall, CinemaHallSeat } from './../../../core/models';
 
@@ -6,7 +6,8 @@ import _ from 'lodash';
 
 @Component({
     selector: 'hall',
-    templateUrl: 'hall.component.html'
+    templateUrl: 'hall.component.html',
+    //changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HallComponent implements OnInit, OnChanges {
 
@@ -29,7 +30,6 @@ export class HallComponent implements OnInit, OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        this.buildMap();
     }
 
     private buildMap() {
