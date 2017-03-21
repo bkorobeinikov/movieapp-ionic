@@ -25,6 +25,11 @@ export class SvgPanZoomDirective implements OnInit, OnChanges {
     private size: { width: number, height: number };
     private position: { x: number, y: number } = { x: 0, y: 0 };
 
+    private minScaleBounce: number = 0.2;
+    private maxScaleBounce: number = 0.35;
+    private startScale: number = 0;
+    private maxScale: number = 1;
+
     constructor(private el: ElementRef) {
     }
 
@@ -99,12 +104,17 @@ export class SvgPanZoomDirective implements OnInit, OnChanges {
         var mc = this.gesture = new Hammer.Manager(this.el.nativeElement.parentNode, {
             recognizers: [
                 [Hammer.Pan, { threshold: 1, direction: Hammer.DIRECTION_ALL}],
-                [Hammer.Tap, { event: 'doubletap', taps: 2}]
+                [Hammer.Tap, { event: 'doubletap', taps: 2}],
+                [Hammer.Pinch]
             ]
         });
         
         mc.on('doubletap', e => this.doubleTapEvent(e));
         mc.on('pan', e => this.panEvent(e));
+
+        mc.on('pinchstart', e => this.onPinchStart(e));
+        mc.on('pinch', e => this.onPinch(e));
+        mc.on('pinchend', e => this.onPinchEnd(e));
     }
 
     private setCenter(event: any) {
@@ -235,5 +245,40 @@ export class SvgPanZoomDirective implements OnInit, OnChanges {
         }
 
         return { left: x, top: y }
+    }
+
+    private onPinchStart(event: any) {
+        //console.log('pinch-start', event, event.center.x, event.center.y);
+
+        this.startScale = this.scale;
+        this.setCenter(event);
+
+        event.preventDefault();
+    }
+
+    private onPinchEnd(event: any) {
+        if (this.scale > this.maxScale) {
+            this.animateScale(this.maxScale);
+        } else if (this.scale < this.originalScale) {
+            this.animateScale(this.originalScale);
+        }
+
+        event.preventDefault();
+    }
+
+    private onPinch(event: any) {
+        //console.log('pinch', event.scale);
+        let scale = this.startScale * event.scale;
+
+        if (scale > this.maxScale) {
+            scale = this.maxScale + (1 - this.maxScale / scale) * this.maxScaleBounce;
+        } else if (scale < this.originalScale) {
+            scale = this.originalScale - (1 - scale / this.originalScale) * this.minScaleBounce;
+        }
+
+        this.scale = scale;
+        this.applyScale();
+
+        event.preventDefault();
     }
 }
