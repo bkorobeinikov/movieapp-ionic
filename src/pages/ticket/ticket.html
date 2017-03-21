@@ -31,7 +31,7 @@
     </div>
 
     <div class="booking-time">
-        <div class="tech" radio-group [(ngModel)]="selectedTechId" (ionChange)="onTechChange()">
+        <div class="tech" [ngClass]="{'center': technologies?.length == 1}" radio-group [(ngModel)]="selectedTechId" (ionChange)="onTechChange()">
             <ng-container *ngFor="let tech of technologies">
                 <ion-item>
                     <ion-label>
@@ -41,7 +41,7 @@
                 </ion-item>
             </ng-container>
         </div>
-        <div class="time" radio-group [(ngModel)]="selectedTimeId" (ionChange)="onTimeChange()">
+        <div class="time" [ngClass]="{'center': times?.length <= 3}" radio-group [(ngModel)]="selectedTimeId" (ionChange)="onTimeChange()">
             <ng-container *ngFor="let time of times">
                 <ion-item>
                     <ion-label>
@@ -61,7 +61,7 @@
     </div>
 
     <div class="seats-container">
-        <div *ngIf="selectedTimeId == null">
+        <div class="info" *ngIf="selectedTimeId == null">
             Please select time to be able to select seats
         </div>
         <hall *ngIf="selectedTimeId != null" [hall]="hall" [(selection)]="seats"></hall>
