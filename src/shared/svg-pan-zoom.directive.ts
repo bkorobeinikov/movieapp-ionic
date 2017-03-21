@@ -1,4 +1,4 @@
-import { Directive, Input, ElementRef, OnInit, OnChanges, SimpleChanges, OnDestroy } from '@angular/core';
+import { Directive, Input, ElementRef, OnInit, OnChanges, SimpleChanges, OnDestroy, Renderer } from '@angular/core';
 
 import { Gesture } from "ionic-angular";
 
@@ -30,7 +30,8 @@ export class SvgPanZoomDirective implements OnInit, OnDestroy, OnChanges {
     private startScale: number = 0;
     private maxScale: number = 1;
 
-    constructor(private el: ElementRef) {
+    constructor(private el: ElementRef, private renderer: Renderer) {
+
     }
 
     ngOnInit() {
@@ -95,7 +96,8 @@ export class SvgPanZoomDirective implements OnInit, OnDestroy, OnChanges {
         this.position = position;
 
         let viewBoxValue = `${position.x} ${position.y} ${svgSize.width} ${svgSize.height}`;
-        this.el.nativeElement.setAttribute('viewBox', viewBoxValue);
+        //this.el.nativeElement.setAttribute('viewBox', viewBoxValue);
+        this.renderer.setElementAttribute(this.el.nativeElement, 'viewBox', viewBoxValue);
 
         console.log('viewbox: ', `"${viewBoxValue}"`, this.scale, `center: ${this.centerStart.x}:${this.centerStart.y}`)
     }
@@ -108,7 +110,7 @@ export class SvgPanZoomDirective implements OnInit, OnDestroy, OnChanges {
         this.gesture.listen();
         
         this.gesture.on('doubletap', e => this.doubleTapEvent(e));
-        this.gesture.on('pan', e => this.panEvent(e));
+        //this.gesture.on('pan', e => this.panEvent(e));
 
         //this.gesture.on('pinchstart', e => this.onPinchStart(e));
         //this.gesture.on('pinch', e => this.onPinch(e));
@@ -116,7 +118,7 @@ export class SvgPanZoomDirective implements OnInit, OnDestroy, OnChanges {
     }
 
     ngOnDestroy() {
-        this.gesture.destroy();
+        //this.gesture.destroy();
     }
 
     private setCenter(event: any) {

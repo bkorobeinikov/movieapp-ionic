@@ -8,5 +8,8 @@ export interface CinemaHallSeat {
 
     row: number;
     seat: number;
+
     available: boolean;
+
+    price: number;
 }

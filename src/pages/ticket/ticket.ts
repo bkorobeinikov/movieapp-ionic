@@ -1,4 +1,4 @@
-import { Component, SimpleChanges, ViewChild, ElementRef } from '@angular/core';
+import { Component, SimpleChanges, ViewChild, ElementRef, OnChanges } from '@angular/core';
 
 import { NavParams, Segment, Slides, App } from 'ionic-angular';
 
@@ -40,49 +40,28 @@ export class TicketPage {
 
     public showtimes: MovieShowtime[];
 
-    public seats: any[];
-    public total: number;
-
     public hall: CinemaHall;
+    public seats: CinemaHallSeat[];
+    public totalPrice: number; //price
 
     constructor(
         private appCtrl: App,
         private navParams: NavParams,
         private movieService: MovieService) {
-
-        this.seats = [{}, {}, {}];
-        this.total = 750;
-
-        var seats = [];
-
-        for (var r = 0; r < 15; r++) {
-            let row = {
-                seats: []
-            };
-            seats.push(row);
-            for (var c = 0; c < 25; c++) {
-                row.seats.push({
-                    row: r + 1,
-                    seat: c + 1
-                });
-            }
-        }
-
-        this.seats = seats;
     }
 
     ngOnInit() {
         this.movie = this.navParams.get("movie");
 
-        var seats = [];
+        var seats:CinemaHallSeat[] = [];
 
         for (let r = 0; r < 15; r++) {
-            for (let c = 0; c < 20; c++) {
+            for (let c = 0; c < 23; c++) {
                 let style = {
                     width: 30,
-                    height: 30,
-                    marginLeft: 4,
-                    marginRight: 4,
+                    height: 34,
+                    marginLeft: 2,
+                    marginRight: 2,
                     marginTop: 4,
                     marginBottom: 4
                 };
@@ -96,7 +75,9 @@ export class TicketPage {
                     row: r + 1,
                     seat: c + 1,
 
-                    available: c % 4 != 0 && r % 3 != 0
+                    available: true,
+
+                    price: 115,
                 };
                 seats.push(seat);
             }
@@ -107,6 +88,7 @@ export class TicketPage {
             id: 'hall_1',
             seats: seats
         };
+        this.seats = [];
     }
 
     ngAfterViewInit() {
@@ -116,8 +98,6 @@ export class TicketPage {
 
     ionViewWillEnter() {
         this.refreshShowtimes();
-
-
     }
 
     duration(duration: number) {
@@ -213,6 +193,10 @@ export class TicketPage {
             movie: this.movie,
             tickets: tickets
         });
+    }
+
+    getTotalSum(seats: CinemaHallSeat[]) {
+        return _.sumBy(seats, s => s.price);
     }
 
 }

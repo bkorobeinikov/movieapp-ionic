@@ -10,11 +10,19 @@ import _ from 'lodash';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HallComponent implements OnInit, OnChanges {
+    private selectionValue: CinemaHallSeat[];
 
     @Input() hall: CinemaHall;
 
-    @Input() seats: any[];
-    @Output() select: EventEmitter<any[]>;
+    @Input() 
+    get selection() {
+        return this.selectionValue;
+    }
+    set selection(val: CinemaHallSeat[]) {
+        this.selectionValue = val;
+        this.selectionChange.emit(this.selectionValue);
+    }
+    @Output() selectionChange: EventEmitter<any[]> = new EventEmitter<CinemaHallSeat[]>();
 
     public width: number;
     public height: number;
@@ -53,11 +61,28 @@ export class HallComponent implements OnInit, OnChanges {
         var canvaHeight = lastBottom.y + lastBottom.height;
 
         this.width = canvaWidth;
-        this.height = canvaHeight;
+        this.height = canvaHeight + 100;
     }
 
     randomColor() {
         return ('#' + Math.floor(Math.random() * 16777215).toString(16));
+    }
+
+    trackByFn(seat: CinemaHallSeat) {
+        return seat.row + "_" + seat.seat;
+    }
+
+    isSelected(seat: CinemaHallSeat) {
+        return this.selection.indexOf(seat) != -1;
+    }
+
+    onSeat(seat: CinemaHallSeat) {
+        if (seat.available) {
+            if (this.isSelected(seat))
+                this.selection.splice(this.selection.indexOf(seat), 1);
+            else 
+                this.selection.push(seat);
+        }
     }
 
 }

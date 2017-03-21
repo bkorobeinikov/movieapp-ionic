@@ -19,7 +19,6 @@ import { AccountPage } from '../pages/account/account';
 import { JoinPipe } from './../shared/join.pipe';
 import { MomentPipe } from './../shared/moment.pipe';
 
-import { Scroll } from './../shared/scrollzoom/scrollzoom.component';
 import { HallComponent } from './../pages/ticket/hall/hall.component';
 import { SvgPanZoomDirective } from './../shared/svg-pan-zoom.directive';
 
@@ -46,7 +45,6 @@ import { SvgPanZoomDirective } from './../shared/svg-pan-zoom.directive';
     NewsPage,
     AccountPage,
 
-    Scroll,
     HallComponent,
     SvgPanZoomDirective,
   ],

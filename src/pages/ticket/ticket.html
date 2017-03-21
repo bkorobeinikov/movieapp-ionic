@@ -64,7 +64,7 @@
         <div *ngIf="selectedTimeId == null">
             Please select time to be able to select seats
         </div>
-        <hall *ngIf="selectedTimeId != null" [hall]="hall"></hall>
+        <hall *ngIf="selectedTimeId != null" [hall]="hall" [(selection)]="seats"></hall>
     </div>
 
 </ion-content>
@@ -73,7 +73,7 @@
     <ion-toolbar padding-left padding-right>
         <div class="cart-total">
             <span class="cart-seats">{{seats.length}} seats</span>
-            <span class="cart-price">{{total}}грн.</span>
+            <span class="cart-price">{{getTotalSum(seats)}}грн.</span>
         </div>
         <button class="checkout" ion-button color="secondary" (click)="checkout()" icon-left>
             <ion-icon name="cart"></ion-icon>
