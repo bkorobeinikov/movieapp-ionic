@@ -73,10 +73,15 @@
 <ion-footer>
     <ion-toolbar padding-left padding-right>
         <div class="cart-total">
-            <span class="cart-seats">{{seats.length}} seats</span>
-            <span class="cart-price">{{getTotalSum(seats)}}грн.</span>
+            <span class="cart-selection" *ngIf="seats?.length > 0">
+                <span class="cart-row" *ngFor="let row of getRows(seats)">
+                    <span class="cart-row-label">{{row}}</span>
+                    <span class="cart-seat" *ngFor="let seat of filterByRow(row, seats)">{{seat.seat}}</span>
+                </span>
+            </span>
+            <span class="cart-price" *ngIf="seats?.length > 0">- {{getTotalSum(seats)}}грн.</span>
         </div>
-        <button class="checkout" ion-button color="secondary" (click)="checkout()" icon-left>
+        <button class="checkout" ion-button color="secondary" (click)="checkout()" icon-left [disabled]="seats?.length == 0" end>
             <ion-icon name="cart"></ion-icon>
             Checkout
         </button>

@@ -108,7 +108,7 @@ export class MovieService {
                     row: r + 1,
                     seat: c + 1,
 
-                    available: Math.random()*100 % 5 != 0,
+                    available: Math.round(Math.random()*10) % 5 != 0,
 
                     price: 115,
                 };

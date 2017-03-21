@@ -166,6 +166,14 @@ export class TicketPage {
         });
     }
 
+    getRows(seats: CinemaHallSeat[]) {
+        return _.chain(seats).map(s => s.row).uniq().value();
+    }
+
+    filterByRow(row: number, seats: CinemaHallSeat[]) {
+        return seats.filter(s => s.row == row);
+    }
+
     getTotalSum(seats: CinemaHallSeat[]) {
         return _.sumBy(seats, s => s.price);
     }
