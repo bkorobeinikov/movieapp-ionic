@@ -3,7 +3,7 @@ import { Component, SimpleChanges } from '@angular/core';
 import { App, NavController, NavParams } from 'ionic-angular';
 import { StatusBar } from 'ionic-native';
 
-import { Movie } from './../../core/movie.model'
+import { Movie } from './../../store/models'
 import { MovieService } from './../../core/movie.service'
 
 import moment from 'moment';

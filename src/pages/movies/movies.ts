@@ -1,27 +1,32 @@
-﻿import { Component, OnInit, OnDestroy, ViewChild, OnChanges, SimpleChanges } from '@angular/core';
-
+﻿import { Component, OnInit, OnDestroy, ViewChild, OnChanges, SimpleChanges, ChangeDetectionStrategy } from '@angular/core';
 import { App, ViewController, NavController, Content } from 'ionic-angular';
 
-import { MovieService } from './../../core/movie.service';
-import { Movie } from './../../core/movie.model';
+import { Observable } from "rxjs/Observable";
 
 import { MoviePage } from './../movie/movie';
 
 import * as _ from 'lodash';
 import moment from 'moment';
 
+import { Movie } from "../../store/models";
+import * as fromRoot from './../../store/reducers';
+import * as movie from './../../store/actions/movie';
+
+import { Store } from "@ngrx/store";
+
 @Component({
     selector: 'page-movies',
     templateUrl: 'movies.html',
+    //changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MoviesPage implements OnChanges {
 
     public filter: string;
 
-    public current: Movie[];
-    public future: Movie[];
+    public current$: Observable<Movie[]>
+    public future$: Observable<Movie[]>
 
-    public loading: boolean;
+    public loading$: Observable<boolean>;
 
     @ViewChild(Content) content: Content;
 
@@ -29,33 +34,22 @@ export class MoviesPage implements OnChanges {
         private appCtrl: App,
         private viewCtrl: ViewController,
         private navCtrl: NavController,
-        private movieService: MovieService) {
+        private store: Store<fromRoot.State>) {
+
+        this.current$ = store.select(fromRoot.getMovieCurrent);
+        this.future$ = store.select(fromRoot.getMovieFuture);
+        this.loading$ = store.select(fromRoot.getMovieLoading);
+
+        this.store.dispatch(new movie.LoadAction());
 
         this.filter = "today";
-        this.loading = true;
     }
 
     ionViewDidEnter() {
         this.content.scrollToTop(0);
-        this.movieService.getMovies().subscribe(movies => {
-            this.current = movies.filter(m => m.soon == false);
-            this.future = movies.filter(m => m.soon == true);
-
-            // fix to show items left aligned
-            if (this.future.length % 3 == 1) {
-                this.future.push(<any>{});
-                this.future.push(<any>{});
-            } else if (this.future.length % 3 == 2) {
-                this.future.push(<any>{});
-            }
-
-            this.content.scrollToTop(0);
-            this.loading = false;
-        });
     }
 
     ionViewDidLeave() {
-        this.loading = true;
     }
 
     onFilterChange() {

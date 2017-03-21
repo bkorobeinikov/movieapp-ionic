@@ -9,11 +9,9 @@ import 'rxjs/add/operator/delay';
 
 import X2JS from 'x2js';
 
-import { Movie } from './movie.model';
-import { MovieShowtime } from './movie-showtime.model';
+import { Movie, MovieShowtime, CinemaHall, CinemaHallSeat } from './../store/models';
 
 import moment from 'moment';
-import { CinemaHall, CinemaHallSeat } from "./models";
 
 @Injectable()
 export class MovieService {

@@ -22,6 +22,13 @@ import { MomentPipe } from './../shared/moment.pipe';
 import { HallComponent } from './../pages/ticket/hall/hall.component';
 import { SvgPanZoomDirective } from './../shared/svg-pan-zoom.directive';
 
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+
+import { reducer, initialState } from './../store/reducers';
+import { MovieEffects } from './../store/effects';
+
 @NgModule({
   imports: [
     IonicModule.forRoot(MyApp, {
@@ -29,6 +36,10 @@ import { SvgPanZoomDirective } from './../shared/svg-pan-zoom.directive';
     }),
     CoreModule,
     HttpModule,
+
+    StoreModule.provideStore(reducer, initialState),
+    StoreDevtoolsModule.instrumentOnlyWithExtension(),
+    EffectsModule.run(MovieEffects)
   ],
   declarations: [
     JoinPipe,

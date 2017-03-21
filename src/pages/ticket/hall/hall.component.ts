@@ -1,6 +1,6 @@
 import { Component, Input, EventEmitter, Output, OnInit, ElementRef, ChangeDetectionStrategy } from '@angular/core';
 
-import { CinemaHall, CinemaHallSeat } from './../../../core/models';
+import { CinemaHall, CinemaHallSeat } from './../../../store/models';
 
 import _ from 'lodash';
 

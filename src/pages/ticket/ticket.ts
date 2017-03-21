@@ -2,17 +2,13 @@ import { Component, SimpleChanges, ViewChild, ElementRef, OnChanges } from '@ang
 
 import { NavParams, Segment, Slides, App } from 'ionic-angular';
 
-import { Movie } from "../../core/movie.model";
-
 import moment from 'moment';
 import _ from 'lodash';
 
-import { MovieShowtime } from "../../core/movie-showtime.model";
+import { MovieShowtime, Movie, CinemaHall, CinemaHallSeat } from "../../store/models";
 import { MovieService } from "../../core/movie.service";
 
 import { CheckoutPage } from "./../checkout/checkout";
-import { CinemaHall } from "../../core/models";
-import { CinemaHallSeat } from "../../core/cinema-hall-seat.model";
 
 @Component({
     selector: 'page-ticket',
