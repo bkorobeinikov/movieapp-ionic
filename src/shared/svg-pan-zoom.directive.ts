@@ -1,4 +1,4 @@
-import { Directive, Input, ElementRef, OnInit, HostBinding, OnChanges, SimpleChanges } from '@angular/core';
+import { Directive, Input, ElementRef, OnInit, OnChanges, SimpleChanges, OnDestroy } from '@angular/core';
 
 import { Gesture } from "ionic-angular";
 
@@ -8,12 +8,12 @@ import hammer from 'hammerjs';
 @Directive({
     selector: "[panZoom]"
 })
-export class SvgPanZoomDirective implements OnInit, OnChanges {
+export class SvgPanZoomDirective implements OnInit, OnDestroy, OnChanges {
 
     @Input() originalWidth: number;
     @Input() originalHeight: number;
 
-    private gesture: any;
+    private gesture: Gesture;
 
     private originalScale: number = 0;
     private scale: number = 1;
@@ -40,6 +40,7 @@ export class SvgPanZoomDirective implements OnInit, OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges) {
+        console.log("ngOnChanges");
         this.applyScale();
     }
 
@@ -64,20 +65,20 @@ export class SvgPanZoomDirective implements OnInit, OnChanges {
             height: this.originalHeight,
         };
 
-        let size = {
+        let svgSize = {
             width: _.round(original.width * svgScale, 0),
             height: _.round(original.height * svgScale, 0)
         };
 
         let maxPosition = {
-            x: original.width - size.width,
-            y: original.height - size.height,
+            x: original.width - svgSize.width,
+            y: original.height - svgSize.height,
         };
         let position = {
-            x: _.round(maxPosition.x * this.centerRatio.x + this.centerStart.x),
-            y: _.round(maxPosition.y * this.centerRatio.y + this.centerStart.y),
+            x: _.round(maxPosition.x * this.centerRatio.x + this.centerStart.x * svgScale),
+            y: _.round(maxPosition.y * this.centerRatio.y + this.centerStart.y * svgScale),
         };
-
+        
         position.x = Math.min(Math.max(position.x, 0), maxPosition.x);
         position.y = Math.min(Math.max(position.y, 0), maxPosition.y);
 
@@ -90,31 +91,32 @@ export class SvgPanZoomDirective implements OnInit, OnChanges {
             
         }
 
-        console.log('viewbox: ', position, maxPosition);
-
-        this.size = size;
+        this.size = svgSize;
         this.position = position;
 
-        this.el.nativeElement.setAttribute('viewBox', `${position.x} ${position.y} ${size.width} ${size.height}`);
-        //this.viewBox = `${position.x} ${position.y} ${size.width} ${size.height}`;
+        let viewBoxValue = `${position.x} ${position.y} ${svgSize.width} ${svgSize.height}`;
+        this.el.nativeElement.setAttribute('viewBox', viewBoxValue);
+
+        console.log('viewbox: ', `"${viewBoxValue}"`, this.scale, `center: ${this.centerStart.x}:${this.centerStart.y}`)
     }
 
     private attachEvents() {
-
-        var mc = this.gesture = new Hammer.Manager(this.el.nativeElement.parentNode, {
-            recognizers: [
-                [Hammer.Pan, { threshold: 1, direction: Hammer.DIRECTION_ALL}],
-                [Hammer.Tap, { event: 'doubletap', taps: 2}],
-                [Hammer.Pinch]
-            ]
+        this.gesture = new Gesture(this.el.nativeElement.parentNode);
+        this.gesture.options({
+            direction: hammer.DIRECTION_ALL
         });
+        this.gesture.listen();
         
-        mc.on('doubletap', e => this.doubleTapEvent(e));
-        mc.on('pan', e => this.panEvent(e));
+        this.gesture.on('doubletap', e => this.doubleTapEvent(e));
+        this.gesture.on('pan', e => this.panEvent(e));
 
-        mc.on('pinchstart', e => this.onPinchStart(e));
-        mc.on('pinch', e => this.onPinch(e));
-        mc.on('pinchend', e => this.onPinchEnd(e));
+        //this.gesture.on('pinchstart', e => this.onPinchStart(e));
+        //this.gesture.on('pinch', e => this.onPinch(e));
+        //this.gesture.on('pinchend', e => this.onPinchEnd(e));
+    }
+
+    ngOnDestroy() {
+        this.gesture.destroy();
     }
 
     private setCenter(event: any) {
@@ -124,7 +126,7 @@ export class SvgPanZoomDirective implements OnInit, OnChanges {
         this.centerRatio = {
             x: _.round(Math.min((this.centerStart.x) / this.originalWidth, 1), 2),
             y: _.round(Math.min((this.centerStart.y) / this.originalHeight, 1), 2),
-        }
+        };
 
         if (this.centerRatio.x <= .1)
             this.centerRatio.x = 0;
@@ -136,7 +138,7 @@ export class SvgPanZoomDirective implements OnInit, OnChanges {
         else if (this.centerRatio.y >= .9)
             this.centerRatio.y = 1;
 
-        console.log('center: ', this.centerStart, this.scale, this.centerRatio);
+        console.log(`center: ${this.centerStart.x}:${this.centerStart.y} scale: ${this.scale} ratio: ${this.centerRatio.x}:${this.centerRatio.y}`);
     }
 
     private getPointRelativeToSvgContent(event: any) {
@@ -144,13 +146,19 @@ export class SvgPanZoomDirective implements OnInit, OnChanges {
         var elOffset = this.getGlobalOffset(element);
 
         let scale = this.scale;
+        let humanScale = this.scale / this.originalScale;
         // because svg has inverse scale, this is needed to calculate point relative to actual svg content size
         let inverseScale = 1 / scale;
+        let svgScale = 1 / humanScale;
 
         let original = {
             width: this.originalWidth,
             height: this.originalHeight,
         };
+        let svgSize = {
+            width: this.originalWidth * svgScale,
+            height: this.originalHeight * svgScale,
+        }
 
         let position = _.clone(this.position);
 
@@ -159,6 +167,11 @@ export class SvgPanZoomDirective implements OnInit, OnChanges {
             x: (element.clientWidth - (original.width * scale)) / 2,
             y: (element.clientHeight - (original.height * scale)) / 2
         };
+
+        if (original.height * scale > element.clientHeight) {
+            svgAutoOffset.y = Math.max(element.clientHeight - svgSize.height - position.y, 0);
+        }
+        
         svgAutoOffset.x = Math.max(Math.round(svgAutoOffset.x), 0);
         svgAutoOffset.y = Math.max(Math.round(svgAutoOffset.y), 0);
 
@@ -170,10 +183,12 @@ export class SvgPanZoomDirective implements OnInit, OnChanges {
         point.x = Math.round(Math.max(point.x, 0));
         point.y = Math.round(Math.max(point.y, 0));
 
+        console.log('point: ', elOffset, svgAutoOffset, point)
+
         return point;
     }
 
-    private doubleTapEvent(event: HammerInput) {
+    private doubleTapEvent(event) {
         //console.log('double-tap: ', event);
 
         this.setCenter(event);
@@ -221,13 +236,13 @@ export class SvgPanZoomDirective implements OnInit, OnChanges {
     private animateScale(scale: number) {
         this.scale += (scale - this.scale) / 5;
 
-        if (Math.abs(this.scale - scale) <= 0.1) {
+        if (Math.abs(this.scale - scale) <= 0.05) {
             this.scale = scale;
         }
 
         this.applyScale();
 
-        if (Math.abs(this.scale - scale) > 0.1) {
+        if (Math.abs(this.scale - scale) > 0.05) {
             window.requestAnimationFrame(this.animateScale.bind(this, scale));
         } else {
             //this.checkScroll();
