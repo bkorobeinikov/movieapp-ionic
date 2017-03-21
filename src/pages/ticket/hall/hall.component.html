@@ -13,5 +13,11 @@
         
         [ngClass]="{'available': seat.available == true, 'selected': isSelected(seat) == true}"
         (tap)="onSeat(seat)" />
+
+        <text *ngFor="let seat of selection; trackBy: trackByFn" class="text"
+        [attr.width]="seat.width" [attr.height]="seat.height" 
+        [attr.x]="seat.x + seat.width/2" [attr.y]="seat.y + seat.height/2">
+            {{seat.seat}}
+        </text>
     </svg>
 </svg>
