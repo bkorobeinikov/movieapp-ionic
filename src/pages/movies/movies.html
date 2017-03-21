@@ -11,9 +11,9 @@
     </ion-toolbar>
 </ion-header>
 
-<ion-content padding class="page-content" [ngClass]="{'loading': loading}">
+<ion-content padding class="page-content" [ngClass]="{'loading': (loading$ | async)}">
 
-    <ng-container *ngIf="loading == true">
+    <ng-container *ngIf="(loading$ | async) == true"> 
         <div class="movies current">
             <div *ngFor="let i of [1, 2, 3, 4]" class="movie-detail loading">
                 <div class="poster">
@@ -33,10 +33,10 @@
         </div>
     </ng-container>
 
-    <ng-container *ngIf="loading == false">
+    <ng-container *ngIf="(loading$ | async) == false">
         <ng-container [ngSwitch]="filter">
             <div *ngSwitchCase="'today'" class="movies current">
-                <div *ngFor="let movie of current" class="movie-detail" (tap)="openMovie(movie)">
+                <div *ngFor="let movie of current$ | async" class="movie-detail" (tap)="openMovie(movie)">
                     <div class="poster">
                         <div class="content">
                             <img src="{{movie.poster}}">
@@ -60,7 +60,7 @@
                 </div>
             </div>
             <div *ngSwitchCase="'future'" class="movies future">
-                <div *ngFor="let movie of future" class="movie-icon future" (tap)="openMovie(movie)">
+                <div *ngFor="let movie of future$ | async" class="movie-icon future" (tap)="openMovie(movie)">
                     <div class="poster">
                         <div class="content">
                             <img src="{{movie.poster}}">
