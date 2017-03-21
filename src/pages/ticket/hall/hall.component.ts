@@ -1,9 +1,8 @@
-import { Component, Input, EventEmitter, Output, OnInit, OnChanges, SimpleChanges, ElementRef, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, EventEmitter, Output, OnInit, ElementRef, ChangeDetectionStrategy } from '@angular/core';
 
 import { CinemaHall, CinemaHallSeat } from './../../../core/models';
 
 import _ from 'lodash';
-import { MovieService } from "../../../core/movie.service";
 
 @Component({
     selector: 'hall',
@@ -30,7 +29,7 @@ export class HallComponent implements OnInit {
 
     // public colors: any = null;
 
-    constructor(private el: ElementRef, private movieService: MovieService) {
+    constructor(private el: ElementRef) {
     }
 
     ngOnInit() {
