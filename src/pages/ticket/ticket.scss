@@ -316,6 +316,14 @@ page-ticket {
 
             margin: 0 -12px;
 
+            .spinner {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                margin-top: -14px;
+                margin-left: -14px;
+            }
+
             .info {
                 position: absolute;
                 top: 50%;

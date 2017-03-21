@@ -36,13 +36,13 @@ export class TicketPage {
 
     public times: { id: string, value: moment.Moment, active: boolean, showtime: MovieShowtime }[];
     public selectedTimeId: string;
-    public selectedTime: moment.Moment;
+    public selectedTime: { id: string, value: moment.Moment, active: boolean, showtime: MovieShowtime };
 
     public showtimes: MovieShowtime[];
 
+    public loadingHall: boolean;
     public hall: CinemaHall;
     public seats: CinemaHallSeat[];
-    public totalPrice: number; //price
 
     constructor(
         private appCtrl: App,
@@ -52,42 +52,6 @@ export class TicketPage {
 
     ngOnInit() {
         this.movie = this.navParams.get("movie");
-
-        var seats:CinemaHallSeat[] = [];
-
-        for (let r = 0; r < 15; r++) {
-            for (let c = 0; c < 23; c++) {
-                let style = {
-                    width: 30,
-                    height: 34,
-                    marginLeft: 2,
-                    marginRight: 2,
-                    marginTop: 4,
-                    marginBottom: 4
-                };
-
-                var seat: CinemaHallSeat = {
-                    x: c * (style.width + style.marginLeft + style.marginRight),
-                    y: r * (style.height + style.marginBottom + style.marginTop),
-                    width: style.width,
-                    height: style.height,
-
-                    row: r + 1,
-                    seat: c + 1,
-
-                    available: true,
-
-                    price: 115,
-                };
-                seats.push(seat);
-            }
-
-        }
-
-        this.hall = {
-            id: 'hall_1',
-            seats: seats
-        };
         this.seats = [];
     }
 
@@ -172,6 +136,7 @@ export class TicketPage {
             this.times = times;
             this.selectedTime = null;
             this.selectedTimeId = null;
+            this.hall = null;
         }
         catch (err) {
 
@@ -183,7 +148,13 @@ export class TicketPage {
             return;
 
         var selectedTime = this.times.find(t => t.id == this.selectedTimeId);
-        this.selectedTime = selectedTime.value;
+        this.selectedTime = selectedTime;
+
+        this.loadingHall = true;
+        this.movieService.getHall(this.selectedTime.showtime).subscribe((hall) => {
+            this.hall = hall;
+            this.loadingHall = false;
+        });
     }
 
     checkout() {
