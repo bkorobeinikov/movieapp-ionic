@@ -1,0 +1,59 @@
+hall {
+    flex: 1;
+    display: flex;
+    position: relative;
+
+    .content {
+        position: absolute; 
+        top: 0; 
+        left: 0; 
+        bottom: 0; 
+        right: 0; 
+
+        width: 100%;
+        height: 100%;
+
+        touch-action: none;
+
+        .g-screen {
+            overflow: visible;
+
+            .screen {
+                height: 10px;
+
+                fill: gray;
+            }
+
+            .text {
+                font-size: 32px;
+
+                fill: gray;
+            }
+        }
+
+        .g-seats {
+
+            .seat {
+                fill: gray;
+
+                &.available {
+                    fill: #1aa3e0;
+                }
+
+                &.selected {
+                    fill: orange;
+                }
+            }
+
+            text {
+                font-size: 24px;
+                text-anchor: middle;
+                alignment-baseline: central;
+                
+                fill: white;
+
+                pointer-events: none;
+            }
+        }
+    }
+}

@@ -1,4 +1,4 @@
-import { Component, SimpleChanges, ViewChild, ElementRef } from '@angular/core';
+import { Component, SimpleChanges, ViewChild, ElementRef, OnChanges } from '@angular/core';
 
 import { NavParams, Segment, Slides, App } from 'ionic-angular';
 
@@ -11,6 +11,8 @@ import { MovieShowtime } from "../../core/movie-showtime.model";
 import { MovieService } from "../../core/movie.service";
 
 import { CheckoutPage } from "./../checkout/checkout";
+import { CinemaHall } from "../../core/models";
+import { CinemaHallSeat } from "../../core/cinema-hall-seat.model";
 
 @Component({
     selector: 'page-ticket',
@@ -38,20 +40,55 @@ export class TicketPage {
 
     public showtimes: MovieShowtime[];
 
-    public seats: any[];
-    public total: number;
+    public hall: CinemaHall;
+    public seats: CinemaHallSeat[];
+    public totalPrice: number; //price
 
     constructor(
         private appCtrl: App,
         private navParams: NavParams,
         private movieService: MovieService) {
-
-        this.seats = [{}, {}, {}];
-        this.total = 750;
     }
 
     ngOnInit() {
         this.movie = this.navParams.get("movie");
+
+        var seats:CinemaHallSeat[] = [];
+
+        for (let r = 0; r < 15; r++) {
+            for (let c = 0; c < 23; c++) {
+                let style = {
+                    width: 30,
+                    height: 34,
+                    marginLeft: 2,
+                    marginRight: 2,
+                    marginTop: 4,
+                    marginBottom: 4
+                };
+
+                var seat: CinemaHallSeat = {
+                    x: c * (style.width + style.marginLeft + style.marginRight),
+                    y: r * (style.height + style.marginBottom + style.marginTop),
+                    width: style.width,
+                    height: style.height,
+
+                    row: r + 1,
+                    seat: c + 1,
+
+                    available: true,
+
+                    price: 115,
+                };
+                seats.push(seat);
+            }
+
+        }
+
+        this.hall = {
+            id: 'hall_1',
+            seats: seats
+        };
+        this.seats = [];
     }
 
     ngAfterViewInit() {
@@ -156,6 +193,10 @@ export class TicketPage {
             movie: this.movie,
             tickets: tickets
         });
+    }
+
+    getTotalSum(seats: CinemaHallSeat[]) {
+        return _.sumBy(seats, s => s.price);
     }
 
 }

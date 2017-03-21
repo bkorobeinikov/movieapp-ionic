@@ -20,6 +20,12 @@ page-ticket {
     font-size: 16px;
 
     .content {
+
+        .scroll-content {
+            display: flex;
+            flex-direction: column;
+        }
+
         .movie-summary {
             text-align: center;
 
@@ -287,6 +293,57 @@ page-ticket {
 
 
                 }
+            }
+        }
+
+        .seats-container {
+            flex: 1;
+            display: flex;
+
+            margin: 0 -12px;
+
+            ion-scroll, ion-scrollzoom {
+                flex: 1;
+
+                white-space: nowrap;
+                -webkit-overflow-scrolling: touch;
+
+                .scroll-content {
+                    padding: 0;
+                }
+            }
+
+            .seats {
+                //display: flex;
+                //flex-direction: column;
+                display: table;
+                width: 500px;
+                height: 500px;
+
+                .row {
+                    display: table-row;
+                    //display: flex;
+                    //flex-direction: row;
+                    //flex-wrap: nowrap;
+
+                    .seat {
+                        display: table-cell;
+                        width: 20px;
+                        height: 20px;
+                        min-width: 20px;
+                        min-height: 20px;
+
+                        margin: 0 2px 2px 0;
+
+                        border: 1px solid #1aa3e0;
+                        border-radius: 2px;
+
+                        span {
+                            font-size: .5em;
+                        }
+                    }
+                }
+
             }
         }
     }

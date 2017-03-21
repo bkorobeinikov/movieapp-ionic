@@ -19,6 +19,9 @@ import { AccountPage } from '../pages/account/account';
 import { JoinPipe } from './../shared/join.pipe';
 import { MomentPipe } from './../shared/moment.pipe';
 
+import { HallComponent } from './../pages/ticket/hall/hall.component';
+import { SvgPanZoomDirective } from './../shared/svg-pan-zoom.directive';
+
 @NgModule({
   imports: [
     IonicModule.forRoot(MyApp, {
@@ -41,6 +44,9 @@ import { MomentPipe } from './../shared/moment.pipe';
     TabsPage,
     NewsPage,
     AccountPage,
+
+    HallComponent,
+    SvgPanZoomDirective,
   ],
   bootstrap: [IonicApp],
   entryComponents: [
