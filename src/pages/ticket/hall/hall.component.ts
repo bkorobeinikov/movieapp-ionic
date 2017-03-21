@@ -1,4 +1,4 @@
-import { Component, Input, EventEmitter, Output, OnInit, OnChanges, SimpleChanges, ElementRef, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, EventEmitter, Output, OnInit, ElementRef, ChangeDetectionStrategy } from '@angular/core';
 
 import { CinemaHall, CinemaHallSeat } from './../../../core/models';
 
@@ -7,9 +7,9 @@ import _ from 'lodash';
 @Component({
     selector: 'hall',
     templateUrl: 'hall.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush //without this performance when panning svg is horrible
 })
-export class HallComponent implements OnInit, OnChanges {
+export class HallComponent implements OnInit {
     private selectionValue: CinemaHallSeat[];
 
     @Input() hall: CinemaHall;
@@ -27,17 +27,13 @@ export class HallComponent implements OnInit, OnChanges {
     public width: number;
     public height: number;
 
-    public colors: any = null;
+    // public colors: any = null;
 
     constructor(private el: ElementRef) {
-
     }
 
     ngOnInit() {
         this.buildMap();
-    }
-
-    ngOnChanges(changes: SimpleChanges) {
     }
 
     private buildMap() {
@@ -45,12 +41,12 @@ export class HallComponent implements OnInit, OnChanges {
         if (this.hall == null || this.hall.seats == null)
             return;
 
-        if (this.colors == null) {
-            this.colors = {};
-            this.hall.seats.forEach(s => {
-                this.colors[s.row + '_' + s.seat] = this.randomColor();
-            });
-        }
+        // if (this.colors == null) {
+        //     this.colors = {};
+        //     this.hall.seats.forEach(s => {
+        //         this.colors[s.row + '_' + s.seat] = this.randomColor();
+        //     });
+        // }
 
         var seats = this.hall.seats;
 

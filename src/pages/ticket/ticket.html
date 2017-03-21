@@ -31,7 +31,7 @@
     </div>
 
     <div class="booking-time">
-        <div class="tech" radio-group [(ngModel)]="selectedTechId" (ionChange)="onTechChange()">
+        <div class="tech" [ngClass]="{'center': technologies?.length == 1}" radio-group [(ngModel)]="selectedTechId" (ionChange)="onTechChange()">
             <ng-container *ngFor="let tech of technologies">
                 <ion-item>
                     <ion-label>
@@ -41,7 +41,7 @@
                 </ion-item>
             </ng-container>
         </div>
-        <div class="time" radio-group [(ngModel)]="selectedTimeId" (ionChange)="onTimeChange()">
+        <div class="time" [ngClass]="{'center': times?.length <= 3}" radio-group [(ngModel)]="selectedTimeId" (ionChange)="onTimeChange()">
             <ng-container *ngFor="let time of times">
                 <ion-item>
                     <ion-label>
@@ -61,10 +61,11 @@
     </div>
 
     <div class="seats-container">
-        <div *ngIf="selectedTimeId == null">
+        <div class="info" *ngIf="selectedTimeId == null">
             Please select time to be able to select seats
         </div>
-        <hall *ngIf="selectedTimeId != null" [hall]="hall" [(selection)]="seats"></hall>
+        <ion-spinner *ngIf="loadingHall"></ion-spinner>
+        <hall *ngIf="loadingHall == false && hall != null" [hall]="hall" [(selection)]="seats"></hall>
     </div>
 
 </ion-content>
@@ -72,10 +73,15 @@
 <ion-footer>
     <ion-toolbar padding-left padding-right>
         <div class="cart-total">
-            <span class="cart-seats">{{seats.length}} seats</span>
-            <span class="cart-price">{{getTotalSum(seats)}}грн.</span>
+            <span class="cart-selection" *ngIf="seats?.length > 0">
+                <span class="cart-row" *ngFor="let row of getRows(seats)">
+                    <span class="cart-row-label">{{row}}</span>
+                    <span class="cart-seat" *ngFor="let seat of filterByRow(row, seats)">{{seat.seat}}</span>
+                </span>
+            </span>
+            <span class="cart-price" *ngIf="seats?.length > 0">- {{getTotalSum(seats)}}грн.</span>
         </div>
-        <button class="checkout" ion-button color="secondary" (click)="checkout()" icon-left>
+        <button class="checkout" ion-button color="secondary" (click)="checkout()" icon-left [disabled]="seats?.length == 0" end>
             <ion-icon name="cart"></ion-icon>
             Checkout
         </button>

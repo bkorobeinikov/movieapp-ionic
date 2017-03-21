@@ -5,6 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/delay';
 
 import X2JS from 'x2js';
 
@@ -12,6 +13,7 @@ import { Movie } from './movie.model';
 import { MovieShowtime } from './movie-showtime.model';
 
 import moment from 'moment';
+import { CinemaHall, CinemaHallSeat } from "./models";
 
 @Injectable()
 export class MovieService {
@@ -80,6 +82,47 @@ export class MovieService {
 
             return result;
         });
+    }
+
+    getHall(showtime: MovieShowtime): Observable<CinemaHall> {
+
+        var seats:CinemaHallSeat[] = [];
+
+        for (let r = 0; r < 15; r++) {
+            for (let c = 0; c < 23; c++) {
+                let style = {
+                    width: 30,
+                    height: 34,
+                    marginLeft: 2,
+                    marginRight: 2,
+                    marginTop: 4,
+                    marginBottom: 4
+                };
+
+                var seat: CinemaHallSeat = {
+                    x: c * (style.width + style.marginLeft + style.marginRight),
+                    y: r * (style.height + style.marginBottom + style.marginTop),
+                    width: style.width,
+                    height: style.height,
+
+                    row: r + 1,
+                    seat: c + 1,
+
+                    available: Math.round(Math.random()*10) % 5 != 0,
+
+                    price: 115,
+                };
+                seats.push(seat);
+            }
+
+        }
+
+        let hall: CinemaHall = {
+            id: showtime.hallId,
+            seats: seats
+        };
+
+        return Observable.of(hall).delay(1000);
     }
 
     private getData<T>(url: string): Observable<T> {
