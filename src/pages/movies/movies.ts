@@ -3,7 +3,7 @@
 import { App, ViewController, NavController, Content } from 'ionic-angular';
 
 import { MovieService } from './../../core/movie.service';
-import { Movie } from './../../core/movie.model';
+import { Movie } from "../../store/models";
 
 import { MoviePage } from './../movie/movie';
 
