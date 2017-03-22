@@ -9,26 +9,7 @@
 
 <ion-content padding-left padding-right padding-bottom scroll="false">
 
-    <div class="slides-container">
-        <ion-slides class="booking-date" #datepicker slidesPerView="{{dates?.length < 7 ? dates?.length : 7}}" radio-group [(ngModel)]="selectedDateId"
-            (ionChange)="onDateChange()">
-            <ng-container *ngFor="let date of dates">
-                <ion-slide>
-                    <ion-item>
-                        <ion-label>
-                            <div class="dayOfWeek"><span>{{date.value | moment: "ddd"}}</span></div>
-                            <div class="day"><span>{{date.value | moment: "D"}}</span></div>
-                        </ion-label>
-                        <ion-radio value="{{date.id}}" checked="{{date.id == selectedDateId}}"></ion-radio>
-                    </ion-item>
-                </ion-slide>
-            </ng-container>
-        </ion-slides>
-        <div #dateSwiperPrev class="slides-swiper slides-swiper-prev">
-        </div>
-        <div #dateSwiperNext class="slides-swiper slides-swiper-next">
-        </div>
-    </div>
+    <datepicker [dates]="dates" [selected]="selectedDate" (change)="onDateChange($event)"></datepicker> 
 
     <div class="booking-time">
         <div class="tech" [ngClass]="{'center': technologies?.length == 1}" radio-group [(ngModel)]="selectedTechId" (ionChange)="onTechChange()">

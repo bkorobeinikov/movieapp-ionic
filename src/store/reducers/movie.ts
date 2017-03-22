@@ -20,7 +20,6 @@ export const initialState: State = {
 };
 
 export function reducer(state = initialState, actionRaw: movie.Actions): State {
-    console.log('movie_reducer', state, actionRaw);
     switch (actionRaw.type) {
         case movie.ActionTypes.LOAD: {
             return Object.assign({}, state, {

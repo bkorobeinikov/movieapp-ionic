@@ -22,11 +22,6 @@ import { Subscription } from "rxjs/Subscription";
     templateUrl: "booking.html"
 })
 export class BookingPage {
-
-    @ViewChild('datepicker') datepicker: Slides;
-    @ViewChild('dateSwiperNext') dateSwiperNext: ElementRef;
-    @ViewChild('dateSwiperPrev') dateSwiperPrev: ElementRef;
-
     public movie$: Observable<Movie>;
     public movie: Movie;
 
@@ -35,9 +30,8 @@ export class BookingPage {
     public showtimes$: Observable<Showtime[]>;
     public showtimes: Showtime[];
 
-    public dates: { id: number, value: moment.Moment }[];
-    public selectedDate: moment.Moment;
-    public selectedDateId: number;
+    public dates: Date[];
+    public selectedDate: Date;
 
     public technologies: { id: string, value: string }[];
     public selectedTechId: string;
@@ -57,9 +51,9 @@ export class BookingPage {
         private appCtrl: App,
         private movieService: MovieService,
         private store: Store<fromRoot.State>) {
-            this.movie$ = store.select(fromRoot.getMovieSelected);
-            this.loading$ = store.select(fromRoot.getCinemaShowtimesLoading);
-            this.showtimes$ = store.select(fromRoot.getBookingAvailableShowtimes);
+        this.movie$ = store.select(fromRoot.getMovieSelected);
+        this.loading$ = store.select(fromRoot.getCinemaShowtimesLoading);
+        this.showtimes$ = store.select(fromRoot.getBookingAvailableShowtimes);
     }
 
     ngOnInit() {
@@ -81,38 +75,32 @@ export class BookingPage {
         this.subscriptions.unsubscribe();
     }
 
-    ngAfterViewInit() {
-        this.datepicker.nextButton = this.dateSwiperNext.nativeElement;
-        this.datepicker.prevButton = this.dateSwiperPrev.nativeElement;
-    }
-
     duration(duration: number) {
         var d = moment.duration(duration, "minutes");
         return d.hours() + "h " + d.minutes() + "min";
     }
 
     private onShowtimesChange() {
-        
-        var dates = _.chain(this.showtimes).map(s => ({
-            id: moment(s.time).startOf('date').valueOf(),
-            value: s.time,
-        })).uniqBy(d => d.id).value();
+        this.dates = _.chain(this.showtimes)
+            .map(v => moment(v.time).startOf("date").toDate())
+            .uniqBy(d => d.valueOf()).value();
 
-        this.dates = dates;
-        this.selectedDate = this.dates[0].value;
-        this.selectedDateId = this.dates[0].id;
-        this.onDateChange();
+        this.onDateChange(this.dates[0]);
     }
 
-    onDateChange() {
+    onDateChange(value: Date) {
         if (this.dates == null)
             return;
 
-        var selectedDate = this.dates.find(d => d.id == this.selectedDateId);
-        this.selectedDate = selectedDate.value;
+        this.selectedDate = this.dates.indexOf(value) > -1 ? value : null;
+
+        console.log('onDateChange:booking - ', value, this.selectedDate);
+
+        if (this.selectedDate == null)
+            return;
 
         var techs = _.chain(this.showtimes)
-            .filter(s => s.time.isSame(selectedDate.value, 'day'))
+            .filter(s => s.time.isSame(this.selectedDate, 'day'))
             .map(s => ({
                 id: s.techId,
                 value: s.techId
