@@ -10,6 +10,11 @@ import { MovieService } from "../../core/movie.service";
 
 import { CheckoutPage } from "./../checkout/checkout";
 
+import { Observable } from "rxjs/Observable";
+
+import { Store } from "@ngrx/store";
+import * as fromRoot from './../../store/reducers';
+
 @Component({
     selector: 'page-ticket',
     templateUrl: "ticket.html"
@@ -20,6 +25,7 @@ export class TicketPage {
     @ViewChild('dateSwiperNext') dateSwiperNext: ElementRef;
     @ViewChild('dateSwiperPrev') dateSwiperPrev: ElementRef;
 
+    public movie$: Observable<Movie>;
     public movie: Movie;
 
     public dates: { id: number, value: moment.Moment }[];
@@ -42,12 +48,16 @@ export class TicketPage {
 
     constructor(
         private appCtrl: App,
-        private navParams: NavParams,
-        private movieService: MovieService) {
+        private movieService: MovieService,
+        private store: Store<fromRoot.State>) {
+            this.movie$ = store.select(fromRoot.getMovieSelected);
     }
 
     ngOnInit() {
-        this.movie = this.navParams.get("movie");
+        this.movie$.subscribe(m => {
+            this.movie = m;
+        })
+
         this.seats = [];
     }
 

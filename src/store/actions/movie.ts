@@ -7,6 +7,8 @@ export const ActionTypes = {
     LOAD: type("[Movie] Load"),
     LOAD_SUCCESS: type("[Movie] Load Success"),
     LOAD_FAIL: type("[Movie] Load Fail"),
+
+    SELECT: type("[Movie] Select"),
 };
 
 export class LoadAction implements Action {
@@ -27,7 +29,14 @@ export class LoadFailAction implements Action {
     constructor(public payload: any) { }
 }
 
+export class SelectAction implements Action {
+    readonly type = ActionTypes.SELECT;
+
+    constructor(public payload: string) { }
+}
+
 export type Actions
     = LoadAction
     | LoadSuccessAction
-    | LoadFailAction;
+    | LoadFailAction
+    | SelectAction;

@@ -10,7 +10,7 @@ import moment from 'moment';
 
 import { Movie } from "../../store/models";
 import * as fromRoot from './../../store/reducers';
-import { movie } from './../../store/actions';
+import { movie as fromMovie } from './../../store/actions';
 
 import { Store } from "@ngrx/store";
 
@@ -40,7 +40,7 @@ export class MoviesPage implements OnChanges {
         this.future$ = store.select(fromRoot.getMovieFuture);
         this.loading$ = store.select(fromRoot.getMovieLoading);
 
-        this.store.dispatch(new movie.LoadAction());
+        this.store.dispatch(new fromMovie.LoadAction());
 
         this.filter = "today";
     }
@@ -65,9 +65,9 @@ export class MoviesPage implements OnChanges {
     }
 
     openMovie(movie: Movie) {
-        this.appCtrl.getRootNav().push(MoviePage, {
-            movie: movie
-        });
+        this.store.dispatch(new fromMovie.SelectAction(movie.id));
+
+        this.appCtrl.getRootNav().push(MoviePage);
     }
 
 }
