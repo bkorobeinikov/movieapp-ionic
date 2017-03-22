@@ -15,8 +15,8 @@ export function reducer(state = initialState, actionRaw: ui.Actions): State {
             var action = <ui.RootChangeTabAction>actionRaw;
             var newIndex = action.payload;
 
-            return Object.assign({}, state, {
-                rootTabSelectedIndex: newIndex,
+            return Object.assign<any, State, State>({}, state, {
+                rootTabIndex: newIndex,
             });
         }
 

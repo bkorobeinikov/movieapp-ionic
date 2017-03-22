@@ -5,7 +5,7 @@ import { NewsPage } from "../news/news";
 import { Store } from "@ngrx/store";
 
 import * as fromRoot from './../../store/reducers';
-import * as fromUi from './../../store/actions/ui';
+import { ui } from './../../store/actions';
 
 @Component({
     selector: "page-payment",
@@ -26,7 +26,7 @@ export class PaymentPage {
         nav.push(NewsPage).then(() => {
             return nav.remove(1, nav.length() - 2);
         }).then(() => {
-            this.store.dispatch(new fromUi.RootChangeTabAction(1));
+            this.store.dispatch(new ui.RootChangeTabAction(1));
         });
     }
 }

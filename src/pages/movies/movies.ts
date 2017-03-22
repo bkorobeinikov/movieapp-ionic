@@ -10,7 +10,7 @@ import moment from 'moment';
 
 import { Movie } from "../../store/models";
 import * as fromRoot from './../../store/reducers';
-import * as movie from './../../store/actions/movie';
+import { movie } from './../../store/actions';
 
 import { Store } from "@ngrx/store";
 
