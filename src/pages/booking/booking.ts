@@ -18,10 +18,10 @@ import { cinema } from './../../store/actions';
 import { Subscription } from "rxjs/Subscription";
 
 @Component({
-    selector: 'page-ticket',
-    templateUrl: "ticket.html"
+    selector: 'page-booking',
+    templateUrl: "booking.html"
 })
-export class TicketPage {
+export class BookingPage {
 
     @ViewChild('datepicker') datepicker: Slides;
     @ViewChild('dateSwiperNext') dateSwiperNext: ElementRef;
@@ -176,11 +176,11 @@ export class TicketPage {
     }
 
     checkout() {
-        var tickets = [{}, {}];
+        var booking = [{}, {}];
 
         this.appCtrl.getRootNav().push(CheckoutPage, {
             movie: this.movie,
-            tickets: tickets
+            booking: booking
         });
     }
 

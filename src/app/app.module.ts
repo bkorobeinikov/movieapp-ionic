@@ -9,7 +9,7 @@ import { CoreModule } from './../core/core.module';
 
 import { MoviesPage } from '../pages/movies/movies';
 import { MoviePage } from '../pages/movie/movie';
-import { TicketPage } from '../pages/ticket/ticket';
+import { BookingPage } from '../pages/booking/booking';
 import { CheckoutPage } from '../pages/checkout/checkout';
 import { PaymentPage } from '../pages/payment/payment';
 import { TabsPage } from '../pages/tabs/tabs';
@@ -19,7 +19,7 @@ import { AccountPage } from '../pages/account/account';
 import { JoinPipe } from './../shared/join.pipe';
 import { MomentPipe } from './../shared/moment.pipe';
 
-import { HallComponent } from './../pages/ticket/hall/hall.component';
+import { HallComponent } from './../pages/booking/hall/hall.component';
 import { SvgPanZoomDirective } from './../shared/svg-pan-zoom.directive';
 
 import { StoreModule } from '@ngrx/store';
@@ -50,7 +50,7 @@ import { MovieEffects, CinemaEffects } from './../store/effects';
 
     MoviesPage,
     MoviePage,
-    TicketPage,
+    BookingPage,
     CheckoutPage,
     PaymentPage,
     TabsPage,
@@ -66,7 +66,7 @@ import { MovieEffects, CinemaEffects } from './../store/effects';
 
     MoviesPage,
     MoviePage,
-    TicketPage,
+    BookingPage,
     CheckoutPage,
     PaymentPage,
     TabsPage,
