@@ -12,26 +12,26 @@
     <datepicker [dates]="dates" [selected]="selectedDate" (change)="onDateChange($event)"></datepicker> 
 
     <div class="booking-time">
-        <div class="tech" [ngClass]="{'center': technologies?.length == 1}" radio-group [(ngModel)]="selectedTechId" (ionChange)="onTechChange()">
+        <div class="tech" [ngClass]="{'center': technologies?.length == 1}" radio-group [ngModel]="selectedTechId" (ionChange)="onTechChange($event)">
             <ng-container *ngFor="let tech of technologies">
                 <ion-item>
                     <ion-label>
-                        {{tech.value}}
+                        {{tech}}
                     </ion-label>
-                    <ion-radio value="{{tech.id}}" checked="{{tech.id == selectedTechId}}"></ion-radio>
+                    <ion-radio [value]="tech" [checked]="tech == selectedTechId"></ion-radio>
                 </ion-item>
             </ng-container>
         </div>
-        <div class="time" [ngClass]="{'center': times?.length <= 3}" radio-group [(ngModel)]="selectedTimeId" (ionChange)="onTimeChange()">
-            <ng-container *ngFor="let time of times">
+        <div class="time" [ngClass]="{'center': filteredShowtimes?.length <= 3}" radio-group [ngModel]="selectedShowtimeId" (ionChange)="onTimeChange($event)">
+            <ng-container *ngFor="let showtime of filteredShowtimes">
                 <ion-item>
                     <ion-label>
-                        {{time.value | moment:"HH:mm"}}
+                        {{showtime.time | moment:"HH:mm"}}
                     </ion-label>
-                    <ion-radio value="{{time.id}}" checked="{{time.id == selectedTimeId}}" disabled="{{time.active == false}}"></ion-radio>
+                    <ion-radio [value]="showtime.id" [checked]="showtime.id == selectedShowtimeId" [disabled]="!isAfterNow(showtime.time)"></ion-radio>
                 </ion-item>
             </ng-container>
-            <div *ngIf="times?.length % 3 == 2">
+            <div *ngIf="filteredShowtimes?.length % 3 == 2">
                 <ion-item style="visibility: hidden">
                     <ion-label>
                         00:00

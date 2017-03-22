@@ -33,13 +33,11 @@ export class BookingPage {
     public dates: Date[];
     public selectedDate: Date;
 
-    public technologies: { id: string, value: string }[];
+    public technologies: string[];
     public selectedTechId: string;
-    public selectedTech: string;
 
-    public times: { id: string, value: moment.Moment, active: boolean, showtime: Showtime }[];
-    public selectedTimeId: string;
-    public selectedTime: { id: string, value: moment.Moment, active: boolean, showtime: Showtime };
+    public filteredShowtimes: Showtime[];
+    public selectedShowtimeId: string;
 
     public loadingHall: boolean;
     public hall: CinemaHall;
@@ -75,11 +73,6 @@ export class BookingPage {
         this.subscriptions.unsubscribe();
     }
 
-    duration(duration: number) {
-        var d = moment.duration(duration, "minutes");
-        return d.hours() + "h " + d.minutes() + "min";
-    }
-
     private onShowtimesChange() {
         this.dates = _.chain(this.showtimes)
             .map(v => moment(v.time).startOf("date").toDate())
@@ -94,65 +87,46 @@ export class BookingPage {
 
         this.selectedDate = this.dates.indexOf(value) > -1 ? value : null;
 
-        console.log('onDateChange:booking - ', value, this.selectedDate);
-
         if (this.selectedDate == null)
             return;
 
         var techs = _.chain(this.showtimes)
             .filter(s => s.time.isSame(this.selectedDate, 'day'))
-            .map(s => ({
-                id: s.techId,
-                value: s.techId
-            }))
-            .uniqBy(t => t.id)
-            .value();
+            .map(v => v.techId)
+            .uniq().value();
 
         this.technologies = techs;
-        this.selectedTechId = this.technologies[0].id;
-        this.selectedTech = this.technologies[0].value;
-        this.onTechChange();
+        this.onTechChange(this.technologies[0]);
     }
 
-    onTechChange() {
+    onTechChange(techId: string) {
         try {
-            var selectedTech = this.technologies.find(t => t.id == this.selectedTechId);
-            this.selectedTech = selectedTech.value;
+            this.selectedTechId = techId;
 
-            console.log(this.selectedDate);
-
-            var now = moment();
-            var times = _.chain(this.showtimes)
-                .filter(s => s.time.isSame(this.selectedDate, 'day') && s.techId == this.selectedTechId)
-                .map(s => ({
-                    id: s.time.format("HH:mm") + '_' + s.hallId,
-                    active: s.time.isAfter(now),
-                    value: s.time,
-                    showtime: s
-                }))
-                .uniqBy(t => t.id)
+            this.filteredShowtimes = _.chain(this.showtimes)
+                .filter(v => v.time.isSame(this.selectedDate, 'day') && v.techId == this.selectedTechId)
+                .sortBy(v => v.time.valueOf())
                 .value();
-            console.log('filtered', times);
 
-            this.times = times;
-            this.selectedTime = null;
-            this.selectedTimeId = null;
-            this.hall = null;
+            this.onTimeChange(null);
         }
         catch (err) {
 
         }
     }
 
-    onTimeChange() {
-        if (this.times == null || this.selectedTimeId == null)
+    onTimeChange(showtimeId: string) {
+        this.selectedShowtimeId = showtimeId;
+        if (this.selectedShowtimeId == null) {
+            this.loadingHall = false;
+            this.hall = null;
             return;
+        }
 
-        var selectedTime = this.times.find(t => t.id == this.selectedTimeId);
-        this.selectedTime = selectedTime;
+        var showtime = this.filteredShowtimes.find(v => v.id == showtimeId);
 
         this.loadingHall = true;
-        this.movieService.getHall(this.selectedTime.showtime).subscribe((hall) => {
+        this.movieService.getHall(showtime).subscribe((hall) => {
             this.hall = hall;
             this.loadingHall = false;
         });
@@ -177,6 +151,10 @@ export class BookingPage {
 
     getTotalSum(seats: CinemaHallSeat[]) {
         return _.sumBy(seats, s => s.price);
+    }
+
+    isAfterNow(time: moment.Moment | Date) {
+        return moment().isBefore(time);
     }
 
 }
