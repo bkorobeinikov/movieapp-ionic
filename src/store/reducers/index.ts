@@ -4,17 +4,21 @@ import { storeFreeze } from 'ngrx-store-freeze';
 import { createSelector } from 'reselect';
 
 import * as fromMovie from './movie';
+import * as fromUi from './ui';
 
 export interface State {
     movie: fromMovie.State,
+    ui: fromUi.State,
 };
 
 export const initialState: State = {
-    movie: fromMovie.initialState
+    movie: fromMovie.initialState,
+    ui: fromUi.initialState,
 };
  
 const reducers = {
-    movie: fromMovie.reducer
+    movie: fromMovie.reducer,
+    ui: fromUi.reducer,
 };
 
 const devReducer: ActionReducer<State> = compose(storeFreeze, combineReducers)(reducers);
@@ -29,6 +33,8 @@ export function reducer(state: State, action: any) {
         return devReducer(state, action);
 }
 
+// movie state
+
 export const getMovieState = (state: State) => state.movie;
 
 export const getMovieEntities = createSelector(getMovieState, fromMovie.getEntities);
@@ -37,4 +43,10 @@ export const getMovieLoading = createSelector(getMovieState, fromMovie.getLoadin
 
 export const getMovieCurrent = createSelector(getMovieState, fromMovie.getCurrent);
 export const getMovieFuture = createSelector(getMovieState, fromMovie.getFuture);
+
+// ui state
+
+export const getUiState = (state: State) => state.ui;
+
+export const getUiRootTabIndex = createSelector(getUiState, fromUi.getRootTabIndex);
 
