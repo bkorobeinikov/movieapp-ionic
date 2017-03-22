@@ -59,7 +59,7 @@ export class BookingPage {
         private store: Store<fromRoot.State>) {
             this.movie$ = store.select(fromRoot.getMovieSelected);
             this.loading$ = store.select(fromRoot.getCinemaShowtimesLoading);
-            this.showtimes$ = store.select(fromRoot.getCinemaCurrentShowtimes);
+            this.showtimes$ = store.select(fromRoot.getBookingAvailableShowtimes);
     }
 
     ngOnInit() {
@@ -74,8 +74,6 @@ export class BookingPage {
         });
         this.subscriptions.add(s);
 
-        this.store.dispatch(new cinema.ShowtimeLoadAction(null));
-
         this.seats = [];
     }
 
@@ -86,9 +84,6 @@ export class BookingPage {
     ngAfterViewInit() {
         this.datepicker.nextButton = this.dateSwiperNext.nativeElement;
         this.datepicker.prevButton = this.dateSwiperPrev.nativeElement;
-    }
-
-    ionViewWillEnter() {
     }
 
     duration(duration: number) {

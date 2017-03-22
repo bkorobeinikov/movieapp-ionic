@@ -48,9 +48,7 @@ export class ShowtimeLoadAction implements Action {
 export class ShowtimeLoadSuccessAction implements Action {
     readonly type = ActionTypes.SHOWTIME_LOAD_SUCCESS;
 
-    constructor(public payload: Showtime[]) { 
-        console.log('showtimeload', payload);
-    }
+    constructor(public payload: Showtime[]) { }
 }
 
 export class ShowtimeLoadFailAction implements Action {

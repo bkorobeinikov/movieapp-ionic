@@ -66,12 +66,14 @@ export class CinemaService extends BaseService {
     private parseShow(showObj: any) {
         try {
             var res: Showtime = {
+                id: null,
                 cinemaId: showObj["_theatre-id"],
                 hallId: showObj["_hall-id"],
                 movieId: showObj["_movie-id"],
                 techId: showObj["_technology"],
                 time: moment(showObj["_full-date"])
             };
+            res.id = `${res.cinemaId}_${res.hallId}_${res.movieId}_${res.techId}_${res.time.toISOString()}`;
 
             return res;
         }

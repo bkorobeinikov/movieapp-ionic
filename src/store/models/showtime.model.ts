@@ -1,6 +1,7 @@
 import moment from 'moment';
 
 export class Showtime {
+    id: string;
 
     cinemaId: string;
     hallId: string;
