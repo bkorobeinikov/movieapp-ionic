@@ -5,10 +5,17 @@ import { NavParams, Segment, Slides, App } from 'ionic-angular';
 import moment from 'moment';
 import _ from 'lodash';
 
-import { MovieShowtime, Movie, CinemaHall, CinemaHallSeat } from "../../store/models";
+import { Showtime, Movie, CinemaHall, CinemaHallSeat } from "../../store/models";
 import { MovieService } from "../../core/movie.service";
 
 import { CheckoutPage } from "./../checkout/checkout";
+
+import { Observable } from "rxjs/Observable";
+
+import { Store } from "@ngrx/store";
+import * as fromRoot from './../../store/reducers';
+import { cinema } from './../../store/actions';
+import { Subscription } from "rxjs/Subscription";
 
 @Component({
     selector: 'page-ticket',
@@ -20,7 +27,13 @@ export class TicketPage {
     @ViewChild('dateSwiperNext') dateSwiperNext: ElementRef;
     @ViewChild('dateSwiperPrev') dateSwiperPrev: ElementRef;
 
+    public movie$: Observable<Movie>;
     public movie: Movie;
+
+    public loading$: Observable<boolean>;
+
+    public showtimes$: Observable<Showtime[]>;
+    public showtimes: Showtime[];
 
     public dates: { id: number, value: moment.Moment }[];
     public selectedDate: moment.Moment;
@@ -30,25 +43,44 @@ export class TicketPage {
     public selectedTechId: string;
     public selectedTech: string;
 
-    public times: { id: string, value: moment.Moment, active: boolean, showtime: MovieShowtime }[];
+    public times: { id: string, value: moment.Moment, active: boolean, showtime: Showtime }[];
     public selectedTimeId: string;
-    public selectedTime: { id: string, value: moment.Moment, active: boolean, showtime: MovieShowtime };
-
-    public showtimes: MovieShowtime[];
+    public selectedTime: { id: string, value: moment.Moment, active: boolean, showtime: Showtime };
 
     public loadingHall: boolean;
     public hall: CinemaHall;
     public seats: CinemaHallSeat[];
 
+    public subscriptions: Subscription = new Subscription();
+
     constructor(
         private appCtrl: App,
-        private navParams: NavParams,
-        private movieService: MovieService) {
+        private movieService: MovieService,
+        private store: Store<fromRoot.State>) {
+            this.movie$ = store.select(fromRoot.getMovieSelected);
+            this.loading$ = store.select(fromRoot.getCinemaShowtimesLoading);
+            this.showtimes$ = store.select(fromRoot.getCinemaCurrentShowtimes);
     }
 
     ngOnInit() {
-        this.movie = this.navParams.get("movie");
+        let s = this.movie$.subscribe(m => {
+            this.movie = m;
+        });
+        this.subscriptions.add(s);
+        s = this.showtimes$.subscribe(showtimes => {
+            this.showtimes = showtimes;
+
+            this.onShowtimesChange();
+        });
+        this.subscriptions.add(s);
+
+        this.store.dispatch(new cinema.ShowtimeLoadAction(null));
+
         this.seats = [];
+    }
+
+    ngOnDestroy() {
+        this.subscriptions.unsubscribe();
     }
 
     ngAfterViewInit() {
@@ -57,7 +89,6 @@ export class TicketPage {
     }
 
     ionViewWillEnter() {
-        this.refreshShowtimes();
     }
 
     duration(duration: number) {
@@ -65,17 +96,8 @@ export class TicketPage {
         return d.hours() + "h " + d.minutes() + "min";
     }
 
-    refreshShowtimes() {
-        this.movieService.getShowtimes().subscribe(res => {
-            var showtimes = res.filter(s => s.movieId == this.movie.id);
-            this.showtimes = showtimes;
-
-            this.onShowtimesChange();
-            return;
-        });
-    }
-
     private onShowtimesChange() {
+        
         var dates = _.chain(this.showtimes).map(s => ({
             id: moment(s.time).startOf('date').valueOf(),
             value: s.time,

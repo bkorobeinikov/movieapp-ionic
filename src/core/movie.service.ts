@@ -9,7 +9,7 @@ import 'rxjs/add/operator/delay';
 
 import X2JS from 'x2js';
 
-import { Movie, MovieShowtime, CinemaHall, CinemaHallSeat } from './../store/models';
+import { Movie, Showtime, CinemaHall, CinemaHallSeat } from './../store/models';
 
 import moment from 'moment';
 
@@ -17,11 +17,10 @@ import moment from 'moment';
 export class MovieService {
 
     private moviesUrl = "http://planetakino.ua/api/movies";
-    private showtimeUrl = "http://planetakino.ua/lvov/ua/showtimes/xml/";
     private headers: Headers;
     private headers1: Headers;
 
-    private showtimes: MovieShowtime[];
+    private showtimes: Showtime[];
 
     constructor(private http: Http) {
 
@@ -57,32 +56,7 @@ export class MovieService {
         return a;
     }
 
-    getShowtimes(): Observable<MovieShowtime[]> {
-        if (this.showtimes != null)
-            return Observable.of(this.showtimes);
-
-        return this.getData<any>(this.showtimeUrl).map(res => {
-            var days: any[] = res.showtimes.day;
-
-            var result: MovieShowtime[] = [];
-
-            days.forEach(d => {
-                var shows: any[] = d.show;
-
-                shows.forEach(s => {
-                    result.push(this.parseShow(s));
-                });
-            });
-
-            console.log('result', result);
-
-            this.showtimes = result;
-
-            return result;
-        });
-    }
-
-    getHall(showtime: MovieShowtime): Observable<CinemaHall> {
+    getHall(showtime: Showtime): Observable<CinemaHall> {
 
         var seats:CinemaHallSeat[] = [];
 
@@ -179,17 +153,7 @@ export class MovieService {
         return result;
     }
 
-    private parseShow(showObj: any) {
-        var res: MovieShowtime = {
-            cinemaId: showObj["_theatre-id"],
-            hallId: showObj["_hall-id"],
-            movieId: showObj["_movie-id"],
-            techId: showObj["_technology"],
-            time: moment(showObj["_full-date"])
-        };
-
-        return res;
-    }
+    
 
     private handleError(error: Response | any) {
         console.error(error);

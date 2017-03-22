@@ -9,35 +9,41 @@ import { MovieService } from './../../core/movie.service'
 import moment from 'moment';
 import { TicketPage } from "../ticket/ticket";
 
+import { Observable } from "rxjs/Observable";
+
+import { Store } from "@ngrx/store";
+import * as fromRoot from './../../store/reducers';
+//import { movie as fromMovie } from './../../store/actions';
+
 @Component({
     selector: 'page-movie',
     templateUrl: 'movie.html'
 })
 export class MoviePage {
 
+    public movie$: Observable<Movie>;
     public movie: Movie;
-
-    public loading: boolean;
 
     constructor(
         private appCtrl: App,
         private navCtrl: NavController,
-        private movieService: MovieService,
-        private params: NavParams
+        private store: Store<fromRoot.State>
     ) {
-        this.loading = true;
+        this.movie$ = store.select(fromRoot.getMovieSelected);
     }
 
     ngOnInit() {
-        this.movie = this.params.get("movie");
+        this.movie$.subscribe(m => {
+            this.movie = m
+        });
     }
 
     ionViewWillEnter() {
-        StatusBar.styleBlackTranslucent();
+        //StatusBar.styleBlackTranslucent();
     }
 
     ionViewWillLeave() {
-        StatusBar.styleDefault();
+        //StatusBar.styleDefault();
     }
 
     duration(duration: number) {
@@ -46,12 +52,12 @@ export class MoviePage {
     }
 
     goBack() {
-        this.appCtrl.getRootNav().pop();
+        this.appCtrl.getRootNav().pop().then(() => {
+
+        });
     }
 
     goToBuyTicket() {
-        this.appCtrl.getRootNav().push(TicketPage, {
-            movie: this.movie
-        });
+        this.appCtrl.getRootNav().push(TicketPage);
     }
 }
