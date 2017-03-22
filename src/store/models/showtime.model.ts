@@ -1,6 +1,6 @@
 import moment from 'moment';
 
-export class MovieShowtime {
+export class Showtime {
 
     cinemaId: string;
     hallId: string;
