@@ -28,7 +28,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
 import { reducer, initialState } from './../store/reducers';
-import { MovieEffects, CinemaEffects } from './../store/effects';
+import { MovieEffects, CinemaEffects, BookingEffects } from './../store/effects';
 
 @NgModule({
   imports: [
@@ -42,6 +42,7 @@ import { MovieEffects, CinemaEffects } from './../store/effects';
     StoreDevtoolsModule.instrumentOnlyWithExtension(),
     EffectsModule.run(MovieEffects),
     EffectsModule.run(CinemaEffects),
+    EffectsModule.run(BookingEffects),
   ],
   declarations: [
     JoinPipe,

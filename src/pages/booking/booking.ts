@@ -14,7 +14,7 @@ import { Observable } from "rxjs/Observable";
 
 import { Store } from "@ngrx/store";
 import * as fromRoot from './../../store/reducers';
-import { cinema } from './../../store/actions';
+import { booking } from './../../store/actions';
 import { Subscription } from "rxjs/Subscription";
 
 @Component({
@@ -39,8 +39,8 @@ export class BookingPage {
     public filteredShowtimes: Showtime[];
     public selectedShowtimeId: string;
 
-    public loadingHall: boolean;
-    public hall: CinemaHall;
+    public hallLoading$: Observable<boolean>;
+    public hall$: Observable<CinemaHall>;
     public seats: CinemaHallSeat[];
 
     public subscriptions: Subscription = new Subscription();
@@ -49,9 +49,13 @@ export class BookingPage {
         private appCtrl: App,
         private movieService: MovieService,
         private store: Store<fromRoot.State>) {
+
         this.movie$ = store.select(fromRoot.getMovieSelected);
         this.loading$ = store.select(fromRoot.getCinemaShowtimesLoading);
         this.showtimes$ = store.select(fromRoot.getBookingAvailableShowtimes);
+
+        this.hallLoading$ = store.select(fromRoot.getBookingHallLoading);
+        this.hall$ = store.select(fromRoot.getBookingHall);
     }
 
     ngOnInit() {
@@ -117,19 +121,9 @@ export class BookingPage {
 
     onTimeChange(showtimeId: string) {
         this.selectedShowtimeId = showtimeId;
-        if (this.selectedShowtimeId == null) {
-            this.loadingHall = false;
-            this.hall = null;
-            return;
-        }
 
-        var showtime = this.filteredShowtimes.find(v => v.id == showtimeId);
-
-        this.loadingHall = true;
-        this.movieService.getHall(showtime).subscribe((hall) => {
-            this.hall = hall;
-            this.loadingHall = false;
-        });
+        let showtime = this.showtimes.find(s => s.id == showtimeId);
+        this.store.dispatch(new booking.SelectShowtimeAction(showtime));
     }
 
     checkout() {

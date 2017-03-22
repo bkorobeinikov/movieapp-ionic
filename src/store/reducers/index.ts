@@ -26,7 +26,7 @@ const reducers = {
     movie: fromMovie.reducer,
     ui: fromUi.reducer,
     cinema: fromCinema.reducer,
-    booking: fromCinema.reducer,
+    booking: fromBooking.reducer,
 };
 
 const devReducer: ActionReducer<State> = compose(storeFreeze, combineReducers)(reducers);
@@ -80,3 +80,6 @@ export const getBookingShowtimeId = createSelector(getBookingState, fromBooking.
 export const getBookingShowtime = createSelector(getCinemaCurrentShowtimes, getBookingShowtimeId, (showtimes, showtimeId) => {
     return showtimes.find(s => s.id == showtimeId);
 });
+
+export const getBookingHallLoading = createSelector(getBookingState, fromBooking.getHallLoading);
+export const getBookingHall = createSelector(getBookingState, fromBooking.getHall);

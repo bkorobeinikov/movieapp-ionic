@@ -6,5 +6,5 @@ import * as fromBooking from './booking';
 export const movie = fromMovie;
 export const ui = fromUi;
 export const cinema = fromCinema;
-
+export const booking = fromBooking;
 

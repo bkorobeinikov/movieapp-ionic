@@ -42,13 +42,13 @@
     </div>
 
     <div class="seats-container">
-        <div class="info" *ngIf="selectedTimeId == null">
+        <div class="info" *ngIf="selectedShowtimeId == null">  
             Please select time to be able to select seats
         </div>
-        <ion-spinner *ngIf="loadingHall"></ion-spinner>
-        <hall *ngIf="loadingHall == false && hall != null" [hall]="hall" [(selection)]="seats"></hall>
+        <ion-spinner *ngIf="hallLoading$ | async"></ion-spinner>
+        <hall *ngIf="hall$ | async" [hall]="hall$ | async" [(selection)]="seats"></hall>
     </div>
-
+ 
 </ion-content>
 
 <ion-footer>
