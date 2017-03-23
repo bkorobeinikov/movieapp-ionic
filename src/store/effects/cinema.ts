@@ -1,7 +1,6 @@
 import { Injectable } from "@angular/core";
 
 import { Observable } from "rxjs/Observable";
-import { empty } from 'rxjs/observable/empty';
 import { of } from 'rxjs/observable/of';
 import 'rxjs/add/observable/from';
 
@@ -17,7 +16,7 @@ import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/do';
 
 import { Action, Store } from "@ngrx/store";
-import { Effect, Actions, toPayload } from '@ngrx/effects';
+import { Effect, Actions } from '@ngrx/effects';
 
 import * as cinema from './../actions/cinema';
 import { CinemaService } from "../../core/cinema.service";

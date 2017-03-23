@@ -1,9 +1,6 @@
 import { createSelector } from 'reselect';
 
 import * as booking from './../actions/booking';
-import * as movie from './../actions/movie';
-
-import moment from 'moment';
 import * as _ from 'lodash';
 
 import { CinemaHall } from './../models';

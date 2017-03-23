@@ -1,80 +1,32 @@
 import { Injectable } from '@angular/core';
-import { Http, Headers, Response } from '@angular/http';
+import { Http } from '@angular/http';
 
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/of';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/delay';
 
-import X2JS from 'x2js';
-
-import { Movie, Showtime, CinemaHall, CinemaHallSeat } from './../store/models';
+import { Movie, } from './../store/models';
 
 import moment from 'moment';
+import { BaseService } from "./base.service";
 
 @Injectable()
-export class MovieService {
+export class MovieService extends BaseService {
 
     private moviesUrl = "http://planetakino.ua/api/movies";
-    private headers: Headers;
-    private headers1: Headers;
 
-    private showtimes: Showtime[];
-
-    constructor(private http: Http) {
-
-        this.headers = new Headers();
-        this.headers.append('Content-Type', 'text/xml');
-        this.headers.append('Access-Control-Allow-Origin', '*');
-
-        this.headers1 = new Headers();
-        this.headers1.append('Content-Type', 'text/xml');
-        //this.headers1.append('Access-Control-Allow-Origin', '*');
+    constructor(http: Http) {
+        super(http);
     }
 
     getMovies(): Observable<Movie[]> {
-        var a = this.http
-            .get(this.moviesUrl, {
-                headers: this.headers
-            })
+        return this.getData<any>(this.moviesUrl)
             .map(res => {
-                var x2js = new X2JS();
-                var text = res.text();
-                var jsonObj: any = x2js.xml2js<any>(text).response;
-                console.log('response ojb1', jsonObj);
-
-                var movies: any[] = jsonObj.inTheaters.movie;
+                var movies: any[] = res.inTheaters.movie;
                 var current = movies.map(m => this.parseMovie(m));
-                movies = jsonObj.soon.movie;
+                movies = res.soon.movie;
                 var future = movies.map(m => this.parseMovie(m, true));
 
                 return current.concat(future);
-            })
-            .catch(this.handleError);
-
-        return a;
-    }
-
-    
-
-    private getData<T>(url: string): Observable<T> {
-        var a = this.http
-            .get(url, {
-                headers: this.headers1
-            })
-            .map(res => {
-                console.log('response ojb3', res);
-                var x2js = new X2JS();
-                var text = res.text();
-                var jsonObj: any = x2js.xml2js<any>(text)['planeta-kino'];
-                console.log('response ojb2', jsonObj);
-
-                return jsonObj;
-            })
-            .catch(this.handleError);
-
-        return a;
+            });
     }
 
     private parseMovie(movieObj: any, soon: boolean = false): Movie {
@@ -112,24 +64,6 @@ export class MovieService {
         };
 
         return result;
-    }
-
-    
-
-    private handleError(error: Response | any) {
-        console.error(error);
-        // In a real world app, you might use a remote logging infrastructure
-        let errMsg: string;
-        if (error instanceof Response) {
-            const body = error.json() || '';
-            const err = body.error || JSON.stringify(body);
-            errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
-        } else {
-            errMsg = error.message ? error.message : error.toString();
-        }
-
-        console.error(errMsg);
-        return Observable.throw(errMsg);
     }
 
 }
