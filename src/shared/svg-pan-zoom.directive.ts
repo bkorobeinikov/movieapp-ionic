@@ -41,7 +41,6 @@ export class SvgPanZoomDirective implements OnInit, OnDestroy, OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        console.log("ngOnChanges");
         this.applyScale();
     }
 
@@ -99,7 +98,7 @@ export class SvgPanZoomDirective implements OnInit, OnDestroy, OnChanges {
         //this.el.nativeElement.setAttribute('viewBox', viewBoxValue);
         this.renderer.setElementAttribute(this.el.nativeElement, 'viewBox', viewBoxValue);
 
-        console.log('viewbox: ', `"${viewBoxValue}"`, this.scale, `center: ${this.centerStart.x}:${this.centerStart.y}`)
+        //console.log('viewbox: ', `"${viewBoxValue}"`, this.scale, `center: ${this.centerStart.x}:${this.centerStart.y}`)
     }
 
     private attachEvents() {
@@ -109,7 +108,7 @@ export class SvgPanZoomDirective implements OnInit, OnDestroy, OnChanges {
         });
         this.gesture.listen();
         
-        this.gesture.on('doubletap', e => this.doubleTapEvent(e));
+        //this.gesture.on('doubletap', e => this.doubleTapEvent(e));
         //this.gesture.on('pan', e => this.panEvent(e));
 
         //this.gesture.on('pinchstart', e => this.onPinchStart(e));

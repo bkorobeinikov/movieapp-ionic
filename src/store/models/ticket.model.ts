@@ -1,7 +1,7 @@
 
 import moment from 'moment';
 
-export class Ticket {
+export class Booking {
 
     cinemaId: string;
     hallId: string;

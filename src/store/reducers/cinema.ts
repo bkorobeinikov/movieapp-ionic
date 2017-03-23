@@ -10,7 +10,7 @@ export interface State {
     currentCinemaId: string,
     loading: boolean,
 
-    showtimes: { [id: string]: Showtime[] }, // key - cinemaid
+    showtimes: { [cinameId: string]: Showtime[] },
     showtimesLoading: boolean,
 }
 

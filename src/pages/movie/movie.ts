@@ -7,7 +7,7 @@ import { Movie } from './../../store/models'
 import { MovieService } from './../../core/movie.service'
 
 import moment from 'moment';
-import { TicketPage } from "../ticket/ticket";
+import { BookingPage } from "../booking/booking";
 
 import { Observable } from "rxjs/Observable";
 
@@ -57,7 +57,7 @@ export class MoviePage {
         });
     }
 
-    goToBuyTicket() {
-        this.appCtrl.getRootNav().push(TicketPage);
+    goToBooking() {
+        this.appCtrl.getRootNav().push(BookingPage);
     }
 }

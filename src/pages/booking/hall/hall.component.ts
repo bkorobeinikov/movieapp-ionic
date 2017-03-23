@@ -10,24 +10,14 @@ import _ from 'lodash';
     changeDetection: ChangeDetectionStrategy.OnPush //without this performance when panning svg is horrible
 })
 export class HallComponent implements OnInit {
-    private selectionValue: CinemaHallSeat[];
 
     @Input() hall: CinemaHall;
+    @Input() selection: CinemaHallSeat[];
 
-    @Input() 
-    get selection() {
-        return this.selectionValue;
-    }
-    set selection(val: CinemaHallSeat[]) {
-        this.selectionValue = val;
-        this.selectionChange.emit(this.selectionValue);
-    }
-    @Output() selectionChange: EventEmitter<any[]> = new EventEmitter<CinemaHallSeat[]>();
+    @Output() toggle: EventEmitter<CinemaHallSeat> = new EventEmitter<CinemaHallSeat>();
 
     public width: number;
     public height: number;
-
-    // public colors: any = null;
 
     constructor(private el: ElementRef) {
     }
@@ -40,13 +30,6 @@ export class HallComponent implements OnInit {
 
         if (this.hall == null || this.hall.seats == null)
             return;
-
-        // if (this.colors == null) {
-        //     this.colors = {};
-        //     this.hall.seats.forEach(s => {
-        //         this.colors[s.row + '_' + s.seat] = this.randomColor();
-        //     });
-        // }
 
         var seats = this.hall.seats;
 
@@ -65,20 +48,15 @@ export class HallComponent implements OnInit {
     }
 
     trackByFn(seat: CinemaHallSeat) {
-        return seat.row + "_" + seat.seat;
+        return seat.id;
     }
 
-    isSelected(seat: CinemaHallSeat) {
-        return this.selection.indexOf(seat) != -1;
+    onSeatToggle(seat: CinemaHallSeat) {
+        this.toggle.emit(seat);
     }
 
-    onSeat(seat: CinemaHallSeat) {
-        if (seat.available) {
-            if (this.isSelected(seat))
-                this.selection.splice(this.selection.indexOf(seat), 1);
-            else 
-                this.selection.push(seat);
-        }
+    selected(seat: CinemaHallSeat) {
+        return this.selection.indexOf(seat) > -1;
     }
 
 }
