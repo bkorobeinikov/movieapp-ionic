@@ -2,6 +2,7 @@ import { Action } from '@ngrx/store';
 import { type } from './../util';
 
 import { Showtime, Cinema } from './../models';
+import { CinemaMovie } from "../models/cinema-movie.model";
 
 export const ActionTypes = {
     LOAD: type("[Cinema] Load"),
@@ -36,19 +37,27 @@ export class LoadFailAction implements Action {
 export class ChangeCurrentAction implements Action {
     readonly type = ActionTypes.CHANGE_CURRENT;
 
+    /**
+     * 
+     * @param payload cinema id
+     */
     constructor(public payload: string) { }
 }
 
 export class ShowtimeLoadAction implements Action {
     readonly type = ActionTypes.SHOWTIME_LOAD;
 
+    /**
+     * 
+     * @param payload cinema id
+     */
     constructor(public payload: string) { }
 }
 
 export class ShowtimeLoadSuccessAction implements Action {
     readonly type = ActionTypes.SHOWTIME_LOAD_SUCCESS;
 
-    constructor(public payload: Showtime[]) { }
+    constructor(public payload: {showtimes: Showtime[], moviesMap: CinemaMovie[]}) { }
 }
 
 export class ShowtimeLoadFailAction implements Action {

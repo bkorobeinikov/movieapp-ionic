@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from "rxjs/Observable";
 
-import { Cinema, Showtime, CinemaHallSeat, CinemaHall } from "../store/models";
+import { Cinema, Showtime, CinemaHallSeat, CinemaHall, CinemaMovie } from "../store/models";
 import { Http, } from "@angular/http";
 
 import { BaseService } from "./base.service";
@@ -17,6 +17,13 @@ export class CinemaService extends BaseService {
     private showtimeUrl = {
         "pk-lvov": "http://planetakino.ua/lvov/ua/showtimes/xml/",
         "pk-lvov2": "http://planetakino.ua/lvov2/ua/showtimes/xml/",
+        "kiev-bloc": "http://planetakino.ua/kiev/ua/showtimes/xml/",
+        "imax-kiev": "http://planetakino.ua/kiev/ua/showtimes/xml/",
+        "pk-odessa2": "http://planetakino.ua/odessa2/ua/showtimes/xml/",
+        "pk-odessa": "http://planetakino.ua/odessa/ua/showtimes/xml/",
+        "pk-sumy": "http://planetakino.ua/sumy/ua/showtimes/xml/",
+        "pk-kharkov": "http://planetakino.ua/kharkov/ua/showtimes/xml/",
+        "pk-yalta": "http://planetakino.ua/yalta/ua/showtimes/xml/"
     };
 
     constructor(http: Http) {
@@ -32,18 +39,26 @@ export class CinemaService extends BaseService {
             });
     }
 
-    getShowtimes(cinemaId: string): Observable<Showtime[]> {
+    getShowtimes(cinemaId: string): Observable<{ showtimes: Showtime[], moviesMap: CinemaMovie[] }> {
         return this.getData<any>(this.showtimeUrl[cinemaId])
             .map(res => {
                 try {
                     var days: { show: any[] }[] = res.showtimes.day;
-                    return _.flatMap(days, d => {
+                    var showtimes = _.flatMap(days, d => {
                         if (d.show instanceof Array) {
                             return _.map(d.show, s => this.parseShow(s));
                         } else {
                             return this.parseShow(d.show);
                         }
                     });
+                    var movies = _.flatMap(res.movies.movie, m => {
+                        return this.parseCinemaMovie(cinemaId, m);
+                    });
+
+                    return {
+                        showtimes: showtimes,
+                        moviesMap: movies,
+                    };
                 }
                 catch (err) {
                     console.error(err);
@@ -67,7 +82,7 @@ export class CinemaService extends BaseService {
                 };
 
                 var seat: CinemaHallSeat = {
-                    id: `${showtime.cinemaId}_${showtime.hallId}_${r+1}_${c+1}`,
+                    id: `${showtime.cinemaId}_${showtime.hallId}_${r + 1}_${c + 1}`,
 
                     x: c * (style.width + style.marginLeft + style.marginRight),
                     y: r * (style.height + style.marginBottom + style.marginTop),
@@ -107,7 +122,7 @@ export class CinemaService extends BaseService {
         };
     }
 
-    private parseShow(showObj: any) {
+    private parseShow(showObj: any): Showtime {
         try {
             var res: Showtime = {
                 id: null,
@@ -124,6 +139,16 @@ export class CinemaService extends BaseService {
         catch (err) {
             console.log('parseShow: failed:', err)
             throw err;
+        }
+    }
+
+    private parseCinemaMovie(cinemaId:string, movieObj: any): CinemaMovie {
+        return {
+            cinemaId: cinemaId,
+            movieId: movieObj._id,
+            movieTitle: movieObj.title,
+            movieStartDate: moment(movieObj["dt-start"]).toDate(),
+            movieEndDate: moment(movieObj["dt-end"]).toDate(),
         }
     }
 }

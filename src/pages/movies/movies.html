@@ -1,14 +1,19 @@
 <ion-header>
     <ion-toolbar>
-        <ion-segment [(ngModel)]="filter" color="primary" (ionChange)="onFilterChange()">
-            <ion-segment-button value="today">
+        <ion-buttons start>
+            <button ion-button icon-only (click)="onCinemaChange($event)" class="cinemas-popover">
+                <ion-icon name="pin"></ion-icon>
+            </button>
+        </ion-buttons>
+        <ion-segment [ngModel]="category$ | async" color="primary" (ionChange)="onCategoryChange($event)">
+            <ion-segment-button value="current">
                 Today
             </ion-segment-button>
             <ion-segment-button value="future">
-                Comming Soon
+                Comming Soon 
             </ion-segment-button>
         </ion-segment>
-    </ion-toolbar>
+    </ion-toolbar> 
 </ion-header>
 
 <ion-content padding class="page-content" [ngClass]="{'loading': (loading$ | async)}">
@@ -34,9 +39,9 @@
     </ng-container>
 
     <ng-container *ngIf="(loading$ | async) == false">
-        <ng-container [ngSwitch]="filter">
-            <div *ngSwitchCase="'today'" class="movies current">
-                <div *ngFor="let movie of current$ | async" class="movie-detail" (tap)="openMovie(movie)">
+        <ng-container [ngSwitch]="category$ | async">
+            <div *ngSwitchCase="'current'" class="movies current">
+                <div *ngFor="let movie of movies$ | async" class="movie-detail" (tap)="openMovie(movie)">
                     <div class="poster">
                         <div class="content">
                             <img src="{{movie.poster}}">
@@ -60,7 +65,7 @@
                 </div>
             </div>
             <div *ngSwitchCase="'future'" class="movies future">
-                <div *ngFor="let movie of future$ | async" class="movie-icon future" (tap)="openMovie(movie)">
+                <div *ngFor="let movie of movies$ | async" class="movie-icon future" (tap)="openMovie(movie)">
                     <div class="poster">
                         <div class="content">
                             <img src="{{movie.poster}}">

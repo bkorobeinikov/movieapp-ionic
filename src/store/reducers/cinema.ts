@@ -1,7 +1,7 @@
 import { createSelector } from 'reselect';
 
 import * as cinema from './../actions/cinema';
-import { Showtime, Cinema } from './../models';
+import { Showtime, Cinema, CinemaMovie } from './../models';
 
 import * as _ from 'lodash';
 
@@ -10,6 +10,7 @@ export interface State {
     currentCinemaId: string,
     loading: boolean,
 
+    movies: { [cinemaId: string]: CinemaMovie[] },
     showtimes: { [cinameId: string]: Showtime[] },
     showtimesLoading: boolean,
 }
@@ -19,6 +20,7 @@ export const initialState: State = {
     currentCinemaId: null,
     loading: false,
 
+    movies: {},
     showtimes: {},
     showtimesLoading: false,
 };
@@ -74,12 +76,15 @@ export function reducer(state = initialState, actionRaw: cinema.Actions) {
             });
         }
         case cinema.ActionTypes.SHOWTIME_LOAD_SUCCESS: {
-            var action = <cinema.ShowtimeLoadSuccessAction>actionRaw;
+            let action = <cinema.ShowtimeLoadSuccessAction>actionRaw;
 
-            var newShowtimes: { [id: string]: Showtime[] } = _.chain(action.payload)
+            let newMovies: { [id: string]: CinemaMovie[] } = _.chain(action.payload.moviesMap)
+                .groupBy(m => m.cinemaId).value();
+            let newShowtimes: { [id: string]: Showtime[] } = _.chain(action.payload.showtimes)
                 .groupBy(s => s.cinemaId).value();
 
             return Object.assign({}, state, {
+                movies: Object.assign({}, state.movies, newMovies),
                 showtimes: Object.assign({}, state.showtimes, newShowtimes),
                 showtimesLoading: false,
             });
@@ -102,6 +107,11 @@ export const getCurrentCinemaId = (state: State) => state.currentCinemaId;
 export const getCurrentCinema = createSelector(getCinemas, getCurrentCinemaId, (entities, currentId) => {
     return entities[currentId]
 });
+
+const getMovies = (state: State) => state.movies;
+export const getCurrentMovies = createSelector(getCurrentCinemaId, getMovies, (cinemaId, movies) => {
+    return movies[cinemaId];
+})
 
 export const getShowtimes = (state: State) => state.showtimes;
 export const getShowtimesLoading = (state: State) => state.showtimesLoading;
