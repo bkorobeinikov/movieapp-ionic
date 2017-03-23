@@ -18,7 +18,7 @@
                     <ion-label>
                         {{tech}}
                     </ion-label>
-                    <ion-radio [value]="tech" [checked]="tech == selectedTechId"></ion-radio>
+                    <ion-radio [value]="tech"></ion-radio>
                 </ion-item>
             </ng-container>
         </div>
@@ -28,7 +28,7 @@
                     <ion-label>
                         {{showtime.time | moment:"HH:mm"}}
                     </ion-label>
-                    <ion-radio [value]="showtime.id" [checked]="showtime.id == selectedShowtime?.id" [disabled]="!isAfterNow(showtime.time)"></ion-radio>
+                    <ion-radio [value]="showtime.id" [disabled]="!isAfterNow(showtime.time)"></ion-radio>
                 </ion-item>
             </ng-container>
             <div *ngIf="filteredShowtimes?.length % 3 == 2">

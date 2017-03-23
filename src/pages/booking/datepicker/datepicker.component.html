@@ -6,7 +6,7 @@
                     <div class="dayOfWeek"><span>{{date | moment: "ddd"}}</span></div>
                     <div class="day"><span>{{date | moment: "D"}}</span></div>
                 </ion-label>
-                <ion-radio [value]="date.valueOf()" [checked]="date.valueOf() == selected?.valueOf()" [disabled]="date.inactive"></ion-radio>
+                <ion-radio [value]="date.valueOf()" [disabled]="date.inactive"></ion-radio>
             </ion-item>
         </ion-slide>
     </ng-container>

@@ -1,12 +1,10 @@
-import { Component, SimpleChanges, ViewChild, ElementRef, OnChanges } from '@angular/core';
-
-import { NavParams, Segment, Slides, App } from 'ionic-angular';
+import { Component} from '@angular/core';
+import { App } from 'ionic-angular';
 
 import moment from 'moment';
 import _ from 'lodash';
 
 import { Showtime, Movie, CinemaHall, CinemaHallSeat } from "../../store/models";
-import { MovieService } from "../../core/movie.service";
 
 import { CheckoutPage } from "./../checkout/checkout";
 
@@ -48,7 +46,6 @@ export class BookingPage {
 
     constructor(
         private appCtrl: App,
-        private movieService: MovieService,
         private store: Store<fromRoot.State>) {
 
         this.movie$ = store.select(fromRoot.getMovieSelected);
