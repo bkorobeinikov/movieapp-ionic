@@ -1,14 +1,19 @@
 <ion-header>
     <ion-toolbar>
+        <ion-buttons start>
+            <button ion-button (click)="onCinemaChange($event)" class="cinemas-popover">
+                {{(cinema$ | async)?.nameShort}}
+            </button>
+        </ion-buttons>
         <ion-segment [(ngModel)]="filter" color="primary" (ionChange)="onFilterChange()">
             <ion-segment-button value="today">
                 Today
             </ion-segment-button>
             <ion-segment-button value="future">
-                Comming Soon
+                Comming Soon 
             </ion-segment-button>
         </ion-segment>
-    </ion-toolbar>
+    </ion-toolbar> 
 </ion-header>
 
 <ion-content padding class="page-content" [ngClass]="{'loading': (loading$ | async)}">

@@ -22,6 +22,7 @@ import { MomentPipe } from './../shared/moment.pipe';
 import { HallComponent } from './../pages/booking/hall/hall.component';
 import { DatePicker } from './../pages/booking/datepicker/datepicker.component';
 import { BookingCartComponent } from './../pages/booking/cart/booking-cart.component';
+import { CinemasPopoverComponent } from './../pages/movies/cinemas-popover/cinemas-popover.component';
 
 import { SvgPanZoomDirective } from './../shared/svg-pan-zoom.directive';
 
@@ -64,6 +65,7 @@ import { MovieEffects, CinemaEffects, BookingEffects } from './../store/effects'
     HallComponent,
     DatePicker,
     BookingCartComponent,
+    CinemasPopoverComponent,
     SvgPanZoomDirective,
   ],
   bootstrap: [IonicApp],
@@ -77,7 +79,9 @@ import { MovieEffects, CinemaEffects, BookingEffects } from './../store/effects'
     PaymentPage,
     TabsPage,
     NewsPage,
-    AccountPage
+    AccountPage,
+
+    CinemasPopoverComponent,
   ],
   providers: [{provide: ErrorHandler, useClass: IonicErrorHandler}]
 })

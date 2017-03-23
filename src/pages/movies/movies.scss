@@ -31,6 +31,12 @@ page-movies {
 
     font-size: 16px;
 
+    ion-toolbar {
+        .cinemas-popover {
+            font-size: .7em;
+        }
+    }
+
     .movies {
         display: flex;
         &.current {

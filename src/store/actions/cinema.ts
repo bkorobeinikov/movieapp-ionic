@@ -36,12 +36,20 @@ export class LoadFailAction implements Action {
 export class ChangeCurrentAction implements Action {
     readonly type = ActionTypes.CHANGE_CURRENT;
 
+    /**
+     * 
+     * @param payload cinema id
+     */
     constructor(public payload: string) { }
 }
 
 export class ShowtimeLoadAction implements Action {
     readonly type = ActionTypes.SHOWTIME_LOAD;
 
+    /**
+     * 
+     * @param payload cinema id
+     */
     constructor(public payload: string) { }
 }
 

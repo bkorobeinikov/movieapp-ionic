@@ -16,7 +16,7 @@ import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/do';
 
 import { Action, Store } from "@ngrx/store";
-import { Effect, Actions } from '@ngrx/effects';
+import { Effect, Actions, toPayload } from '@ngrx/effects';
 
 import * as cinema from './../actions/cinema';
 import { CinemaService } from "../../core/cinema.service";
@@ -27,7 +27,7 @@ import * as fromRoot from './../reducers';
 export class CinemaEffects {
 
     @Effect()
-    load$: Observable<Action> = this.actions$
+    load$ = this.actions$
         .ofType(cinema.ActionTypes.LOAD)
         .startWith(new cinema.LoadAction())
         .switchMap(payload => {
@@ -37,11 +37,16 @@ export class CinemaEffects {
         });
 
     @Effect()
-    loadShowtimes$: Observable<Action> = this.actions$
+    cinemaChange$ = this.actions$
         .ofType(cinema.ActionTypes.CHANGE_CURRENT, cinema.ActionTypes.LOAD_SUCCESS)
         .withLatestFrom(this.store.select(fromRoot.getCinemaCurrentId))
-        .do(([action, cinemaId]) => this.store.dispatch(new cinema.ShowtimeLoadAction(cinemaId)))
-        .switchMap(([action, cinemaId]) => {
+        .map(([action, cinemaId]) => new cinema.ShowtimeLoadAction(cinemaId));
+
+    @Effect()
+    loadShowtimes$: Observable<Action> = this.actions$
+        .ofType(cinema.ActionTypes.SHOWTIME_LOAD)
+        .map(toPayload)
+        .switchMap(cinemaId => {
             return this.cinemaService.getShowtimes(cinemaId)
                 .map(showtimes => new cinema.ShowtimeLoadSuccessAction(showtimes))
                 .catch((err) => of(new cinema.ShowtimeLoadFailAction(err)))

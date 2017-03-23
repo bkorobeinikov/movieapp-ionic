@@ -17,6 +17,13 @@ export class CinemaService extends BaseService {
     private showtimeUrl = {
         "pk-lvov": "http://planetakino.ua/lvov/ua/showtimes/xml/",
         "pk-lvov2": "http://planetakino.ua/lvov2/ua/showtimes/xml/",
+        "kiev-bloc": "http://planetakino.ua/kiev/ua/showtimes/xml/",
+        "imax-kiev": "http://planetakino.ua/kiev/ua/showtimes/xml/",
+        "pk-odessa2": "http://planetakino.ua/odessa2/ua/showtimes/xml/",
+        "pk-odessa": "http://planetakino.ua/odessa/ua/showtimes/xml/",
+        "pk-sumy": "http://planetakino.ua/sumy/ua/showtimes/xml/",
+        "pk-kharkov": "http://planetakino.ua/kharkov/ua/showtimes/xml/",
+        "pk-yalta": "http://planetakino.ua/yalta/ua/showtimes/xml/"
     };
 
     constructor(http: Http) {

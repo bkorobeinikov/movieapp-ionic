@@ -1,5 +1,5 @@
 ﻿import { Component, OnInit, OnDestroy, ViewChild, OnChanges, SimpleChanges, ChangeDetectionStrategy } from '@angular/core';
-import { App, ViewController, NavController, Content } from 'ionic-angular';
+import { App, ViewController, NavController, Content, PopoverController } from 'ionic-angular';
 
 import { Observable } from "rxjs/Observable";
 
@@ -8,11 +8,13 @@ import { MoviePage } from './../movie/movie';
 import * as _ from 'lodash';
 import moment from 'moment';
 
-import { Movie } from "../../store/models";
+import { Movie, Cinema } from "../../store/models";
 import * as fromRoot from './../../store/reducers';
 import { movie as fromMovie } from './../../store/actions';
 
 import { Store } from "@ngrx/store";
+
+import { CinemasPopoverComponent } from './cinemas-popover/cinemas-popover.component'
 
 @Component({
     selector: 'page-movies',
@@ -22,6 +24,8 @@ import { Store } from "@ngrx/store";
 export class MoviesPage implements OnChanges {
 
     public filter: string;
+
+    public cinema$: Observable<Cinema>;
 
     public current$: Observable<Movie[]>
     public future$: Observable<Movie[]>
@@ -34,7 +38,10 @@ export class MoviesPage implements OnChanges {
         private appCtrl: App,
         private viewCtrl: ViewController,
         private navCtrl: NavController,
+        private popoverCtrl: PopoverController,
         private store: Store<fromRoot.State>) {
+
+        this.cinema$ = store.select(fromRoot.getCinemaCurrent);
 
         this.current$ = store.select(fromRoot.getMovieCurrent);
         this.future$ = store.select(fromRoot.getMovieFuture);
@@ -68,6 +75,13 @@ export class MoviesPage implements OnChanges {
         this.store.dispatch(new fromMovie.SelectAction(movie.id));
 
         this.appCtrl.getRootNav().push(MoviePage);
+    }
+
+    onCinemaChange(event: any) {
+        let popover = this.popoverCtrl.create(CinemasPopoverComponent);
+        popover.present({
+            ev: event
+        });
     }
 
 }

@@ -64,7 +64,10 @@ export const getUiRootTabIndex = createSelector(getUiState, fromUi.getRootTabInd
 // cinema state
 export const getCinemaState = (state: State) => state.cinema;
 
-const getCinemas = createSelector(getCinemaState, fromCinema.getCinemas);
+const getCinemaEntities = createSelector(getCinemaState, fromCinema.getCinemas);
+export const getCinemas = createSelector(getCinemaEntities, (cinemas) => {
+    return Object.keys(cinemas).map(key => cinemas[key]);
+});
 export const getCinemaCurrentId = createSelector(getCinemaState, fromCinema.getCurrentCinemaId);
 export const getCinemaCurrent = createSelector(getCinemaState, fromCinema.getCurrentCinema);
 export const getCinemaCurrentShowtimes = createSelector(getCinemaState, fromCinema.getCurrentShowtimes);
@@ -87,7 +90,7 @@ export const getBookingHall = createSelector(getBookingState, fromBooking.getHal
 
 export const getBookingSeats = createSelector(getBookingState, fromBooking.getSeats);
 
-const getBookingShowtimeCinema = createSelector(getCinemas, getBookingShowtime, (cinemas, showtime) => {
+const getBookingShowtimeCinema = createSelector(getCinemaEntities, getBookingShowtime, (cinemas, showtime) => {
     if (showtime == null)
         return null;
         
