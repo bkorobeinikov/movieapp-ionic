@@ -22,13 +22,13 @@
                 </ion-item>
             </ng-container>
         </div>
-        <div class="time" [ngClass]="{'center': filteredShowtimes?.length <= 3}" radio-group [ngModel]="selectedShowtimeId" (ionChange)="onTimeChange($event)">
+        <div class="time" [ngClass]="{'center': filteredShowtimes?.length <= 3}" radio-group [ngModel]="selectedShowtime?.id" (ionChange)="onTimeChange($event)">
             <ng-container *ngFor="let showtime of filteredShowtimes">
                 <ion-item>
                     <ion-label>
                         {{showtime.time | moment:"HH:mm"}}
                     </ion-label>
-                    <ion-radio [value]="showtime.id" [checked]="showtime.id == selectedShowtimeId" [disabled]="!isAfterNow(showtime.time)"></ion-radio>
+                    <ion-radio [value]="showtime.id" [checked]="showtime.id == selectedShowtime?.id" [disabled]="!isAfterNow(showtime.time)"></ion-radio>
                 </ion-item>
             </ng-container>
             <div *ngIf="filteredShowtimes?.length % 3 == 2">
@@ -42,7 +42,7 @@
     </div>
 
     <div class="seats-container">
-        <div class="info" *ngIf="selectedShowtimeId == null">  
+        <div class="info" *ngIf="selectedShowtime == null">  
             Please select time to be able to select seats
         </div>
         <ion-spinner *ngIf="hallLoading$ | async"></ion-spinner>

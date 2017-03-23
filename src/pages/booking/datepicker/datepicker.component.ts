@@ -15,10 +15,11 @@ export class DatePicker {
     @ViewChild('dateSwiperPrev') dateSwiperPrev: ElementRef;
 
     public dates: Date[];
+    public selected: Date;
 
     @Input("dates")
-    set datesPublic(val: Date[]) {
-        this.dates = _.clone(val);
+    set datesProp(val: Date[]) {
+        this.dates = _.clone(val.map(v => moment(v).startOf("date").toDate()));
 
         if (val.length < 7) {
             let before = Math.round((7 - val.length) / 2);
@@ -35,11 +36,18 @@ export class DatePicker {
             });
         }
     }
-    get datesPublic(): Date[] {
+    get datesProp(): Date[] {
         return this.dates;
     }
 
-    @Input() selected: Date;
+    @Input("selected")
+    set selectedProp(val: Date) {
+        this.selected = moment(val).startOf("date").toDate();
+    }
+    get selectedProp() {
+        return this.selected;
+    }
+
     @Output() change = new EventEmitter<Date>();
 
     constructor() {
@@ -51,6 +59,7 @@ export class DatePicker {
     }
 
     onDateChange(date: Date) {
-        this.change.emit(date);
+        if (this.selected.valueOf() != date.valueOf())
+            this.change.emit(date);
     }
 }

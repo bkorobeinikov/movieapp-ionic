@@ -37,7 +37,8 @@ export class BookingPage {
     public selectedTechId: string;
 
     public filteredShowtimes: Showtime[];
-    public selectedShowtimeId: string;
+    public selectedShowtime: Showtime;
+    public selectedShowtimeId$: Observable<string>;
 
     public hallLoading$: Observable<boolean>;
     public hall$: Observable<CinemaHall>;
@@ -53,6 +54,7 @@ export class BookingPage {
         this.movie$ = store.select(fromRoot.getMovieSelected);
         this.loading$ = store.select(fromRoot.getCinemaShowtimesLoading);
         this.showtimes$ = store.select(fromRoot.getBookingAvailableShowtimes);
+        this.selectedShowtimeId$ = store.select(fromRoot.getBookingShowtimeId);
 
         this.hallLoading$ = store.select(fromRoot.getBookingHallLoading);
         this.hall$ = store.select(fromRoot.getBookingHall);
@@ -64,9 +66,14 @@ export class BookingPage {
         });
         this.subscriptions.add(s);
         s = this.showtimes$.subscribe(showtimes => {
+            console.log('onshowtimeschange2222:', showtimes);
             this.showtimes = showtimes;
 
             this.onShowtimesChange();
+        });
+        this.subscriptions.add(s);
+        s = this.selectedShowtimeId$.subscribe(showtimeId => {
+            this.onSelectedShowtimeChange(showtimeId);
         });
         this.subscriptions.add(s);
 
@@ -79,20 +86,21 @@ export class BookingPage {
 
     private onShowtimesChange() {
         this.dates = _.chain(this.showtimes)
-            .map(v => moment(v.time).startOf("date").toDate())
-            .uniqBy(d => d.valueOf()).value();
+            .map(v => v.time.toDate())
+            .uniqBy(v => moment(v).startOf("date").valueOf())
+            .value();
 
-        this.onDateChange(this.dates[0]);
+        var newDate = this.dates[0];
+        if (this.selectedShowtime != null) {
+            newDate = this.selectedShowtime.time.toDate();
+        };
+
+        this.onDateChange(newDate);
     }
 
     onDateChange(value: Date) {
-        if (this.dates == null)
-            return;
-
-        this.selectedDate = this.dates.indexOf(value) > -1 ? value : null;
-
-        if (this.selectedDate == null)
-            return;
+        console.log('onDateChange', value);
+        this.selectedDate = value;
 
         var techs = _.chain(this.showtimes)
             .filter(s => s.time.isSame(this.selectedDate, 'day'))
@@ -100,10 +108,17 @@ export class BookingPage {
             .uniq().value();
 
         this.technologies = techs;
-        this.onTechChange(this.technologies[0]);
+
+        let oldTechId = this.selectedTechId;
+        let newTechId = this.technologies.indexOf(oldTechId) > -1 ? oldTechId : this.technologies[0];
+        if (this.selectedShowtime != null)
+            newTechId = this.selectedShowtime.techId;
+
+        this.onTechChange(newTechId);
     }
 
     onTechChange(techId: string) {
+        console.log('onTechChange1', techId);
         try {
             this.selectedTechId = techId;
 
@@ -112,18 +127,35 @@ export class BookingPage {
                 .sortBy(v => v.time.valueOf())
                 .value();
 
-            this.onTimeChange(null);
+            if (this.filteredShowtimes.indexOf(this.selectedShowtime) == -1) {
+                this.onTimeChange(null);
+            }
         }
         catch (err) {
-
+            console.error(err);
         }
     }
 
     onTimeChange(showtimeId: string) {
-        this.selectedShowtimeId = showtimeId;
+        console.log('onTimeChange1', showtimeId);
+        let currentId = this.selectedShowtime != null ? this.selectedShowtime.id : null;
 
-        let showtime = this.showtimes.find(s => s.id == showtimeId);
-        this.store.dispatch(new booking.SelectShowtimeAction(showtime));
+        if (currentId !== showtimeId) {
+            let showtime = this.showtimes.find(s => s.id == showtimeId);
+            this.selectedShowtime = showtime;
+            this.store.dispatch(new booking.SelectShowtimeAction(showtime));
+        }
+    }
+
+    onSelectedShowtimeChange(showtimeId: string) {
+        console.log('onSelectedShowtimeChange1', showtimeId);
+        let newShowtime = this.showtimes.find(s => s.id == showtimeId);
+
+        if (this.selectedShowtime != newShowtime) {
+            console.log('onSelectedshowtimechange:different')
+            this.selectedShowtime = newShowtime;
+            this.onShowtimesChange(); // refresh datepicker and tech according to selected showtime id
+        }
     }
 
     checkout() {
