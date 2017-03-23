@@ -1,0 +1,9 @@
+<div class="cart-total">
+    <span class="cart-selection" *ngIf="seats?.length > 0">
+        <span class="cart-row" *ngFor="let row of getRows(seats)">
+            <span class="cart-row-label">{{row}}</span>
+            <span class="cart-seat" *ngFor="let seat of filterByRow(row, seats)">{{seat.seat}}</span>
+        </span>
+    </span>
+    <span class="cart-price" *ngIf="seats?.length > 0">- {{getTotalSum(seats)}}грн.</span>
+</div>
