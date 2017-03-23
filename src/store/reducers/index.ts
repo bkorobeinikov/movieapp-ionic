@@ -77,7 +77,7 @@ export const getBookingAvailableShowtimes = createSelector(getMovieSelectedId, g
 });
 
 export const getBookingShowtimeId = createSelector(getBookingState, fromBooking.getShowtimeId);
-export const getBookingShowtime = createSelector(getCinemaCurrentShowtimes, getBookingShowtimeId, (showtimes, showtimeId) => {
+export const getBookingShowtime = createSelector(getBookingAvailableShowtimes, getBookingShowtimeId, (showtimes, showtimeId) => {
     return showtimes.find(s => s.id == showtimeId);
 });
 

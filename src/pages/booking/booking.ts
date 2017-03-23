@@ -38,7 +38,7 @@ export class BookingPage {
 
     public filteredShowtimes: Showtime[];
     public selectedShowtime: Showtime;
-    public selectedShowtimeId$: Observable<string>;
+    public selectedShowtime$: Observable<Showtime>;
 
     public hallLoading$: Observable<boolean>;
     public hall$: Observable<CinemaHall>;
@@ -54,7 +54,7 @@ export class BookingPage {
         this.movie$ = store.select(fromRoot.getMovieSelected);
         this.loading$ = store.select(fromRoot.getCinemaShowtimesLoading);
         this.showtimes$ = store.select(fromRoot.getBookingAvailableShowtimes);
-        this.selectedShowtimeId$ = store.select(fromRoot.getBookingShowtimeId);
+        this.selectedShowtime$ = store.select(fromRoot.getBookingShowtime);
 
         this.hallLoading$ = store.select(fromRoot.getBookingHallLoading);
         this.hall$ = store.select(fromRoot.getBookingHall);
@@ -66,14 +66,12 @@ export class BookingPage {
         });
         this.subscriptions.add(s);
         s = this.showtimes$.subscribe(showtimes => {
-            console.log('onshowtimeschange2222:', showtimes);
             this.showtimes = showtimes;
-
             this.onShowtimesChange();
         });
         this.subscriptions.add(s);
-        s = this.selectedShowtimeId$.subscribe(showtimeId => {
-            this.onSelectedShowtimeChange(showtimeId);
+        s = this.selectedShowtime$.subscribe(showtime => {
+            this.onSelectedShowtimeChange(showtime);
         });
         this.subscriptions.add(s);
 
@@ -99,7 +97,6 @@ export class BookingPage {
     }
 
     onDateChange(value: Date) {
-        console.log('onDateChange', value);
         this.selectedDate = value;
 
         var techs = _.chain(this.showtimes)
@@ -118,7 +115,6 @@ export class BookingPage {
     }
 
     onTechChange(techId: string) {
-        console.log('onTechChange1', techId);
         try {
             this.selectedTechId = techId;
 
@@ -137,7 +133,6 @@ export class BookingPage {
     }
 
     onTimeChange(showtimeId: string) {
-        console.log('onTimeChange1', showtimeId);
         let currentId = this.selectedShowtime != null ? this.selectedShowtime.id : null;
 
         if (currentId !== showtimeId) {
@@ -147,13 +142,9 @@ export class BookingPage {
         }
     }
 
-    onSelectedShowtimeChange(showtimeId: string) {
-        console.log('onSelectedShowtimeChange1', showtimeId);
-        let newShowtime = this.showtimes.find(s => s.id == showtimeId);
-
-        if (this.selectedShowtime != newShowtime) {
-            console.log('onSelectedshowtimechange:different')
-            this.selectedShowtime = newShowtime;
+    onSelectedShowtimeChange(showtime: Showtime) {
+        if (this.selectedShowtime != showtime) {
+            this.selectedShowtime = showtime;
             this.onShowtimesChange(); // refresh datepicker and tech according to selected showtime id
         }
     }
