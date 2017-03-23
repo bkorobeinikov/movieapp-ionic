@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from "rxjs/Observable";
 
 import { Cinema, Showtime, CinemaHallSeat, CinemaHall } from "../store/models";
-import { Http, Headers, Response } from "@angular/http";
+import { Http, } from "@angular/http";
 
 import { BaseService } from "./base.service";
 
