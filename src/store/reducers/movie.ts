@@ -5,7 +5,7 @@ import { Movie } from './../models';
 
 export interface State {
     ids: string[],
-    entities: { [id: string]: Movie },
+    entities: { [movieId: string]: Movie },
     loading: boolean,
 
     selectedId: string;
@@ -67,14 +67,6 @@ export const getSelectedId = (state: State) => state.selectedId;
 
 export const getAll = createSelector(getEntities, getIds, (entities, ids) => {
     return ids.map(id => entities[id]);
-});
-
-export const getCurrent = createSelector(getAll, (movies) => {
-    return movies.filter(m => !m.soon);
-});
-
-export const getFuture = createSelector(getAll, (movies) => {
-    return movies.filter(m => m.soon);
 });
 
 export const getSelected = createSelector(getEntities, getSelectedId, (entities, id) => {

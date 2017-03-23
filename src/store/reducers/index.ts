@@ -45,12 +45,9 @@ export function reducer(state: State, action: any) {
 
 const getMovieState = (state: State) => state.movie;
 
-export const getMovieEntities = createSelector(getMovieState, fromMovie.getEntities);
-export const getMovieIds = createSelector(getMovieState, fromMovie.getIds);
+const getMovieEntities = createSelector(getMovieState, fromMovie.getEntities);
+const getMovieIds = createSelector(getMovieState, fromMovie.getIds);
 export const getMovieLoading = createSelector(getMovieState, fromMovie.getLoading);
-
-export const getMovieCurrent = createSelector(getMovieState, fromMovie.getCurrent);
-export const getMovieFuture = createSelector(getMovieState, fromMovie.getFuture);
 
 export const getMovieSelectedId = createSelector(getMovieState, fromMovie.getSelectedId);
 export const getMovieSelected = createSelector(getMovieState, fromMovie.getSelected);
@@ -60,6 +57,7 @@ export const getMovieSelected = createSelector(getMovieState, fromMovie.getSelec
 const getUiState = (state: State) => state.ui;
 
 export const getUiRootTabIndex = createSelector(getUiState, fromUi.getRootTabIndex);
+export const getUiMoviesCategory = createSelector(getUiState, fromUi.getMoviesCategory);
 
 // cinema state
 export const getCinemaState = (state: State) => state.cinema;
@@ -70,6 +68,24 @@ export const getCinemas = createSelector(getCinemaEntities, (cinemas) => {
 });
 export const getCinemaCurrentId = createSelector(getCinemaState, fromCinema.getCurrentCinemaId);
 export const getCinemaCurrent = createSelector(getCinemaState, fromCinema.getCurrentCinema);
+const getCinemaCurrentMoviesMap = createSelector(getCinemaState, fromCinema.getCurrentMovies);
+export const getCinemaCurrentMovies = createSelector(getUiMoviesCategory, getMovieEntities, getCinemaCurrentMoviesMap, (category, movies, moviesMap) => {
+    console.log('getCinemaCurrentMovies', movies, moviesMap);
+
+    if (movies == null || moviesMap == null)
+        return null;
+
+    return moviesMap.map(m => movies[m.movieId]).filter(m => {
+        if (m === undefined)
+            return;
+
+        if (category == "future")
+            return m.soon == true;
+        else if (category == "current")
+            return m.soon == false;
+    });
+
+});
 export const getCinemaCurrentShowtimes = createSelector(getCinemaState, fromCinema.getCurrentShowtimes);
 export const getCinemaShowtimesLoading = createSelector(getCinemaState, fromCinema.getShowtimesLoading);
 
@@ -93,7 +109,7 @@ export const getBookingSeats = createSelector(getBookingState, fromBooking.getSe
 const getBookingShowtimeCinema = createSelector(getCinemaEntities, getBookingShowtime, (cinemas, showtime) => {
     if (showtime == null)
         return null;
-        
+
     return cinemas[showtime.cinemaId];
 });
 const getBookingShowtimeMovie = createSelector(getMovieEntities, getBookingShowtime, (movies, showtime) => {

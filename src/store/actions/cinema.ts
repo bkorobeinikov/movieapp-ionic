@@ -2,6 +2,7 @@ import { Action } from '@ngrx/store';
 import { type } from './../util';
 
 import { Showtime, Cinema } from './../models';
+import { CinemaMovie } from "../models/cinema-movie.model";
 
 export const ActionTypes = {
     LOAD: type("[Cinema] Load"),
@@ -56,7 +57,7 @@ export class ShowtimeLoadAction implements Action {
 export class ShowtimeLoadSuccessAction implements Action {
     readonly type = ActionTypes.SHOWTIME_LOAD_SUCCESS;
 
-    constructor(public payload: Showtime[]) { }
+    constructor(public payload: {showtimes: Showtime[], moviesMap: CinemaMovie[]}) { }
 }
 
 export class ShowtimeLoadFailAction implements Action {

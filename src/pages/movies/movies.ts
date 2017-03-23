@@ -10,7 +10,7 @@ import moment from 'moment';
 
 import { Movie, Cinema } from "../../store/models";
 import * as fromRoot from './../../store/reducers';
-import { movie as fromMovie } from './../../store/actions';
+import { movie as fromMovie, ui as fromUi } from './../../store/actions';
 
 import { Store } from "@ngrx/store";
 
@@ -23,12 +23,10 @@ import { CinemasPopoverComponent } from './cinemas-popover/cinemas-popover.compo
 })
 export class MoviesPage implements OnChanges {
 
-    public filter: string;
+    public category$: Observable<string>;
 
     public cinema$: Observable<Cinema>;
-
-    public current$: Observable<Movie[]>
-    public future$: Observable<Movie[]>
+    public movies$: Observable<Movie[]>
 
     public loading$: Observable<boolean>;
 
@@ -41,15 +39,12 @@ export class MoviesPage implements OnChanges {
         private popoverCtrl: PopoverController,
         private store: Store<fromRoot.State>) {
 
+        this.category$ = store.select(fromRoot.getUiMoviesCategory);
         this.cinema$ = store.select(fromRoot.getCinemaCurrent);
-
-        this.current$ = store.select(fromRoot.getMovieCurrent);
-        this.future$ = store.select(fromRoot.getMovieFuture);
+        this.movies$ = store.select(fromRoot.getCinemaCurrentMovies);
         this.loading$ = store.select(fromRoot.getMovieLoading);
 
         this.store.dispatch(new fromMovie.LoadAction());
-
-        this.filter = "today";
     }
 
     ionViewDidEnter() {
@@ -59,7 +54,8 @@ export class MoviesPage implements OnChanges {
     ionViewDidLeave() {
     }
 
-    onFilterChange() {
+    onCategoryChange(ev: {value: "current" | "future"}) {
+        this.store.dispatch(new fromUi.ChangeMoviesCategoryAction(ev.value));
         this.content.scrollToTop(0);
     }
 
