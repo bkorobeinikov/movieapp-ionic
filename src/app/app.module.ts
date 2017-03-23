@@ -21,6 +21,8 @@ import { MomentPipe } from './../shared/moment.pipe';
 
 import { HallComponent } from './../pages/booking/hall/hall.component';
 import { DatePicker } from './../pages/booking/datepicker/datepicker.component';
+import { BookingCartComponent } from './../pages/booking/cart/booking-cart.component';
+
 import { SvgPanZoomDirective } from './../shared/svg-pan-zoom.directive';
 
 import { StoreModule } from '@ngrx/store';
@@ -61,6 +63,7 @@ import { MovieEffects, CinemaEffects, BookingEffects } from './../store/effects'
 
     HallComponent,
     DatePicker,
+    BookingCartComponent,
     SvgPanZoomDirective,
   ],
   bootstrap: [IonicApp],

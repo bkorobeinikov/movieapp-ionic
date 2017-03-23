@@ -22,8 +22,6 @@ import { Subscription } from "rxjs/Subscription";
 })
 export class BookingPage {
     public movie$: Observable<Movie>;
-    public movie: Movie;
-
     public loading$: Observable<boolean>;
 
     public showtimes$: Observable<Showtime[]>;
@@ -43,7 +41,6 @@ export class BookingPage {
     public hall$: Observable<CinemaHall>;
 
     public seats$: Observable<CinemaHallSeat[]>;
-    public seats: CinemaHallSeat[];
 
     public subscriptions: Subscription = new Subscription();
 
@@ -63,11 +60,7 @@ export class BookingPage {
     }
 
     ngOnInit() {
-        let s = this.movie$.subscribe(m => {
-            this.movie = m;
-        });
-        this.subscriptions.add(s);
-        s = this.showtimes$.subscribe(showtimes => {
+        let s = this.showtimes$.subscribe(showtimes => {
             this.showtimes = showtimes;
             this.onShowtimesChange();
         });
@@ -76,12 +69,6 @@ export class BookingPage {
             this.onSelectedShowtimeChange(showtime);
         });
         this.subscriptions.add(s);
-        this.seats$.subscribe(seats => {
-            this.seats = seats;
-        });
-        this.subscriptions.add(s);
-
-        this.seats = [];
     }
 
     ngOnDestroy() {
@@ -156,25 +143,10 @@ export class BookingPage {
     }
 
     checkout() {
-        var booking = [{}, {}];
-
-        this.appCtrl.getRootNav().push(CheckoutPage, {
-            movie: this.movie,
-            booking: booking
-        });
+        this.appCtrl.getRootNav().push(CheckoutPage);
     }
 
-    getRows(seats: CinemaHallSeat[]) {
-        return _.chain(seats).map(s => s.row).uniq().value();
-    }
-
-    filterByRow(row: number, seats: CinemaHallSeat[]) {
-        return seats.filter(s => s.row == row);
-    }
-
-    getTotalSum(seats: CinemaHallSeat[]) {
-        return _.sumBy(seats, s => s.price);
-    }
+    
 
     isAfterNow(time: moment.Moment | Date) {
         return moment().isBefore(time);

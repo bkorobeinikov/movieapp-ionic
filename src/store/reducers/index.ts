@@ -1,5 +1,5 @@
 import { compose } from '@ngrx/core/compose';
-import { combineReducers, ActionReducer, Store as rxStore } from '@ngrx/store';
+import { combineReducers, ActionReducer } from '@ngrx/store';
 import { storeFreeze } from 'ngrx-store-freeze';
 import { createSelector } from 'reselect';
 
