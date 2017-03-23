@@ -9,6 +9,8 @@ export const ActionTypes = {
     HALL_LOAD: type("[Booking] Hall Load"),
     HALL_LOAD_SUCCESS: type("[Booking] Hall Load Success"),
     HALL_LOAD_FAIL: type("[Booking] Hall Load Fail"),
+
+    SEAT_TOGGLE: type("[Booking] Seat Toggle"),
 };
 
 export class SelectShowtimeAction implements Action {
@@ -39,8 +41,19 @@ export class HallLoadFailAction implements Action {
     constructor(public payload: any) { }
 }
 
+export class SeatToggleAction implements Action {
+    readonly type = ActionTypes.SEAT_TOGGLE;
+
+    /**
+     * 
+     * @param payload seat id
+     */
+    constructor(public payload: string) {}
+}
+
 export type Actions
     = SelectShowtimeAction
     | HallLoadAction
     | HallLoadSuccessAction
-    | HallLoadFailAction;
+    | HallLoadFailAction
+    | SeatToggleAction;

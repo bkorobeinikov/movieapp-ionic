@@ -1,5 +1,7 @@
 
 export interface CinemaHallSeat {
+    id: string;
+    
     x: number;
     y: number;
 

@@ -67,6 +67,8 @@ export class CinemaService extends BaseService {
                 };
 
                 var seat: CinemaHallSeat = {
+                    id: `${showtime.cinemaId}_${showtime.hallId}_${r+1}_${c+1}`,
+
                     x: c * (style.width + style.marginLeft + style.marginRight),
                     y: r * (style.height + style.marginBottom + style.marginTop),
                     width: style.width,

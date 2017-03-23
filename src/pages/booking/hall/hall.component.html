@@ -10,9 +10,16 @@
         rx="6" ry="6"
 
         class="seat"
-        
-        [ngClass]="{'available': seat.available == true, 'selected': isSelected(seat) == true}"
-        (tap)="onSeat(seat)" />
+        [ngClass]="{'available': seat.available == true}"
+        (tap)="onSeatToggle(seat)" />
+
+        <rect *ngFor="let seat of selection; trackBy:trackByFn" 
+        [attr.width]="seat.width" [attr.height]="seat.height" 
+        [attr.x]="seat.x" [attr.y]="seat.y"
+        rx="6" ry="6"
+
+        class="seat available selected"
+        (tap)="onSeatToggle(seat)" />
 
         <text *ngFor="let seat of selection; trackBy: trackByFn" class="text"
         [attr.width]="seat.width" [attr.height]="seat.height" 

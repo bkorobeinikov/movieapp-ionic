@@ -46,7 +46,7 @@
             Please select time to be able to select seats
         </div>
         <ion-spinner *ngIf="hallLoading$ | async"></ion-spinner>
-        <hall *ngIf="hall$ | async" [hall]="hall$ | async" [(selection)]="seats"></hall>
+        <hall *ngIf="hall$ | async" [hall]="hall$ | async" [selection]="seats$ | async" (toggle)="onSeatToggle($event)"></hall>
     </div>
  
 </ion-content>

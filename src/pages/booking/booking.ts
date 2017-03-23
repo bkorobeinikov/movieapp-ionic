@@ -1,4 +1,4 @@
-import { Component} from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { App } from 'ionic-angular';
 
 import moment from 'moment';
@@ -17,7 +17,8 @@ import { Subscription } from "rxjs/Subscription";
 
 @Component({
     selector: 'page-booking',
-    templateUrl: "booking.html"
+    templateUrl: "booking.html",
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BookingPage {
     public movie$: Observable<Movie>;
@@ -40,6 +41,8 @@ export class BookingPage {
 
     public hallLoading$: Observable<boolean>;
     public hall$: Observable<CinemaHall>;
+
+    public seats$: Observable<CinemaHallSeat[]>;
     public seats: CinemaHallSeat[];
 
     public subscriptions: Subscription = new Subscription();
@@ -55,6 +58,8 @@ export class BookingPage {
 
         this.hallLoading$ = store.select(fromRoot.getBookingHallLoading);
         this.hall$ = store.select(fromRoot.getBookingHall);
+
+        this.seats$ = store.select(fromRoot.getBookingSeats);
     }
 
     ngOnInit() {
@@ -69,6 +74,10 @@ export class BookingPage {
         this.subscriptions.add(s);
         s = this.selectedShowtime$.subscribe(showtime => {
             this.onSelectedShowtimeChange(showtime);
+        });
+        this.subscriptions.add(s);
+        this.seats$.subscribe(seats => {
+            this.seats = seats;
         });
         this.subscriptions.add(s);
 
@@ -169,6 +178,10 @@ export class BookingPage {
 
     isAfterNow(time: moment.Moment | Date) {
         return moment().isBefore(time);
+    }
+
+    onSeatToggle(seat: CinemaHallSeat) {
+        this.store.dispatch(new booking.SeatToggleAction(seat.id));
     }
 
 }
