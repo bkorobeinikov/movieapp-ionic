@@ -43,7 +43,7 @@ export function reducer(state: State, action: any) {
 
 // movie state
 
-export const getMovieState = (state: State) => state.movie;
+const getMovieState = (state: State) => state.movie;
 
 export const getMovieEntities = createSelector(getMovieState, fromMovie.getEntities);
 export const getMovieIds = createSelector(getMovieState, fromMovie.getIds);
@@ -57,26 +57,27 @@ export const getMovieSelected = createSelector(getMovieState, fromMovie.getSelec
 
 // ui state
 
-export const getUiState = (state: State) => state.ui;
+const getUiState = (state: State) => state.ui;
 
 export const getUiRootTabIndex = createSelector(getUiState, fromUi.getRootTabIndex);
 
 // cinema state
 export const getCinemaState = (state: State) => state.cinema;
 
+const getCinemas = createSelector(getCinemaState, fromCinema.getCinemas);
 export const getCinemaCurrentId = createSelector(getCinemaState, fromCinema.getCurrentCinemaId);
 export const getCinemaCurrent = createSelector(getCinemaState, fromCinema.getCurrentCinema);
 export const getCinemaCurrentShowtimes = createSelector(getCinemaState, fromCinema.getCurrentShowtimes);
 export const getCinemaShowtimesLoading = createSelector(getCinemaState, fromCinema.getShowtimesLoading);
 
 // booking state
-export const getBookingState = (state: State) => state.booking;
+const getBookingState = (state: State) => state.booking;
 
 export const getBookingAvailableShowtimes = createSelector(getMovieSelectedId, getCinemaCurrentShowtimes, (movieId, showtimes) => {
     return showtimes.filter(s => s.movieId == movieId);
 });
 
-export const getBookingShowtimeId = createSelector(getBookingState, fromBooking.getShowtimeId);
+const getBookingShowtimeId = createSelector(getBookingState, fromBooking.getShowtimeId);
 export const getBookingShowtime = createSelector(getBookingAvailableShowtimes, getBookingShowtimeId, (showtimes, showtimeId) => {
     return showtimes.find(s => s.id == showtimeId);
 });
@@ -85,3 +86,28 @@ export const getBookingHallLoading = createSelector(getBookingState, fromBooking
 export const getBookingHall = createSelector(getBookingState, fromBooking.getHall);
 
 export const getBookingSeats = createSelector(getBookingState, fromBooking.getSeats);
+
+const getBookingShowtimeCinema = createSelector(getCinemas, getBookingShowtime, (cinemas, showtime) => {
+    if (showtime == null)
+        return null;
+        
+    return cinemas[showtime.cinemaId];
+});
+const getBookingShowtimeMovie = createSelector(getMovieEntities, getBookingShowtime, (movies, showtime) => {
+    if (showtime == null)
+        return null;
+
+    return movies[showtime.movieId];
+})
+export const getBookingOrder = createSelector(getBookingShowtimeCinema, getBookingHall, getBookingShowtimeMovie, getBookingShowtime, getBookingSeats, (cinema, hall, movie, showtime, seats) => {
+    if (showtime == null)
+        return null;
+
+    return {
+        cinema: cinema,
+        hall: hall,
+        movie: movie,
+        showtime: showtime,
+        seats: seats,
+    };
+})

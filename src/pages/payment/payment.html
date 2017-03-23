@@ -1,5 +1,10 @@
 <ion-header>
     <ion-navbar>
+        <ion-buttons start>
+            <button ion-button (tap)="cancel()">
+                Cancel
+            </button>
+        </ion-buttons>
         <ion-title>
             Payment page
         </ion-title>
@@ -12,8 +17,11 @@
 
 <ion-footer>
     <ion-toolbar padding-left padding-right>
-        <button ion-button (click)="complete()">
+        <button ion-button (click)="complete()" color="primary">
             Complete
+        </button>
+        <button ion-button (click)="fail()" color="danger">
+            Fail
         </button>
     </ion-toolbar>
 </ion-footer>

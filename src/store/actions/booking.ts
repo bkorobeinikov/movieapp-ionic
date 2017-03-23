@@ -11,6 +11,8 @@ export const ActionTypes = {
     HALL_LOAD_FAIL: type("[Booking] Hall Load Fail"),
 
     SEAT_TOGGLE: type("[Booking] Seat Toggle"),
+
+    COMPLETE: type("[Booking] Complete"),
 };
 
 export class SelectShowtimeAction implements Action {
@@ -26,7 +28,7 @@ export class SelectShowtimeAction implements Action {
 export class HallLoadAction implements Action {
     readonly type = ActionTypes.HALL_LOAD;
 
-    constructor(public payload: any) { }
+    constructor(public payload: Showtime) { }
 }
 
 export class HallLoadSuccessAction implements Action {
@@ -48,7 +50,17 @@ export class SeatToggleAction implements Action {
      * 
      * @param payload seat id
      */
-    constructor(public payload: string) {}
+    constructor(public payload: string) { }
+}
+
+export class CompleteAction implements Action {
+    readonly type = ActionTypes.COMPLETE;
+
+    /**
+     * 
+     * @param payload showtime id
+     */
+    constructor(public payload: string) { }
 }
 
 export type Actions
@@ -56,4 +68,5 @@ export type Actions
     | HallLoadAction
     | HallLoadSuccessAction
     | HallLoadFailAction
-    | SeatToggleAction;
+    | SeatToggleAction
+    | CompleteAction;

@@ -78,6 +78,21 @@ export function reducer(state = initialState, actionRaw: booking.Actions) {
                 seatIds: newSeatIds,
             });
         }
+        case booking.ActionTypes.COMPLETE: {
+            let action = <booking.CompleteAction>actionRaw;
+            var showtimeId = action.payload;
+
+            if (state.showtimeId != showtimeId) {
+                return state;
+            }
+
+            return Object.assign({}, state, {
+                showtimeId: null,
+                hallLoading: false,
+                hall: null,
+                seatIds: [],
+            });
+        }
 
         default: {
             return state;
@@ -94,6 +109,6 @@ export const getSeatIds = (state: State) => state.seatIds;
 export const getSeats = createSelector(getHall, getSeatIds, (hall, seatIds) => {
     if (hall == null)
         return [];
-        
+
     return hall.seats.filter(s => seatIds.indexOf(s.id) > -1);
 });

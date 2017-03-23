@@ -100,7 +100,7 @@ export function reducer(state = initialState, actionRaw: cinema.Actions) {
 export const getCinemas = (state: State) => state.cinemas;
 export const getCurrentCinemaId = (state: State) => state.currentCinemaId;
 export const getCurrentCinema = createSelector(getCinemas, getCurrentCinemaId, (entities, currentId) => {
-    entities[currentId]
+    return entities[currentId]
 });
 
 export const getShowtimes = (state: State) => state.showtimes;
