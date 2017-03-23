@@ -52,10 +52,14 @@ export class HallComponent implements OnInit {
     }
 
     onSeatToggle(seat: CinemaHallSeat) {
+        if (!seat.available)
+            return;
         this.toggle.emit(seat);
     }
 
     selected(seat: CinemaHallSeat) {
+        if (!seat.available)
+            return;
         return this.selection.indexOf(seat) > -1;
     }
 
