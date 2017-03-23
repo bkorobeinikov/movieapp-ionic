@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { App } from 'ionic-angular';
 
 import moment from 'moment';
-import _ from 'lodash';
+import * as _ from 'lodash';
 
 import { Showtime, Movie, CinemaHall, CinemaHallSeat } from "../../store/models";
 
