@@ -58,7 +58,7 @@
 <ion-footer>
     <ion-toolbar padding-left padding-right>
         <booking-cart [seats]="seats$ | async"></booking-cart>
-        <button class="checkout" ion-button color="secondary" (click)="checkout()" icon-left [disabled]="seats?.length == 0" end>
+        <button class="checkout" ion-button color="secondary" (click)="checkout()" icon-left [disabled]="canCheckout == false" end>
             <ion-icon name="cart"></ion-icon>
             Checkout
         </button>

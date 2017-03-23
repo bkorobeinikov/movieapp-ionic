@@ -88,7 +88,8 @@ export class CinemaService extends BaseService {
 
         let hall: CinemaHall = {
             id: showtime.hallId,
-            seats: seats
+            name: "Hall " + showtime.hallId,
+            seats: seats,
         };
 
         return Observable.of(hall).delay(1000);

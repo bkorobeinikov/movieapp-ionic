@@ -42,6 +42,8 @@ export class BookingPage {
 
     public seats$: Observable<CinemaHallSeat[]>;
 
+    public canCheckout: boolean = false;
+
     public subscriptions: Subscription = new Subscription();
 
     constructor(
@@ -67,6 +69,10 @@ export class BookingPage {
         this.subscriptions.add(s);
         s = this.selectedShowtime$.subscribe(showtime => {
             this.onSelectedShowtimeChange(showtime);
+        });
+        this.subscriptions.add(s);
+        s = this.seats$.subscribe((seats) => {
+            this.canCheckout = seats != null && seats.length > 0;
         });
         this.subscriptions.add(s);
     }
@@ -145,8 +151,6 @@ export class BookingPage {
     checkout() {
         this.appCtrl.getRootNav().push(CheckoutPage);
     }
-
-    
 
     isAfterNow(time: moment.Moment | Date) {
         return moment().isBefore(time);
