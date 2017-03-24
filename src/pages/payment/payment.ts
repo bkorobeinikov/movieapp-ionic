@@ -5,7 +5,6 @@ import { NewsPage } from "../news/news";
 import { Store } from "@ngrx/store";
 
 import { State } from './../../store';
-import * as selectors from './../../store/selectors'
 import * as actionsUi from './../../store/actions/ui';
 import * as actionsBooking from './../../store/actions/booking';
 
