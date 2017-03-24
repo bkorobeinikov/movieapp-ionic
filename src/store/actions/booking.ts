@@ -12,7 +12,7 @@ export const ActionTypes = {
 
     SEAT_TOGGLE: type("[Booking] Seat Toggle"),
 
-    COMPLETE: type("[Booking] Complete"),
+    CLEAR: type("[Booking] Clear"),
 };
 
 export class SelectShowtimeAction implements Action {
@@ -53,14 +53,10 @@ export class SeatToggleAction implements Action {
     constructor(public payload: string) { }
 }
 
-export class CompleteAction implements Action {
-    readonly type = ActionTypes.COMPLETE;
+export class ClearAction implements Action {
+    readonly type = ActionTypes.CLEAR;
 
-    /**
-     * 
-     * @param payload showtime id
-     */
-    constructor(public payload: string) { }
+    constructor() { }
 }
 
 export type Actions
@@ -69,4 +65,4 @@ export type Actions
     | HallLoadSuccessAction
     | HallLoadFailAction
     | SeatToggleAction
-    | CompleteAction;
+    | ClearAction;

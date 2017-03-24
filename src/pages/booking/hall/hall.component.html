@@ -8,7 +8,7 @@
         [attr.width]="seat.width" [attr.height]="seat.height" 
         [attr.x]="seat.x" [attr.y]="seat.y"
         rx="6" ry="6"
-  
+        
         class="seat"
         [ngClass]="{'available': seat.available == true}"
         (tap)="onSeatToggle(seat)" />

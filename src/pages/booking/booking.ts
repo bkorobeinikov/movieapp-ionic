@@ -90,6 +90,7 @@ export class BookingPage {
 
     ngOnDestroy() {
         this.subscriptions.unsubscribe();
+        this.store.dispatch(new actionsBooking.ClearAction());
     }
 
     private onShowtimesChange() {

@@ -81,14 +81,7 @@ export function reducer(state = initialState, actionRaw: booking.Actions): State
                 selectedSeatIds: newSeatIds,
             });
         }
-        case booking.ActionTypes.COMPLETE: {
-            let action = <booking.CompleteAction>actionRaw;
-            var showtimeId = action.payload;
-
-            if (state.showtimeId != showtimeId) {
-                return state;
-            }
-
+        case booking.ActionTypes.CLEAR: {
             return Object.assign({}, state, {
                 showtimeId: null,
                 hallLoading: false,

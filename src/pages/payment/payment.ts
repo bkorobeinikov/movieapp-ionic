@@ -71,7 +71,6 @@ export class PaymentPage {
         nav.push(NewsPage).then(() => {
             return nav.remove(1, nav.length() - 2);
         }).then(() => {
-            this.store.dispatch(new actionsBooking.CompleteAction(this.order.showtime.id));
             this.store.dispatch(new actionsUi.RootChangeTabAction(1));
 
             return loading.dismiss();
