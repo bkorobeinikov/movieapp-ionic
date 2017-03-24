@@ -6,6 +6,7 @@ import * as fromMovie from './../reducers/movie';
 import * as fromUi from './../reducers/ui';
 import * as fromCinema from './../reducers/cinema';
 import * as fromBooking from './../reducers/booking';
+import * as fromTicket from './../reducers/ticket';
 
 import * as _ from 'lodash';
 
@@ -103,3 +104,9 @@ export const getBookingOrder = createSelector(getBookingShowtimeCinema, getBooki
         seats: seats,
     };
 })
+
+// ticket state
+
+const getTicketState = (state:State) => state.ticket;
+export const getTicketAll = createSelector(getTicketState, fromTicket.getTickets);
+export const getTicketSelected = createSelector(getTicketState, fromTicket.getSelectedTicket);

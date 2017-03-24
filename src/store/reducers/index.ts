@@ -6,12 +6,14 @@ import * as fromMovie from './movie';
 import * as fromUi from './ui';
 import * as fromCinema from './cinema';
 import * as fromBooking from './booking';
+import * as fromTicket from './ticket';
 
 export interface State {
     movie: fromMovie.State,
     ui: fromUi.State,
     cinema: fromCinema.State,
     booking: fromBooking.State,
+    ticket: fromTicket.State,
 };
 
 export const initialState: State = {
@@ -19,6 +21,7 @@ export const initialState: State = {
     ui: fromUi.initialState,
     cinema: fromCinema.initialState,
     booking: fromBooking.initialState,
+    ticket: fromTicket.initialState,
 };
 
 const reducers = {
@@ -26,6 +29,7 @@ const reducers = {
     ui: fromUi.reducer,
     cinema: fromCinema.reducer,
     booking: fromBooking.reducer,
+    ticket: fromTicket.reducer,
 };
 
 const devReducer: ActionReducer<State> = compose(storeFreeze, combineReducers)(reducers);

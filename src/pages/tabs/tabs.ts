@@ -1,8 +1,8 @@
 import { Component, ChangeDetectionStrategy, ViewChild, OnInit } from '@angular/core';
 
 import { MoviesPage } from '../movies/movies';
-import { NewsPage } from '../news/news';
 import { AccountPage } from '../account/account';
+import { TicketsPage } from './../tickets/tickets';
 
 import { Store } from "@ngrx/store";
 import { State } from './../../store'
@@ -21,8 +21,8 @@ export class TabsPage implements OnInit {
     @ViewChild('tabs') tabs: Tabs;
 
     public movies: any = MoviesPage;
-    public news: any = NewsPage;
     public account: any = AccountPage;
+    public tickets: any = TicketsPage;
 
     public index$: Observable<number>;
 

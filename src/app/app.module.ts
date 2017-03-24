@@ -15,6 +15,8 @@ import { PaymentPage } from '../pages/payment/payment';
 import { TabsPage } from '../pages/tabs/tabs';
 import { NewsPage } from '../pages/news/news';
 import { AccountPage } from '../pages/account/account';
+import { TicketsPage } from './../pages/tickets/tickets';
+import { TicketPage } from './../pages/ticket/ticket';
 
 import { JoinPipe } from './../shared/join.pipe';
 import { MomentPipe } from './../shared/moment.pipe';
@@ -61,6 +63,8 @@ import { MovieEffects, CinemaEffects, BookingEffects } from './../store/effects'
     TabsPage,
     NewsPage,
     AccountPage,
+    TicketsPage,
+    TicketPage,
 
     HallComponent,
     DatePicker,
@@ -80,6 +84,8 @@ import { MovieEffects, CinemaEffects, BookingEffects } from './../store/effects'
     TabsPage,
     NewsPage,
     AccountPage,
+    TicketsPage,
+    TicketPage,
 
     CinemasPopoverComponent,
   ],

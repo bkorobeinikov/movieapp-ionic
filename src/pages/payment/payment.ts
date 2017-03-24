@@ -1,12 +1,23 @@
 import { Component } from '@angular/core';
 import { App, NavParams, ViewController, AlertController, LoadingController } from "ionic-angular";
-import { NewsPage } from "../news/news";
+import { TicketPage } from "../ticket/ticket";
 
 import { Store } from "@ngrx/store";
 
 import { State } from './../../store';
+import { Ticket, Cinema, CinemaHall, Movie, Showtime, CinemaHallSeat } from './../../store/models';
 import * as actionsUi from './../../store/actions/ui';
 import * as actionsBooking from './../../store/actions/booking';
+import * as actionsTicket from './../../store/actions/ticket';
+
+type Order = {
+    cinema: Cinema,
+    hall: CinemaHall,
+    movie: Movie,
+    showtime: Showtime,
+    seats: CinemaHallSeat[]
+};
+
 
 @Component({
     selector: "page-payment",
@@ -14,7 +25,7 @@ import * as actionsBooking from './../../store/actions/booking';
 })
 export class PaymentPage {
 
-    public order: any;
+    public order: Order;
 
     constructor(
         private appCtrl: App,
@@ -67,9 +78,24 @@ export class PaymentPage {
         });
         loading.present();
 
-        nav.push(NewsPage).then(() => {
+        nav.push(TicketPage).then(() => {
             return nav.remove(1, nav.length() - 2);
         }).then(() => {
+            // load real ticket
+            let ticket: Ticket = {
+                id: Math.random() + "",
+                movieId: this.order.movie.id,
+                movieName: this.order.movie.name,
+                cinemaId: this.order.cinema.id,
+                hallId: this.order.hall.id,
+                hallName: this.order.hall.name,
+                techId: this.order.showtime.techId,
+                time: this.order.showtime.time.toDate(),
+                seats: this.order.seats.map(s => ({ row: s.row, seat: s.seat, price: s.price })),
+            };
+
+            this.store.dispatch(new actionsTicket.LoadSuccessAction([ticket]));
+            this.store.dispatch(new actionsTicket.SelectAction(ticket.id));
             this.store.dispatch(new actionsUi.RootChangeTabAction(1));
 
             return loading.dismiss();
