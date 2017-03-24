@@ -14,19 +14,20 @@ import { Effect, Actions, toPayload } from '@ngrx/effects';
 
 import { MovieService } from './../../core/movie.service';
 
-import * as movie from './../actions/movie';
+import * as actionsMovie from './../actions/movie';
 
 @Injectable()
 export class MovieEffects {
 
     @Effect()
     load$: Observable<Action> = this.actions$
-        .ofType(movie.ActionTypes.LOAD)
+        .ofType(actionsMovie.ActionTypes.LOAD)
+        .startWith(new actionsMovie.LoadAction())
         .map(toPayload)
         .switchMap(payload => {
             return this.movieService.getMovies()
-                .map(movies => new movie.LoadSuccessAction(movies))
-                .catch(() => of(new movie.LoadFailAction([])));
+                .map(movies => new actionsMovie.LoadSuccessAction(movies))
+                .catch(() => of(new actionsMovie.LoadFailAction([])));
         });
 
     constructor(private actions$: Actions, private movieService: MovieService) { }

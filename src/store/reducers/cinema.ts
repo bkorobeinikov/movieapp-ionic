@@ -1,7 +1,8 @@
 import { createSelector } from 'reselect';
 
 import * as cinema from './../actions/cinema';
-import { Showtime, Cinema, CinemaMovie } from './../models';
+import { Showtime, Cinema } from './../models';
+import { ScreeningsViewModel } from './../viewModels';
 
 import * as _ from 'lodash';
 
@@ -10,9 +11,7 @@ export interface State {
     currentCinemaId: string,
     loading: boolean,
 
-    movies: { [cinemaId: string]: CinemaMovie[] },
-    showtimes: { [cinameId: string]: Showtime[] },
-    showtimesLoading: boolean,
+    screenings: { [cinemaId: string]: ScreeningsViewModel },
 }
 
 export const initialState: State = {
@@ -20,12 +19,10 @@ export const initialState: State = {
     currentCinemaId: null,
     loading: false,
 
-    movies: {},
-    showtimes: {},
-    showtimesLoading: false,
+    screenings: {},
 };
 
-export function reducer(state = initialState, actionRaw: cinema.Actions) {
+export function reducer(state = initialState, actionRaw: cinema.Actions): State {
     switch (actionRaw.type) {
         case cinema.ActionTypes.LOAD: {
 
@@ -59,7 +56,7 @@ export function reducer(state = initialState, actionRaw: cinema.Actions) {
         }
         case cinema.ActionTypes.CHANGE_CURRENT: {
             let action = <cinema.ChangeCurrentAction>actionRaw;
-            var newCinemaId = action.payload;
+            let newCinemaId = action.payload;
 
             if (state.cinemas[newCinemaId] === undefined) {
                 return state;
@@ -70,29 +67,53 @@ export function reducer(state = initialState, actionRaw: cinema.Actions) {
             });
         }
         case cinema.ActionTypes.SHOWTIME_LOAD: {
+            let action = <cinema.ShowtimeLoadAction>actionRaw;
+            let cinemaId = action.payload;
 
             return Object.assign({}, state, {
-                showtimesLoading: true,
+                screenings: Object.assign({}, state.screenings, {
+                    [cinemaId]: {
+                        movies: [],
+                        showtimes: {},
+                        map: {},
+                        loading: true,
+                        loaded: false,
+                        loadedAt: null,
+                    } as ScreeningsViewModel,
+                }),
             });
         }
         case cinema.ActionTypes.SHOWTIME_LOAD_SUCCESS: {
             let action = <cinema.ShowtimeLoadSuccessAction>actionRaw;
+            let cinemaId = action.payload.cinemaId;
 
-            let newMovies: { [id: string]: CinemaMovie[] } = _.chain(action.payload.moviesMap)
-                .groupBy(m => m.cinemaId).value();
-            let newShowtimes: { [id: string]: Showtime[] } = _.chain(action.payload.showtimes)
-                .groupBy(s => s.cinemaId).value();
+            let screenings: ScreeningsViewModel = {
+                movies: action.payload.moviesMap,
+                showtimes: _.keyBy(action.payload.showtimes, s => s.id),
+                map: _.chain(action.payload.showtimes).groupBy(s => s.movieId)
+                    .mapValues((arr: Showtime[]) => arr.map(s => s.id)).value(),
+                loading: false,
+                loaded: true,
+                loadedAt: new Date(),
+            };
 
             return Object.assign({}, state, {
-                movies: Object.assign({}, state.movies, newMovies),
-                showtimes: Object.assign({}, state.showtimes, newShowtimes),
-                showtimesLoading: false,
+                screenings: Object.assign({}, state.screenings, {
+                    [cinemaId]: screenings
+                }),
             });
         }
         case cinema.ActionTypes.SHOWTIME_LOAD_FAIL: {
+            let action = <cinema.ShowtimeLoadFailAction>actionRaw;
+            let cinemaId = action.payload.cinemaId;
 
             return Object.assign({}, state, {
-                showtimesLoading: false
+                screenings: Object.assign({}, state.screenings, {
+                    [cinemaId]: {
+                        loading: false,
+                        loaded: false,
+                    }
+                })
             });
         }
 
@@ -105,16 +126,10 @@ export function reducer(state = initialState, actionRaw: cinema.Actions) {
 export const getCinemas = (state: State) => state.cinemas;
 export const getCurrentCinemaId = (state: State) => state.currentCinemaId;
 export const getCurrentCinema = createSelector(getCinemas, getCurrentCinemaId, (entities, currentId) => {
-    return entities[currentId]
+    return entities[currentId];
 });
 
-const getMovies = (state: State) => state.movies;
-export const getCurrentMovies = createSelector(getCurrentCinemaId, getMovies, (cinemaId, movies) => {
-    return movies[cinemaId];
-})
-
-export const getShowtimes = (state: State) => state.showtimes;
-export const getShowtimesLoading = (state: State) => state.showtimesLoading;
-export const getCurrentShowtimes = createSelector(getCurrentCinemaId, getShowtimes, (cinemaId, showtimes) => {
-    return showtimes[cinemaId];
+const getScreenings = (state: State) => state.screenings;
+export const getCurrentScreenings = createSelector(getCurrentCinemaId, getScreenings, (cinemaId, screenings) => {
+    return screenings[cinemaId];
 });

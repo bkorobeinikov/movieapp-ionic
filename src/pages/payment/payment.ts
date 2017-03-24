@@ -4,8 +4,9 @@ import { NewsPage } from "../news/news";
 
 import { Store } from "@ngrx/store";
 
-import * as fromRoot from './../../store/reducers';
-import { ui, booking } from './../../store/actions';
+import { State } from './../../store';
+import * as actionsUi from './../../store/actions/ui';
+import * as actionsBooking from './../../store/actions/booking';
 
 @Component({
     selector: "page-payment",
@@ -21,7 +22,7 @@ export class PaymentPage {
         private alertCtrl: AlertController,
         private loadingCtrl: LoadingController,
         private navParams: NavParams,
-        private store: Store<fromRoot.State>
+        private store: Store<State>
     ) {
         this.order = navParams.get("order");
     }
@@ -69,9 +70,8 @@ export class PaymentPage {
         nav.push(NewsPage).then(() => {
             return nav.remove(1, nav.length() - 2);
         }).then(() => {
-            this.store.dispatch(new booking.CompleteAction(this.order.showtime.id));
-            this.store.dispatch(new ui.RootChangeTabAction(1));
-            
+            this.store.dispatch(new actionsUi.RootChangeTabAction(1));
+
             return loading.dismiss();
         }).then(() => {
             return this.viewCtrl.dismiss();
@@ -82,7 +82,7 @@ export class PaymentPage {
         var nav = this.appCtrl.getRootNav();
 
         nav.pop().then(() => {
-            this.store.dispatch(new booking.HallLoadAction(this.order.showtime))
+            this.store.dispatch(new actionsBooking.HallLoadAction(this.order.showtime))
         }).then(() => {
             this.viewCtrl.dismiss();
         });

@@ -7,8 +7,10 @@ import { MoviePage } from './../movie/movie';
 import moment from 'moment';
 
 import { Movie, Cinema } from "../../store/models";
-import * as fromRoot from './../../store/reducers';
-import { movie as fromMovie, ui as fromUi } from './../../store/actions';
+import { State } from './../../store';
+import * as selectors from './../../store/selectors'
+import * as actionsUi from './../../store/actions/ui';
+import * as actionsMovie from './../../store/actions/movie';
 
 import { Store } from "@ngrx/store";
 
@@ -35,14 +37,12 @@ export class MoviesPage implements OnChanges {
         private viewCtrl: ViewController,
         private navCtrl: NavController,
         private popoverCtrl: PopoverController,
-        private store: Store<fromRoot.State>) {
+        private store: Store<State>) {
 
-        this.category$ = store.select(fromRoot.getUiMoviesCategory);
-        this.cinema$ = store.select(fromRoot.getCinemaCurrent);
-        this.movies$ = store.select(fromRoot.getCinemaCurrentMovies);
-        this.loading$ = store.select(fromRoot.getMovieLoading);
-
-        this.store.dispatch(new fromMovie.LoadAction());
+        this.category$ = store.select(selectors.getUiMoviesCategory);
+        this.cinema$ = store.select(selectors.getCinemaCurrent);
+        this.movies$ = store.select(selectors.getCinemaCurrentMovies);
+        this.loading$ = store.select(selectors.getCinemaCurrentLoading);
     }
 
     ionViewDidEnter() {
@@ -52,8 +52,8 @@ export class MoviesPage implements OnChanges {
     ionViewDidLeave() {
     }
 
-    onCategoryChange(ev: {value: "current" | "future"}) {
-        this.store.dispatch(new fromUi.ChangeMoviesCategoryAction(ev.value));
+    onCategoryChange(ev: { value: "current" | "future" }) {
+        this.store.dispatch(new actionsUi.ChangeMoviesCategoryAction(ev.value));
         this.content.scrollToTop(0);
     }
 
@@ -66,7 +66,7 @@ export class MoviesPage implements OnChanges {
     }
 
     openMovie(movie: Movie) {
-        this.store.dispatch(new fromMovie.SelectAction(movie.id));
+        this.store.dispatch(new actionsMovie.SelectAction(movie.id));
 
         this.appCtrl.getRootNav().push(MoviePage);
     }

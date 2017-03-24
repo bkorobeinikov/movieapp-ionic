@@ -11,9 +11,13 @@ import { CheckoutPage } from "./../checkout/checkout";
 import { Observable } from "rxjs/Observable";
 
 import { Store } from "@ngrx/store";
-import * as fromRoot from './../../store/reducers';
-import { booking } from './../../store/actions';
+import { State } from './../../store';
+import * as selectors from './../../store/selectors'
+import * as actionsBooking from './../../store/actions/booking';
+
 import { Subscription } from "rxjs/Subscription";
+
+import { ScreeningsViewModel } from "../../store/viewModels";
 
 @Component({
     selector: 'page-booking',
@@ -21,8 +25,11 @@ import { Subscription } from "rxjs/Subscription";
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BookingPage {
+
+    public screenings$: Observable<ScreeningsViewModel>;
+    public screenings: ScreeningsViewModel;
+
     public movie$: Observable<Movie>;
-    public loading$: Observable<boolean>;
 
     public showtimes$: Observable<Showtime[]>;
     public showtimes: Showtime[];
@@ -48,21 +55,25 @@ export class BookingPage {
 
     constructor(
         private appCtrl: App,
-        private store: Store<fromRoot.State>) {
+        private store: Store<State>) {
 
-        this.movie$ = store.select(fromRoot.getMovieSelected);
-        this.loading$ = store.select(fromRoot.getCinemaShowtimesLoading);
-        this.showtimes$ = store.select(fromRoot.getBookingAvailableShowtimes);
-        this.selectedShowtime$ = store.select(fromRoot.getBookingShowtime);
+        this.screenings$ = store.select(selectors.getCinemaCurrentScreenings);
 
-        this.hallLoading$ = store.select(fromRoot.getBookingHallLoading);
-        this.hall$ = store.select(fromRoot.getBookingHall);
+        this.movie$ = store.select(selectors.getMovieSelected);
+        this.showtimes$ = store.select(selectors.getBookingAvailableShowtimes);
+        this.selectedShowtime$ = store.select(selectors.getBookingShowtime);
 
-        this.seats$ = store.select(fromRoot.getBookingSeats);
+        this.hallLoading$ = store.select(selectors.getBookingHallLoading);
+        this.hall$ = store.select(selectors.getBookingHall);
+        this.seats$ = store.select(selectors.getBookingSeats);
     }
 
     ngOnInit() {
-        let s = this.showtimes$.subscribe(showtimes => {
+        let s = this.screenings$.subscribe(screenings => {
+            this.screenings = screenings;
+        });
+        this.subscriptions.add(s);
+        s = this.showtimes$.subscribe(showtimes => {
             this.showtimes = showtimes;
             this.onShowtimesChange();
         });
@@ -79,6 +90,7 @@ export class BookingPage {
 
     ngOnDestroy() {
         this.subscriptions.unsubscribe();
+        this.store.dispatch(new actionsBooking.ClearAction());
     }
 
     private onShowtimesChange() {
@@ -137,7 +149,7 @@ export class BookingPage {
         if (currentId !== showtimeId) {
             let showtime = this.showtimes.find(s => s.id == showtimeId);
             this.selectedShowtime = showtime;
-            this.store.dispatch(new booking.SelectShowtimeAction(showtime));
+            this.store.dispatch(new actionsBooking.SelectShowtimeAction(showtime));
         }
     }
 
@@ -157,7 +169,7 @@ export class BookingPage {
     }
 
     onSeatToggle(seat: CinemaHallSeat) {
-        this.store.dispatch(new booking.SeatToggleAction(seat.id));
+        this.store.dispatch(new actionsBooking.SeatToggleAction(seat.id));
     }
 
 }

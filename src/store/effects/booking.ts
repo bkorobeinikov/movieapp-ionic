@@ -20,40 +20,40 @@ import 'rxjs/add/operator/filter';
 import { Action, Store } from "@ngrx/store";
 import { Effect, Actions, toPayload } from '@ngrx/effects';
 
-import * as booking from './../actions/booking';
 import { CinemaService } from "../../core/cinema.service";
 
-import * as fromRoot from './../reducers';
+import { State } from './../reducers';
+import * as actionsBooking from './../actions/booking';
 
 @Injectable()
 export class BookingEffects {
 
     @Effect()
     selectShowtime$: Observable<Action> = this.actions$
-        .ofType(booking.ActionTypes.SELECT_SHOWTIME)
+        .ofType(actionsBooking.ActionTypes.SELECT_SHOWTIME)
         .map(toPayload)
         .filter(showtime => showtime != null)
-        .map(showtime => new booking.HallLoadAction(showtime));
+        .map(showtime => new actionsBooking.HallLoadAction(showtime));
 
     @Effect()
     hallLoad$: Observable<Action> = this.actions$
-        .ofType(booking.ActionTypes.HALL_LOAD)
+        .ofType(actionsBooking.ActionTypes.HALL_LOAD)
         .map(toPayload)
         .switchMap(payload => {
 
             const nextSelect$ = Observable.merge(
-                this.actions$.ofType(booking.ActionTypes.HALL_LOAD).skip(1),
-                this.actions$.ofType(booking.ActionTypes.SELECT_SHOWTIME));
-            
+                this.actions$.ofType(actionsBooking.ActionTypes.HALL_LOAD).skip(1),
+                this.actions$.ofType(actionsBooking.ActionTypes.SELECT_SHOWTIME));
+
 
             return this.cinemaService.getHall(payload)
                 .takeUntil(nextSelect$)
-                .map(hall => new booking.HallLoadSuccessAction(hall))
-                .catch(() => of(new booking.HallLoadFailAction([])));
+                .map(hall => new actionsBooking.HallLoadSuccessAction(hall))
+                .catch(() => of(new actionsBooking.HallLoadFailAction([])));
         });
 
     constructor(
         private actions$: Actions,
         private cinemaService: CinemaService,
-        private store: Store<fromRoot.State>) { }
+        private store: Store<State>) { }
 }

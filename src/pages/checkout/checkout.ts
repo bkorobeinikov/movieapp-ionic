@@ -5,7 +5,8 @@ import { Observable } from "rxjs/Observable";
 import { Subscription } from "rxjs/Subscription";
 import { Store } from "@ngrx/store";
 
-import * as fromRoot from './../../store/reducers';
+import { State } from './../../store';
+import * as selectors from './../../store/selectors';
 
 import { PaymentPage } from "../payment/payment";
 
@@ -39,9 +40,9 @@ export class CheckoutPage {
         private appCtrl: App,
         private modalCtrl: ModalController,
         private toastCtrl: ToastController,
-        private store: Store<fromRoot.State>
+        private store: Store<State>
     ) {
-        this.order$ = store.select(fromRoot.getBookingOrder);
+        this.order$ = store.select(selectors.getBookingOrder);
     }
 
     ngOnInit() {

@@ -5,8 +5,9 @@ import { NewsPage } from '../news/news';
 import { AccountPage } from '../account/account';
 
 import { Store } from "@ngrx/store";
-import * as fromRoot from './../../store/reducers'
-import { ui } from './../../store/actions';
+import { State } from './../../store'
+import * as selectors from './../../store/selectors';
+import * as ui from './../../store/actions/ui';
 
 import { Observable } from "rxjs/Observable";
 import { Tabs } from "ionic-angular";
@@ -25,8 +26,8 @@ export class TabsPage implements OnInit {
 
     public index$: Observable<number>;
 
-    constructor(private store: Store<fromRoot.State>) {
-        this.index$ = store.select(fromRoot.getUiRootTabIndex);
+    constructor(private store: Store<State>) {
+        this.index$ = store.select(selectors.getUiRootTabIndex);
     }
 
     ngOnInit() {

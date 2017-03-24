@@ -39,7 +39,7 @@ export class CinemaService extends BaseService {
             });
     }
 
-    getShowtimes(cinemaId: string): Observable<{ showtimes: Showtime[], moviesMap: CinemaMovie[] }> {
+    getShowtimes(cinemaId: string): Observable<{ cinemaId: string, showtimes: Showtime[], moviesMap: CinemaMovie[] }> {
         return this.getData<any>(this.showtimeUrl[cinemaId])
             .map(res => {
                 try {
@@ -56,6 +56,7 @@ export class CinemaService extends BaseService {
                     });
 
                     return {
+                        cinemaId: cinemaId,
                         showtimes: showtimes,
                         moviesMap: movies,
                     };
@@ -68,7 +69,7 @@ export class CinemaService extends BaseService {
 
     getHall(showtime: Showtime): Observable<CinemaHall> {
 
-        var seats: CinemaHallSeat[] = [];
+        var seats: { [seatId: string]: CinemaHallSeat } = {};
 
         for (let r = 0; r < 15; r++) {
             for (let c = 0; c < 23; c++) {
@@ -96,7 +97,7 @@ export class CinemaService extends BaseService {
 
                     price: 115,
                 };
-                seats.push(seat);
+                seats[seat.id] = seat;
             }
 
         }
@@ -142,7 +143,7 @@ export class CinemaService extends BaseService {
         }
     }
 
-    private parseCinemaMovie(cinemaId:string, movieObj: any): CinemaMovie {
+    private parseCinemaMovie(cinemaId: string, movieObj: any): CinemaMovie {
         return {
             cinemaId: cinemaId,
             movieId: movieObj._id,

@@ -3,8 +3,9 @@ import { createSelector } from 'reselect';
 import * as movie from './../actions/movie';
 import { Movie } from './../models';
 
+import * as _ from 'lodash';
+
 export interface State {
-    ids: string[],
     entities: { [movieId: string]: Movie },
     loading: boolean,
 
@@ -12,7 +13,6 @@ export interface State {
 }
 
 export const initialState: State = {
-    ids: [],
     entities: {},
     loading: false,
 
@@ -30,15 +30,9 @@ export function reducer(state = initialState, actionRaw: movie.Actions): State {
             const movies = (<movie.LoadSuccessAction>actionRaw).payload;
             const newMovies = movies.filter(m => !state.entities[m.id]);
 
-            const newMoviesIds = newMovies.map(m => m.id);
-            const newMoviesEntities = newMovies.reduce((entities: { [id: string]: Movie }, movie: Movie) => {
-                return Object.assign(entities, {
-                    [movie.id]: movie
-                })
-            }, {});
+            const newMoviesEntities: { [movieId: string]: Movie } = _.keyBy(newMovies, m => m.id);
 
             return Object.assign({}, state, {
-                ids: state.ids.concat(newMoviesIds),
                 entities: Object.assign({}, state.entities, newMoviesEntities),
                 loading: false,
             });
@@ -61,13 +55,8 @@ export function reducer(state = initialState, actionRaw: movie.Actions): State {
 }
 
 export const getEntities = (state: State) => state.entities;
-export const getIds = (state: State) => state.ids;
 export const getLoading = (state: State) => state.loading;
 export const getSelectedId = (state: State) => state.selectedId;
-
-export const getAll = createSelector(getEntities, getIds, (entities, ids) => {
-    return ids.map(id => entities[id]);
-});
 
 export const getSelected = createSelector(getEntities, getSelectedId, (entities, id) => {
     return entities[id];
