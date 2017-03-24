@@ -11,8 +11,10 @@ import { CheckoutPage } from "./../checkout/checkout";
 import { Observable } from "rxjs/Observable";
 
 import { Store } from "@ngrx/store";
-import * as fromRoot from './../../store/reducers';
-import { booking } from './../../store/actions';
+import { State } from './../../store';
+import * as selectors from './../../store/selectors'
+import * as actionsBooking from './../../store/actions/booking';
+
 import { Subscription } from "rxjs/Subscription";
 
 @Component({
@@ -48,17 +50,17 @@ export class BookingPage {
 
     constructor(
         private appCtrl: App,
-        private store: Store<fromRoot.State>) {
+        private store: Store<State>) {
 
-        this.movie$ = store.select(fromRoot.getMovieSelected);
-        this.loading$ = store.select(fromRoot.getCinemaShowtimesLoading);
-        this.showtimes$ = store.select(fromRoot.getBookingAvailableShowtimes);
-        this.selectedShowtime$ = store.select(fromRoot.getBookingShowtime);
+        this.movie$ = store.select(selectors.getMovieSelected);
+        this.loading$ = store.select(selectors.getCinemaShowtimesLoading);
+        this.showtimes$ = store.select(selectors.getBookingAvailableShowtimes);
+        this.selectedShowtime$ = store.select(selectors.getBookingShowtime);
 
-        this.hallLoading$ = store.select(fromRoot.getBookingHallLoading);
-        this.hall$ = store.select(fromRoot.getBookingHall);
+        this.hallLoading$ = store.select(selectors.getBookingHallLoading);
+        this.hall$ = store.select(selectors.getBookingHall);
 
-        this.seats$ = store.select(fromRoot.getBookingSeats);
+        this.seats$ = store.select(selectors.getBookingSeats);
     }
 
     ngOnInit() {
@@ -137,7 +139,7 @@ export class BookingPage {
         if (currentId !== showtimeId) {
             let showtime = this.showtimes.find(s => s.id == showtimeId);
             this.selectedShowtime = showtime;
-            this.store.dispatch(new booking.SelectShowtimeAction(showtime));
+            this.store.dispatch(new actionsBooking.SelectShowtimeAction(showtime));
         }
     }
 
@@ -157,7 +159,7 @@ export class BookingPage {
     }
 
     onSeatToggle(seat: CinemaHallSeat) {
-        this.store.dispatch(new booking.SeatToggleAction(seat.id));
+        this.store.dispatch(new actionsBooking.SeatToggleAction(seat.id));
     }
 
 }

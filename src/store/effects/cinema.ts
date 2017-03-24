@@ -18,43 +18,44 @@ import 'rxjs/add/operator/do';
 import { Action, Store } from "@ngrx/store";
 import { Effect, Actions, toPayload } from '@ngrx/effects';
 
-import * as cinema from './../actions/cinema';
-import { CinemaService } from "../../core/cinema.service";
+import { State } from './../reducers';
+import * as actionsCinema from './../actions/cinema';
+import * as selectors from './../selectors';
 
-import * as fromRoot from './../reducers';
+import { CinemaService } from "../../core/cinema.service";
 
 @Injectable()
 export class CinemaEffects {
 
     @Effect()
     load$ = this.actions$
-        .ofType(cinema.ActionTypes.LOAD)
-        .startWith(new cinema.LoadAction())
+        .ofType(actionsCinema.ActionTypes.LOAD)
+        .startWith(new actionsCinema.LoadAction())
         .switchMap(payload => {
             return this.cinemaService.getCinemas()
-                .map(cinemas => new cinema.LoadSuccessAction(cinemas))
-                .catch(() => of(new cinema.LoadFailAction([])));
+                .map(cinemas => new actionsCinema.LoadSuccessAction(cinemas))
+                .catch(() => of(new actionsCinema.LoadFailAction([])));
         });
 
     @Effect()
     cinemaChange$ = this.actions$
-        .ofType(cinema.ActionTypes.CHANGE_CURRENT, cinema.ActionTypes.LOAD_SUCCESS)
-        .withLatestFrom(this.store.select(fromRoot.getCinemaCurrentId))
+        .ofType(actionsCinema.ActionTypes.CHANGE_CURRENT, actionsCinema.ActionTypes.LOAD_SUCCESS)
+        .withLatestFrom(this.store.select(selectors.getCinemaCurrentId))
         // tslint:disable-next-line:no-unused-variable
-        .map(([action, cinemaId]) => new cinema.ShowtimeLoadAction(cinemaId));
+        .map(([action, cinemaId]) => new actionsCinema.ShowtimeLoadAction(cinemaId));
 
     @Effect()
     loadShowtimes$: Observable<Action> = this.actions$
-        .ofType(cinema.ActionTypes.SHOWTIME_LOAD)
+        .ofType(actionsCinema.ActionTypes.SHOWTIME_LOAD)
         .map(toPayload)
         .switchMap(cinemaId => {
             return this.cinemaService.getShowtimes(cinemaId)
-                .map(showtimes => new cinema.ShowtimeLoadSuccessAction(showtimes))
-                .catch((err) => of(new cinema.ShowtimeLoadFailAction(err)))
+                .map(showtimes => new actionsCinema.ShowtimeLoadSuccessAction(showtimes))
+                .catch((err) => of(new actionsCinema.ShowtimeLoadFailAction(err)))
         });
 
     constructor(
         private actions$: Actions,
         private cinemaService: CinemaService,
-        private store: Store<fromRoot.State>) { }
+        private store: Store<State>) { }
 }

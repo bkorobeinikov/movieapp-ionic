@@ -10,7 +10,9 @@ import { BookingPage } from "../booking/booking";
 import { Observable } from "rxjs/Observable";
 
 import { Store } from "@ngrx/store";
-import * as fromRoot from './../../store/reducers';
+
+import { State } from './../../store';
+import * as selectors from './../../store/selectors'
 
 @Component({
     selector: 'page-movie',
@@ -24,9 +26,9 @@ export class MoviePage {
     constructor(
         private appCtrl: App,
         private navCtrl: NavController,
-        private store: Store<fromRoot.State>
+        private store: Store<State>
     ) {
-        this.movie$ = store.select(fromRoot.getMovieSelected);
+        this.movie$ = store.select(selectors.getMovieSelected);
     }
 
     ngOnInit() {

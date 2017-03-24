@@ -2,8 +2,9 @@ import { Component, ChangeDetectionStrategy, OnDestroy, OnInit } from '@angular/
 import { ViewController } from "ionic-angular";
 import { Store } from "@ngrx/store";
 
-import * as fromRoot from './../../../store/reducers';
-import { cinema } from './../../../store/actions';
+import { State } from './../../../store';
+import * as selectors from './../../../store/selectors'
+import * as actionsCinema from './../../../store/actions/cinema';
 
 import { Observable } from "rxjs/Observable";
 import { Cinema } from "../../../store/models";
@@ -25,10 +26,10 @@ export class CinemasPopoverComponent implements OnInit, OnDestroy {
 
     constructor(
         private viewCtrl: ViewController,
-        private store: Store<fromRoot.State>
+        private store: Store<State>
     ) {
-        this.cinemas$ = store.select(fromRoot.getCinemas);
-        this.currentId$ = store.select(fromRoot.getCinemaCurrentId);
+        this.cinemas$ = store.select(selectors.getCinemas);
+        this.currentId$ = store.select(selectors.getCinemaCurrentId);
     }
 
     ngOnInit() {
@@ -45,7 +46,7 @@ export class CinemasPopoverComponent implements OnInit, OnDestroy {
     onChange(cinemaId: string) {
         if (this.currentId == cinemaId)
             return;
-        this.store.dispatch(new cinema.ChangeCurrentAction(cinemaId));
+        this.store.dispatch(new actionsCinema.ChangeCurrentAction(cinemaId));
         this.viewCtrl.dismiss();
     }
 }

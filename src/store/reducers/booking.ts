@@ -3,15 +3,16 @@ import { createSelector } from 'reselect';
 import * as booking from './../actions/booking';
 import * as _ from 'lodash';
 
-import { CinemaHall } from './../models';
+import { CinemaHall, CinemaHallSeat } from './../models';
 
 export interface State {
     showtimeId: string;
 
     hallLoading: boolean;
     hall: CinemaHall;
+    seats: { [seatId: string]: CinemaHallSeat };
 
-    seatIds: string[];
+    selectedSeatIds: string[];
 }
 
 export const initialState: State = {
@@ -19,11 +20,12 @@ export const initialState: State = {
 
     hallLoading: false,
     hall: null,
+    seats: {},
 
-    seatIds: [],
+    selectedSeatIds: [],
 };
 
-export function reducer(state = initialState, actionRaw: booking.Actions) {
+export function reducer(state = initialState, actionRaw: booking.Actions): State {
     switch (actionRaw.type) {
         case booking.ActionTypes.SELECT_SHOWTIME: {
             let action = <booking.SelectShowtimeAction>actionRaw;
@@ -38,7 +40,8 @@ export function reducer(state = initialState, actionRaw: booking.Actions) {
 
                 hallLoading: false,
                 hall: null,
-                seatIds: [],
+                seats: null,
+                selectedSeatIds: null,
             });
         }
         case booking.ActionTypes.HALL_LOAD: {
@@ -46,15 +49,25 @@ export function reducer(state = initialState, actionRaw: booking.Actions) {
             return Object.assign({}, state, {
                 hallLoading: true,
                 hall: null,
-                seatIds: [],
+                seats: null,
+                selectedSeatIds: null,
             });
         }
         case booking.ActionTypes.HALL_LOAD_SUCCESS: {
             let action = <booking.HallLoadSuccessAction>actionRaw;
+
+            let hall = action.payload;
+            let seatsMap: { [id: string]: CinemaHallSeat } = hall.seats.reduce((map, seat) => {
+                console.log('map:', map);
+                map[seat.id] = seat;
+                return map;
+            }, {});
+
             return Object.assign({}, state, {
                 hallLoading: false,
                 hall: action.payload,
-                seatIds: [],
+                seats: seatsMap,
+                selectedSeatIds: [],
             })
         }
         case booking.ActionTypes.HALL_LOAD_FAIL: {
@@ -66,16 +79,16 @@ export function reducer(state = initialState, actionRaw: booking.Actions) {
             let action = <booking.SeatToggleAction>actionRaw;
             let seatId = action.payload;
 
-            let newSeatIds = _.clone(state.seatIds);
+            let newSeatIds = _.clone(state.selectedSeatIds);
 
-            let exists = state.seatIds.indexOf(seatId);
+            let exists = state.selectedSeatIds.indexOf(seatId);
             if (exists > -1)
                 newSeatIds.splice(exists, 1);
             else
                 newSeatIds.push(seatId);
 
             return Object.assign({}, state, {
-                seatIds: newSeatIds,
+                selectedSeatIds: newSeatIds,
             });
         }
         case booking.ActionTypes.COMPLETE: {
@@ -90,7 +103,7 @@ export function reducer(state = initialState, actionRaw: booking.Actions) {
                 showtimeId: null,
                 hallLoading: false,
                 hall: null,
-                seatIds: [],
+                selectedSeatIds: [],
             });
         }
 
@@ -105,7 +118,7 @@ export const getShowtimeId = (state: State) => state.showtimeId;
 export const getHallLoading = (state: State) => state.hallLoading;
 export const getHall = (state: State) => state.hall;
 
-export const getSeatIds = (state: State) => state.seatIds;
+export const getSeatIds = (state: State) => state.selectedSeatIds;
 export const getSeats = createSelector(getHall, getSeatIds, (hall, seatIds) => {
     if (hall == null)
         return [];

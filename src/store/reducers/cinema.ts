@@ -25,7 +25,7 @@ export const initialState: State = {
     showtimesLoading: false,
 };
 
-export function reducer(state = initialState, actionRaw: cinema.Actions) {
+export function reducer(state = initialState, actionRaw: cinema.Actions): State {
     switch (actionRaw.type) {
         case cinema.ActionTypes.LOAD: {
 
