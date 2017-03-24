@@ -4,7 +4,7 @@
         <text class="text" x="50%" text-anchor="middle" alignment-baseline="central">Screen</text>
     </svg>
     <svg class="g-seats" y="100">
-        <rect *ngFor="let seat of hall.seats; trackBy:trackByFn" 
+        <rect *ngFor="let seat of seats; trackBy:trackByFn" 
         [attr.width]="seat.width" [attr.height]="seat.height" 
         [attr.x]="seat.x" [attr.y]="seat.y"
         rx="6" ry="6"

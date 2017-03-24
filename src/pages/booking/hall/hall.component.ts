@@ -11,6 +11,8 @@ import _ from 'lodash';
 })
 export class HallComponent implements OnInit {
 
+    public seats: CinemaHallSeat[];
+
     @Input() hall: CinemaHall;
     @Input() selection: CinemaHallSeat[];
 
@@ -31,10 +33,10 @@ export class HallComponent implements OnInit {
         if (this.hall == null || this.hall.seats == null)
             return;
 
-        var seats = this.hall.seats;
-
-        var lastRight = _.maxBy(seats, s => s.x);
-        var lastBottom = _.maxBy(seats, s => s.y);
+        var keys = Object.keys(this.hall.seats);
+        var seats = this.seats = keys.map(id => this.hall.seats[id]);
+        var lastRight = _.maxBy(seats, id => id.x);
+        var lastBottom = _.maxBy(seats, id => id.y);
 
         var canvaWidth = lastRight.x + lastRight.width;
         var canvaHeight = lastBottom.y + lastBottom.height;
@@ -56,11 +58,4 @@ export class HallComponent implements OnInit {
             return;
         this.toggle.emit(seat);
     }
-
-    selected(seat: CinemaHallSeat) {
-        if (!seat.available)
-            return;
-        return this.selection.indexOf(seat) > -1;
-    }
-
 }

@@ -66,8 +66,7 @@ export const getBookingShowtime = createSelector(getBookingAvailableShowtimes, g
 
 export const getBookingHallLoading = createSelector(getBookingState, fromBooking.getHallLoading);
 export const getBookingHall = createSelector(getBookingState, fromBooking.getHall);
-
-export const getBookingSeats = createSelector(getBookingState, fromBooking.getSeats);
+export const getBookingSeats = createSelector(getBookingState, fromBooking.getSelectedSeats);
 
 const getBookingShowtimeCinema = createSelector(getCinemaEntities, getBookingShowtime, (cinemas, showtime) => {
     if (showtime == null)

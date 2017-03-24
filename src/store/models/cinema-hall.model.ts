@@ -5,6 +5,6 @@ export interface CinemaHall {
 
     id: string;
     name: string;
-    
-    seats: CinemaHallSeat[]
+
+    seats: { [seatId: string]: CinemaHallSeat }
 }

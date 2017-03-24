@@ -10,7 +10,6 @@ export interface State {
 
     hallLoading: boolean;
     hall: CinemaHall;
-    seats: { [seatId: string]: CinemaHallSeat };
 
     selectedSeatIds: string[];
 }
@@ -20,7 +19,6 @@ export const initialState: State = {
 
     hallLoading: false,
     hall: null,
-    seats: {},
 
     selectedSeatIds: [],
 };
@@ -40,7 +38,6 @@ export function reducer(state = initialState, actionRaw: booking.Actions): State
 
                 hallLoading: false,
                 hall: null,
-                seats: null,
                 selectedSeatIds: null,
             });
         }
@@ -49,7 +46,6 @@ export function reducer(state = initialState, actionRaw: booking.Actions): State
             return Object.assign({}, state, {
                 hallLoading: true,
                 hall: null,
-                seats: null,
                 selectedSeatIds: null,
             });
         }
@@ -57,16 +53,10 @@ export function reducer(state = initialState, actionRaw: booking.Actions): State
             let action = <booking.HallLoadSuccessAction>actionRaw;
 
             let hall = action.payload;
-            let seatsMap: { [id: string]: CinemaHallSeat } = hall.seats.reduce((map, seat) => {
-                console.log('map:', map);
-                map[seat.id] = seat;
-                return map;
-            }, {});
 
             return Object.assign({}, state, {
                 hallLoading: false,
-                hall: action.payload,
-                seats: seatsMap,
+                hall: hall,
                 selectedSeatIds: [],
             })
         }
@@ -114,14 +104,13 @@ export function reducer(state = initialState, actionRaw: booking.Actions): State
 }
 
 export const getShowtimeId = (state: State) => state.showtimeId;
-
 export const getHallLoading = (state: State) => state.hallLoading;
 export const getHall = (state: State) => state.hall;
 
-export const getSeatIds = (state: State) => state.selectedSeatIds;
-export const getSeats = createSelector(getHall, getSeatIds, (hall, seatIds) => {
-    if (hall == null)
-        return [];
+const getSelectedSeatIds = (state: State) => state.selectedSeatIds;
+export const getSelectedSeats = createSelector(getHall, getSelectedSeatIds, (hall, seatIds) => {
+    if (_.isEmpty(hall) || _.isEmpty(seatIds))
+    return null;
 
-    return hall.seats.filter(s => seatIds.indexOf(s.id) > -1);
+    return seatIds.map(id => hall.seats[id]);
 });

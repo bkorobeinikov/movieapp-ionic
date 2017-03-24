@@ -59,7 +59,6 @@ export class BookingPage {
 
         this.hallLoading$ = store.select(selectors.getBookingHallLoading);
         this.hall$ = store.select(selectors.getBookingHall);
-
         this.seats$ = store.select(selectors.getBookingSeats);
     }
 
