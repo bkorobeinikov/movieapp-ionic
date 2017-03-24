@@ -46,7 +46,6 @@ export function reducer(state: State, action: any) {
 const getMovieState = (state: State) => state.movie;
 
 const getMovieEntities = createSelector(getMovieState, fromMovie.getEntities);
-const getMovieIds = createSelector(getMovieState, fromMovie.getIds);
 export const getMovieLoading = createSelector(getMovieState, fromMovie.getLoading);
 
 export const getMovieSelectedId = createSelector(getMovieState, fromMovie.getSelectedId);

@@ -40,6 +40,7 @@ export class CinemaEffects {
     cinemaChange$ = this.actions$
         .ofType(cinema.ActionTypes.CHANGE_CURRENT, cinema.ActionTypes.LOAD_SUCCESS)
         .withLatestFrom(this.store.select(fromRoot.getCinemaCurrentId))
+        // tslint:disable-next-line:no-unused-variable
         .map(([action, cinemaId]) => new cinema.ShowtimeLoadAction(cinemaId));
 
     @Effect()

@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { App, NavParams, ModalController, ToastController } from "ionic-angular";
+import { App, ModalController, ToastController } from "ionic-angular";
 
 import { Observable } from "rxjs/Observable";
 import { Subscription } from "rxjs/Subscription";
@@ -12,9 +12,6 @@ import { PaymentPage } from "../payment/payment";
 import { Cinema, CinemaHall, CinemaHallSeat, Movie, Showtime } from "../../store/models";
 
 import * as _ from 'lodash';
-import { NewsPage } from "../news/news";
-
-import { ui } from "../../store/actions";
 
 type Order = {
     cinema: Cinema,

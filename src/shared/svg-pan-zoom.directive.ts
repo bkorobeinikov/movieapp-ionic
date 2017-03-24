@@ -189,6 +189,7 @@ export class SvgPanZoomDirective implements OnInit, OnDestroy, OnChanges {
         return point;
     }
 
+    // tslint:disable-next-line:no-unused-variable
     private doubleTapEvent(event) {
         //console.log('double-tap: ', event);
 
@@ -202,6 +203,7 @@ export class SvgPanZoomDirective implements OnInit, OnDestroy, OnChanges {
         this.animateScale(scale);
     }
 
+    // tslint:disable-next-line:no-unused-variable
     private panEvent(event) {
         var deltaX = event.deltaX;
         var deltaY = event.deltaY;
@@ -263,6 +265,7 @@ export class SvgPanZoomDirective implements OnInit, OnDestroy, OnChanges {
         return { left: x, top: y }
     }
 
+    // tslint:disable-next-line:no-unused-variable
     private onPinchStart(event: any) {
         //console.log('pinch-start', event, event.center.x, event.center.y);
 
@@ -272,6 +275,7 @@ export class SvgPanZoomDirective implements OnInit, OnDestroy, OnChanges {
         event.preventDefault();
     }
 
+    // tslint:disable-next-line:no-unused-variable
     private onPinchEnd(event: any) {
         if (this.scale > this.maxScale) {
             this.animateScale(this.maxScale);
@@ -282,6 +286,7 @@ export class SvgPanZoomDirective implements OnInit, OnDestroy, OnChanges {
         event.preventDefault();
     }
 
+    // tslint:disable-next-line:no-unused-variable
     private onPinch(event: any) {
         //console.log('pinch', event.scale);
         let scale = this.startScale * event.scale;
