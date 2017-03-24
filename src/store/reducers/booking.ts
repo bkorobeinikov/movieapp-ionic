@@ -3,7 +3,7 @@ import { createSelector } from 'reselect';
 import * as booking from './../actions/booking';
 import * as _ from 'lodash';
 
-import { CinemaHall, CinemaHallSeat } from './../models';
+import { CinemaHall } from './../models';
 
 export interface State {
     showtimeId: string;
@@ -38,7 +38,7 @@ export function reducer(state = initialState, actionRaw: booking.Actions): State
 
                 hallLoading: false,
                 hall: null,
-                selectedSeatIds: null,
+                selectedSeatIds: [],
             });
         }
         case booking.ActionTypes.HALL_LOAD: {
@@ -46,7 +46,7 @@ export function reducer(state = initialState, actionRaw: booking.Actions): State
             return Object.assign({}, state, {
                 hallLoading: true,
                 hall: null,
-                selectedSeatIds: null,
+                selectedSeatIds: [],
             });
         }
         case booking.ActionTypes.HALL_LOAD_SUCCESS: {
@@ -110,7 +110,7 @@ export const getHall = (state: State) => state.hall;
 const getSelectedSeatIds = (state: State) => state.selectedSeatIds;
 export const getSelectedSeats = createSelector(getHall, getSelectedSeatIds, (hall, seatIds) => {
     if (_.isEmpty(hall) || _.isEmpty(seatIds))
-    return null;
+        return [];
 
     return seatIds.map(id => hall.seats[id]);
 });

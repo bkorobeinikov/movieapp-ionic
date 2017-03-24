@@ -17,14 +17,19 @@ import * as actionsBooking from './../../store/actions/booking';
 
 import { Subscription } from "rxjs/Subscription";
 
+import { ScreeningsViewModel } from "../../store/viewModels";
+
 @Component({
     selector: 'page-booking',
     templateUrl: "booking.html",
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BookingPage {
+
+    public screenings$: Observable<ScreeningsViewModel>;
+    public screenings: ScreeningsViewModel;
+
     public movie$: Observable<Movie>;
-    public loading$: Observable<boolean>;
 
     public showtimes$: Observable<Showtime[]>;
     public showtimes: Showtime[];
@@ -52,8 +57,9 @@ export class BookingPage {
         private appCtrl: App,
         private store: Store<State>) {
 
+        this.screenings$ = store.select(selectors.getCinemaCurrentScreenings);
+
         this.movie$ = store.select(selectors.getMovieSelected);
-        this.loading$ = store.select(selectors.getCinemaShowtimesLoading);
         this.showtimes$ = store.select(selectors.getBookingAvailableShowtimes);
         this.selectedShowtime$ = store.select(selectors.getBookingShowtime);
 
@@ -63,7 +69,11 @@ export class BookingPage {
     }
 
     ngOnInit() {
-        let s = this.showtimes$.subscribe(showtimes => {
+        let s = this.screenings$.subscribe(screenings => {
+            this.screenings = screenings;
+        });
+        this.subscriptions.add(s);
+        s = this.showtimes$.subscribe(showtimes => {
             this.showtimes = showtimes;
             this.onShowtimesChange();
         });

@@ -20,12 +20,18 @@ import { Effect, Actions, toPayload } from '@ngrx/effects';
 
 import { State } from './../reducers';
 import * as actionsCinema from './../actions/cinema';
+import * as actionsMovie from './../actions/movie';
 import * as selectors from './../selectors';
 
 import { CinemaService } from "../../core/cinema.service";
 
 @Injectable()
 export class CinemaEffects {
+
+    @Effect()
+    onMoviesLoad$ = this.actions$
+        .ofType(actionsMovie.ActionTypes.LOAD_SUCCESS)
+        .map(() => new actionsCinema.LoadAction());
 
     @Effect()
     load$ = this.actions$
@@ -51,7 +57,9 @@ export class CinemaEffects {
         .switchMap(cinemaId => {
             return this.cinemaService.getShowtimes(cinemaId)
                 .map(showtimes => new actionsCinema.ShowtimeLoadSuccessAction(showtimes))
-                .catch((err) => of(new actionsCinema.ShowtimeLoadFailAction(err)))
+                .catch((err) => of(new actionsCinema.ShowtimeLoadFailAction({
+                    cinemaId: cinemaId,
+                })))
         });
 
     constructor(

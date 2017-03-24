@@ -22,6 +22,7 @@ export class MovieEffects {
     @Effect()
     load$: Observable<Action> = this.actions$
         .ofType(actionsMovie.ActionTypes.LOAD)
+        .startWith(new actionsMovie.LoadAction())
         .map(toPayload)
         .switchMap(payload => {
             return this.movieService.getMovies()

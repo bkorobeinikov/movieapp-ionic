@@ -57,13 +57,13 @@ export class ShowtimeLoadAction implements Action {
 export class ShowtimeLoadSuccessAction implements Action {
     readonly type = ActionTypes.SHOWTIME_LOAD_SUCCESS;
 
-    constructor(public payload: {showtimes: Showtime[], moviesMap: CinemaMovie[]}) { }
+    constructor(public payload: { cinemaId: string, showtimes: Showtime[], moviesMap: CinemaMovie[] }) { }
 }
 
 export class ShowtimeLoadFailAction implements Action {
     readonly type = ActionTypes.SHOWTIME_LOAD_FAIL;
 
-    constructor(public payload: any) { }
+    constructor(public payload: { cinemaId: string }) { }
 }
 
 export type Actions

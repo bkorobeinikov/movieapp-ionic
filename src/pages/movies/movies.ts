@@ -42,9 +42,7 @@ export class MoviesPage implements OnChanges {
         this.category$ = store.select(selectors.getUiMoviesCategory);
         this.cinema$ = store.select(selectors.getCinemaCurrent);
         this.movies$ = store.select(selectors.getCinemaCurrentMovies);
-        this.loading$ = store.select(selectors.getMovieLoading);
-
-        this.store.dispatch(new actionsMovie.LoadAction());
+        this.loading$ = store.select(selectors.getCinemaCurrentLoading);
     }
 
     ionViewDidEnter() {
@@ -54,7 +52,7 @@ export class MoviesPage implements OnChanges {
     ionViewDidLeave() {
     }
 
-    onCategoryChange(ev: {value: "current" | "future"}) {
+    onCategoryChange(ev: { value: "current" | "future" }) {
         this.store.dispatch(new actionsUi.ChangeMoviesCategoryAction(ev.value));
         this.content.scrollToTop(0);
     }

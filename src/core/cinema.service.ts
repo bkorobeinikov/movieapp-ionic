@@ -39,7 +39,7 @@ export class CinemaService extends BaseService {
             });
     }
 
-    getShowtimes(cinemaId: string): Observable<{ showtimes: Showtime[], moviesMap: CinemaMovie[] }> {
+    getShowtimes(cinemaId: string): Observable<{ cinemaId: string, showtimes: Showtime[], moviesMap: CinemaMovie[] }> {
         return this.getData<any>(this.showtimeUrl[cinemaId])
             .map(res => {
                 try {
@@ -56,6 +56,7 @@ export class CinemaService extends BaseService {
                     });
 
                     return {
+                        cinemaId: cinemaId,
                         showtimes: showtimes,
                         moviesMap: movies,
                     };
