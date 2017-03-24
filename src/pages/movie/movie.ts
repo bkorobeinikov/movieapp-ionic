@@ -1,10 +1,8 @@
-import { Component, SimpleChanges } from '@angular/core';
+import { Component } from '@angular/core';
 
-import { App, NavController, NavParams } from 'ionic-angular';
-import { StatusBar } from 'ionic-native';
+import { App, NavController } from 'ionic-angular';
 
 import { Movie } from './../../store/models'
-import { MovieService } from './../../core/movie.service'
 
 import moment from 'moment';
 import { BookingPage } from "../booking/booking";
@@ -13,7 +11,6 @@ import { Observable } from "rxjs/Observable";
 
 import { Store } from "@ngrx/store";
 import * as fromRoot from './../../store/reducers';
-//import { movie as fromMovie } from './../../store/actions';
 
 @Component({
     selector: 'page-movie',

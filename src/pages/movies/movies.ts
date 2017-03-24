@@ -1,11 +1,9 @@
-﻿import { Component, OnInit, OnDestroy, ViewChild, OnChanges, SimpleChanges, ChangeDetectionStrategy } from '@angular/core';
+﻿import { Component, ViewChild, OnChanges, SimpleChanges } from '@angular/core';
 import { App, ViewController, NavController, Content, PopoverController } from 'ionic-angular';
 
 import { Observable } from "rxjs/Observable";
 
 import { MoviePage } from './../movie/movie';
-
-import * as _ from 'lodash';
 import moment from 'moment';
 
 import { Movie, Cinema } from "../../store/models";
