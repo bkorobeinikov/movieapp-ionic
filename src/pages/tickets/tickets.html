@@ -1,0 +1,28 @@
+<ion-header>
+    <ion-navbar>
+        <ion-title>Tickets</ion-title>
+    </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+
+
+    <ion-list>
+        <ion-item *ngFor="let ticket of tickets$ | async" (tap)="onSelect(ticket)">
+            <div>
+                <div>{{ticket.movieName}}</div>
+                <div>{{ticket.hallName}}</div>
+                <div>{{ticket.techId}}</div>
+                <div>{{ticket.time | moment:"D MMMM dddd HH:mm"}}</div>
+
+                <div>
+                    <div *ngFor="let seat of ticket.seats">
+                        <span>row {{seat.row}} - seat {{seat.seat}} - price {{seat.price}}</span>
+                    </div>
+                </div>
+            </div>
+        </ion-item>
+    </ion-list>
+
+
+</ion-content>
