@@ -1,0 +1,115 @@
+page-tickets {
+
+    .scroll-content {
+        margin-top: 64px;
+        margin-bottom: 41px;
+    }
+
+    .ticket-list {
+        .ticket-item {
+
+        }
+    }
+
+    .movie-summary {
+        overflow: visible;
+        
+        margin-bottom: 1em;
+        padding: 0;
+
+        align-items: flex-start;
+
+        display: flex;
+        flex-direction: row;
+
+        .poster {
+            margin-right: 1em;
+
+            @include aspect-ratio(1, 1.5);
+
+            flex: 2;
+            min-width: auto;
+            min-height: auto;
+
+            padding: 0;
+
+            img {
+                width: auto;
+                height: auto;
+
+                border-radius: 2px;
+            }
+        }
+
+        .item-content {
+            overflow: hidden;
+
+            flex: 3;
+
+            display: flex;
+            flex-direction: column;
+
+            padding: 0;
+        }
+
+        .title {
+            margin-bottom: .5em;
+
+            font-size: 1.2em;
+            font-weight: bold;
+
+            color: $color-title;
+        }
+
+        .country {
+            margin-bottom: .2em;
+
+            font-size: .8em;
+
+            color: $color-subtitle;
+        }
+
+        .genre {
+            margin-bottom: .5em;
+
+            font-size: .8em;
+
+            color: $color-subsubtitle;
+        }
+
+        .line {
+            margin-bottom: .5em;
+
+            display: flex;
+            flex-direction: row;
+
+            >* {
+                margin: 0 .4em 0 0;
+            }
+        }           
+
+        .duration {
+            font-size: .8em;
+            font-weight: bold;
+
+            color: $color-subtitle;
+        }
+
+        .time {
+            font-weight: bold;
+            color: #333;
+            font-size: 1.2em;
+        }
+
+        .tech {
+            margin-bottom: .5em;
+            padding: .5em;
+            border-radius: 2px;
+
+            background-color: #1aa3e0;
+            color: white;
+            text-shadow: 0 0 1px white;
+            align-self: flex-start;
+        }
+    }
+}
