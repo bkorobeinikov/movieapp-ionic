@@ -23,13 +23,13 @@ export class BaseService {
                 headers: this.headers
             })
             .map(res => {
-                console.log('service:response', res);
+                //console.log('service:response', res);
                 var x2js = new X2JS();
                 var text = res.text();
                 var jsonObj: any = x2js.xml2js<any>(text);
                 jsonObj = jsonObj[Object.keys(jsonObj)[0]];
 
-                console.log('service:response parsed', jsonObj);
+                //console.log('service:response parsed', jsonObj);
 
                 return jsonObj;
             })

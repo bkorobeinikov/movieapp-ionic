@@ -10,70 +10,72 @@
                 Today
             </ion-segment-button>
             <ion-segment-button value="future">
-                Comming Soon 
+                Comming Soon
             </ion-segment-button>
         </ion-segment>
-    </ion-toolbar> 
+    </ion-toolbar>
 </ion-header>
 
 <ion-content padding class="page-content" [ngClass]="{'loading': (loading$ | async)}">
 
-    <ng-container *ngIf="(loading$ | async) == true"> 
-        <div class="movies current">
-            <div *ngFor="let i of [1, 2, 3, 4]" class="movie-detail loading">
-                <div class="poster">
-                    <div class="content">
-                    </div>
-                </div>
-                <div class="item-content">
-                    <span class="title">&nbsp;</span>
-                    <span class="country">&nbsp;</span>
-                    <span class="genre ">&nbsp;</span>
-                    <span class="line"> 
-                        <span class="date">&nbsp;</span>
-                    <span class="time">&nbsp;</span>
-                    </span>
-                </div>
-            </div>
-        </div>
-    </ng-container>
-
-    <ng-container *ngIf="(loading$ | async) == false">
-        <ng-container [ngSwitch]="category$ | async">
-            <div *ngSwitchCase="'current'" class="movies current">
-                <div *ngFor="let movie of movies$ | async" class="movie-detail" (tap)="openMovie(movie)">
+    <ng-container [ngSwitch]="(loading$ | async)">
+        <ng-container *ngSwitchCase="true">
+            <ion-spinner></ion-spinner>
+            <div class="movies current">
+                <div *ngFor="let i of [1, 2, 3, 4]" class="movie-detail loading">
                     <div class="poster">
                         <div class="content">
-                            <img src="{{movie.poster}}">
                         </div>
                     </div>
                     <div class="item-content">
-                        <span class="title">{{movie.name}}</span>
-                        <span class="country">{{movie.countries | join: ", "}}</span>
-                        <span class="genre ">{{movie.genres | join:" | "}}</span>
+                        <span class="title">&nbsp;</span>
+                        <span class="country">&nbsp;</span>
+                        <span class="genre ">&nbsp;</span>
                         <span class="line"> 
-                        <span class="date">{{movie.sinceDate | date:"yMMMd"}}</span>
-                        <span class="time">{{duration(movie.duration)}}</span>
+                        <span class="date">&nbsp;</span>
+                        <span class="time">&nbsp;</span>
                         </span>
-                        <!-- services rating -->
-                        <div class="ratings" *ngIf="movie.ratings != null">
-                            <div class="imdb" *ngIf="movie.ratings.imdb != null">
-                                <span>imdb <span class="nb">{{movie.ratings.imdb.rating}}</span></span>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+        <ng-container *ngSwitchCase="false">
+            <ng-container [ngSwitch]="category$ | async">
+                <div *ngSwitchCase="'current'" class="movies current">
+                    <div *ngFor="let movie of movies$ | async" class="movie-detail" (tap)="openMovie(movie)">
+                        <div class="poster">
+                            <div class="content">
+                                <img src="{{movie.poster}}">
+                            </div>
+                        </div>
+                        <div class="item-content">
+                            <span class="title">{{movie.name}}</span>
+                            <span class="country">{{movie.countries | join: ", "}}</span>
+                            <span class="genre ">{{movie.genres | join:" | "}}</span>
+                            <span class="line"> 
+                        <span class="date">{{movie.sinceDate | date:"yMMMd"}}</span>
+                            <span class="time">{{duration(movie.duration)}}</span>
+                            </span>
+                            <!-- services rating -->
+                            <div class="ratings" *ngIf="movie.ratings != null">
+                                <div class="imdb" *ngIf="movie.ratings.imdb != null">
+                                    <span>imdb <span class="nb">{{movie.ratings.imdb.rating}}</span></span>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div *ngSwitchCase="'future'" class="movies future">
-                <div *ngFor="let movie of movies$ | async" class="movie-icon future" (tap)="openMovie(movie)">
-                    <div class="poster">
-                        <div class="content">
-                            <img src="{{movie.poster}}">
+                <div *ngSwitchCase="'future'" class="movies future">
+                    <div *ngFor="let movie of movies$ | async" class="movie-icon future" (tap)="openMovie(movie)">
+                        <div class="poster">
+                            <div class="content">
+                                <img src="{{movie.poster}}">
+                            </div>
                         </div>
+                        <div class="title">{{movie.name}}</div>
                     </div>
-                    <div class="title">{{movie.name}}</div>
                 </div>
-            </div>
+            </ng-container>
         </ng-container>
     </ng-container>
 

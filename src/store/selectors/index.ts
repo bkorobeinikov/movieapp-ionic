@@ -34,6 +34,7 @@ export const getCinemas = createSelector(getCinemaEntities, (cinemas) => {
 });
 export const getCinemaCurrentId = createSelector(getCinemaState, fromCinema.getCurrentCinemaId);
 export const getCinemaCurrent = createSelector(getCinemaState, fromCinema.getCurrentCinema);
+export const getCinemaAllScreenings = createSelector(getCinemaState, fromCinema.getScreenings);
 export const getCinemaCurrentScreenings = createSelector(getCinemaState, fromCinema.getCurrentScreenings);
 
 export const getCinemaCurrentMovies = createSelector(getUiMoviesCategory, getMovieEntities, getCinemaCurrentScreenings,
@@ -63,12 +64,12 @@ export const getCinemaCurrentLoading = createSelector(getMovieLoading, getCinema
 const getBookingState = (state: State) => state.booking;
 
 export const getBookingAvailableShowtimes = createSelector(getMovieSelectedId, getCinemaCurrentScreenings, (movieId, screenings) => {
-    if (movieId == null || _.isEmpty(screenings)) {
+    if (movieId == null || _.isEmpty(screenings) || _.isEmpty(screenings.map[movieId])) {
         return [];
     }
 
     let showtimeIds = screenings.map[movieId];
-    return showtimeIds.map(id => screenings.showtimes[id]);
+    return showtimeIds.map(id => screenings.showtimes[id]).filter(s => s !== undefined);
 });
 
 const getBookingShowtimeId = createSelector(getBookingState, fromBooking.getShowtimeId);

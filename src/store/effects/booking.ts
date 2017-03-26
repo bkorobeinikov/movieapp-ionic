@@ -41,13 +41,13 @@ export class BookingEffects {
         .map(toPayload)
         .switchMap(payload => {
 
-            const nextSelect$ = Observable.merge(
+            const next$ = Observable.merge(
                 this.actions$.ofType(actionsBooking.ActionTypes.HALL_LOAD).skip(1),
                 this.actions$.ofType(actionsBooking.ActionTypes.SELECT_SHOWTIME));
 
 
             return this.cinemaService.getHall(payload)
-                .takeUntil(nextSelect$)
+                .takeUntil(next$)
                 .map(hall => new actionsBooking.HallLoadSuccessAction(hall))
                 .catch(() => of(new actionsBooking.HallLoadFailAction([])));
         });

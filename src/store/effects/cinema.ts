@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 
 import { Observable } from "rxjs/Observable";
+import { empty } from 'rxjs/observable/empty';
 import { of } from 'rxjs/observable/of';
 import 'rxjs/add/observable/from';
 
@@ -25,6 +26,8 @@ import * as selectors from './../selectors';
 
 import { CinemaService } from "../../core/cinema.service";
 
+import moment from 'moment';
+
 @Injectable()
 export class CinemaEffects {
 
@@ -36,7 +39,6 @@ export class CinemaEffects {
     @Effect()
     load$ = this.actions$
         .ofType(actionsCinema.ActionTypes.LOAD)
-        .startWith(new actionsCinema.LoadAction())
         .switchMap(payload => {
             return this.cinemaService.getCinemas()
                 .map(cinemas => new actionsCinema.LoadSuccessAction(cinemas))
@@ -48,18 +50,38 @@ export class CinemaEffects {
         .ofType(actionsCinema.ActionTypes.CHANGE_CURRENT, actionsCinema.ActionTypes.LOAD_SUCCESS)
         .withLatestFrom(this.store.select(selectors.getCinemaCurrentId))
         // tslint:disable-next-line:no-unused-variable
-        .map(([action, cinemaId]) => new actionsCinema.ShowtimeLoadAction(cinemaId));
+        .map(([action, cinemaId]) => new actionsCinema.ShowtimeCheckAndLoadAction(cinemaId));
+
+    @Effect()
+    checkAndLoad$: Observable<Action> = this.actions$
+        .ofType(actionsCinema.ActionTypes.SHOWTIME_CHECK_AND_LOAD)
+        .map(toPayload)
+        .withLatestFrom(this.store.select(selectors.getCinemaAllScreenings))
+        .switchMap(([cinemaId, screenings]) => {
+            var cinemanScreenings = screenings[cinemaId];
+
+            if (cinemanScreenings == null ||
+                moment(cinemanScreenings.loadedAt).isBefore(moment().subtract(5, "minutes"))) {
+                return of(new actionsCinema.ShowtimeLoadAction(cinemaId));
+            }
+
+            return empty();
+        });
 
     @Effect()
     loadShowtimes$: Observable<Action> = this.actions$
         .ofType(actionsCinema.ActionTypes.SHOWTIME_LOAD)
         .map(toPayload)
-        .switchMap(cinemaId => {
+        .switchMap((cinemaId) => {
+
+            const next$ = this.actions$.ofType(actionsCinema.ActionTypes.SHOWTIME_LOAD).skip(1);
+
             return this.cinemaService.getShowtimes(cinemaId)
-                .map(showtimes => new actionsCinema.ShowtimeLoadSuccessAction(showtimes))
+                .takeUntil(next$)
+                .map(result => new actionsCinema.ShowtimeLoadSuccessAction(result))
                 .catch((err) => of(new actionsCinema.ShowtimeLoadFailAction({
                     cinemaId: cinemaId,
-                })))
+                })));
         });
 
     constructor(

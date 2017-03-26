@@ -66,6 +66,9 @@ export function reducer(state = initialState, actionRaw: cinema.Actions): State 
                 currentCinemaId: newCinemaId
             });
         }
+        case cinema.ActionTypes.SHOWTIME_CHECK_AND_LOAD: {
+            return state;
+        }
         case cinema.ActionTypes.SHOWTIME_LOAD: {
             let action = <cinema.ShowtimeLoadAction>actionRaw;
             let cinemaId = action.payload;
@@ -129,7 +132,7 @@ export const getCurrentCinema = createSelector(getCinemas, getCurrentCinemaId, (
     return entities[currentId];
 });
 
-const getScreenings = (state: State) => state.screenings;
+export const getScreenings = (state: State) => state.screenings;
 export const getCurrentScreenings = createSelector(getCurrentCinemaId, getScreenings, (cinemaId, screenings) => {
     return screenings[cinemaId];
 });

@@ -1,4 +1,4 @@
-﻿import { Component, ViewChild, OnChanges, SimpleChanges } from '@angular/core';
+﻿import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { App, ViewController, NavController, Content, PopoverController } from 'ionic-angular';
 
 import { Observable } from "rxjs/Observable";
@@ -19,16 +19,16 @@ import { CinemasPopoverComponent } from './cinemas-popover/cinemas-popover.compo
 @Component({
     selector: 'page-movies',
     templateUrl: 'movies.html',
-    //changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MoviesPage implements OnChanges {
+export class MoviesPage {
+
+    public loading$: Observable<boolean>;
 
     public category$: Observable<string>;
 
     public cinema$: Observable<Cinema>;
     public movies$: Observable<Movie[]>
-
-    public loading$: Observable<boolean>;
 
     @ViewChild(Content) content: Content;
 
@@ -49,15 +49,9 @@ export class MoviesPage implements OnChanges {
         this.content.scrollToTop(0);
     }
 
-    ionViewDidLeave() {
-    }
-
     onCategoryChange(ev: { value: "current" | "future" }) {
         this.store.dispatch(new actionsUi.ChangeMoviesCategoryAction(ev.value));
         this.content.scrollToTop(0);
-    }
-
-    ngOnChanges(changes: SimpleChanges) {
     }
 
     duration(duration: number) {
@@ -67,7 +61,6 @@ export class MoviesPage implements OnChanges {
 
     openMovie(movie: Movie) {
         this.store.dispatch(new actionsMovie.SelectAction(movie.id));
-
         this.appCtrl.getRootNav().push(MoviePage);
     }
 

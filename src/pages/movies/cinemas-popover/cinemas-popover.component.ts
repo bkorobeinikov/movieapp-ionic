@@ -43,10 +43,10 @@ export class CinemasPopoverComponent implements OnInit, OnDestroy {
         this.subscription.unsubscribe();
     }
 
-    onChange(cinemaId: string) {
-        if (this.currentId == cinemaId)
-            return;
-        this.store.dispatch(new actionsCinema.ChangeCurrentAction(cinemaId));
+    onSelect(cinemaId: string) {
         this.viewCtrl.dismiss();
+
+        if (this.currentId !== cinemaId)
+            this.store.dispatch(new actionsCinema.ChangeCurrentAction(cinemaId));
     }
 }

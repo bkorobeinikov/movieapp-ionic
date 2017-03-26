@@ -11,6 +11,7 @@ export const ActionTypes = {
 
     CHANGE_CURRENT: type("[Cinema] Change Current"),
 
+    SHOWTIME_CHECK_AND_LOAD: type("[Cinema] Showtime Check And Load"),
     SHOWTIME_LOAD: type("[Cinema] Showtime Load"),
     SHOWTIME_LOAD_SUCCESS: type("[Cinema] Showtime Load Success"),
     SHOWTIME_LOAD_FAIL: type("[Cinema] Showtime Load Fail"),
@@ -44,6 +45,16 @@ export class ChangeCurrentAction implements Action {
     constructor(public payload: string) { }
 }
 
+export class ShowtimeCheckAndLoadAction implements Action {
+    readonly type = ActionTypes.SHOWTIME_CHECK_AND_LOAD;
+
+    /**
+     * 
+     * @param payload cinema id
+     */
+    constructor(public payload: string) {}
+}
+
 export class ShowtimeLoadAction implements Action {
     readonly type = ActionTypes.SHOWTIME_LOAD;
 
@@ -71,6 +82,7 @@ export type Actions
     | LoadSuccessAction
     | LoadFailAction
     | ChangeCurrentAction
+    | ShowtimeCheckAndLoadAction
     | ShowtimeLoadAction
     | ShowtimeLoadSuccessAction
     | ShowtimeLoadFailAction;

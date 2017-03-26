@@ -36,6 +36,12 @@ page-movies {
         }
     }
 
+    .spinner {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+    }
+
     .movies {
         display: flex;
         &.current {

@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, ViewChild, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ViewChild, OnInit, OnDestroy } from '@angular/core';
 
 import { MoviesPage } from '../movies/movies';
 import { AccountPage } from '../account/account';
@@ -10,13 +10,15 @@ import * as selectors from './../../store/selectors';
 import * as ui from './../../store/actions/ui';
 
 import { Observable } from "rxjs/Observable";
+import { Subscription } from "rxjs/Subscription";
+
 import { Tabs } from "ionic-angular";
 
 @Component({
     templateUrl: 'tabs.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TabsPage implements OnInit {
+export class TabsPage implements OnInit, OnDestroy {
 
     @ViewChild('tabs') tabs: Tabs;
 
@@ -26,17 +28,24 @@ export class TabsPage implements OnInit {
 
     public index$: Observable<number>;
 
+    public subscription: Subscription = new Subscription();
+
     constructor(private store: Store<State>) {
         this.index$ = store.select(selectors.getUiRootTabIndex);
     }
 
     ngOnInit() {
-        this.index$.subscribe(index => {
+        let s = this.index$.subscribe(index => {
             this.tabs.select(index);
-        })
+        });
+        this.subscription.add(s);
     }
 
-    onTabChange(ev: any) {
-        this.store.dispatch(new ui.RootChangeTabAction(ev.index));
+    ngOnDestroy() {
+        this.subscription.unsubscribe();
+    }
+
+    onSelect(index) {
+        this.store.dispatch(new ui.RootChangeTabAction(index));
     }
 }
