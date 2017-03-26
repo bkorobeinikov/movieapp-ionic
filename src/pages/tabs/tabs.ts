@@ -16,7 +16,6 @@ import { Tabs } from "ionic-angular";
 
 @Component({
     templateUrl: 'tabs.html',
-    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TabsPage implements OnInit, OnDestroy {
 
@@ -30,6 +29,8 @@ export class TabsPage implements OnInit, OnDestroy {
 
     public subscription: Subscription = new Subscription();
 
+    public ticketsCount: number = 0;
+
     constructor(private store: Store<State>) {
         this.index$ = store.select(selectors.getUiRootTabIndex);
     }
@@ -39,6 +40,9 @@ export class TabsPage implements OnInit, OnDestroy {
             this.tabs.select(index);
         });
         this.subscription.add(s);
+        this.subscription.add(this.store.select(selectors.getTicketAll).subscribe(tickets => {
+            this.ticketsCount = tickets.length;
+        }));
     }
 
     ngOnDestroy() {
