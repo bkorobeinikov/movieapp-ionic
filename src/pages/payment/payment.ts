@@ -85,7 +85,6 @@ export class PaymentPage {
             let ticket: Ticket = {
                 id: Math.random() + "",
                 movieId: this.order.movie.id,
-                movieName: this.order.movie.name,
                 cinemaId: this.order.cinema.id,
                 hallId: this.order.hall.id,
                 hallName: this.order.hall.name,
