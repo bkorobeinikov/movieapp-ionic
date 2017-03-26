@@ -83,14 +83,17 @@ export class PaymentPage {
         }).then(() => {
             // load real ticket
             let ticket: Ticket = {
-                id: Math.random() + "",
+                id: Math.round(Math.random() * 100000000) + "",
                 movieId: this.order.movie.id,
                 cinemaId: this.order.cinema.id,
                 hallId: this.order.hall.id,
                 hallName: this.order.hall.name,
                 techId: this.order.showtime.techId,
                 time: this.order.showtime.time.toDate(),
-                seats: this.order.seats.map(s => ({ row: s.row, seat: s.seat, price: s.price })),
+                seats: this.order.seats.map(s => ({
+                    id: Math.round(Math.random() * 1000000000) + "",
+                    row: s.row, seat: s.seat, price: s.price
+                })),
             };
 
             this.store.dispatch(new actionsTicket.LoadSuccessAction([ticket]));

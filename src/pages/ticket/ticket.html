@@ -6,70 +6,71 @@
 
 <ion-content padding>
     <ng-container *ngIf="ticket != null">
-        <div class="movie-content">
-            <div class="movie-summary">
-                <div class="poster">
-                    <div class="content">
-                        <img src="{{movie.poster}}">
+        <div class="ticket-content">
+            <div class="movie-content">
+                <div class="movie-summary">
+                    <div class="poster">
+                        <div class="content">
+                            <img src="{{movie.poster}}">
+                        </div>
                     </div>
-                </div>
-                <div class="item-content">
-                    <span class="title">{{movie.name}}</span>
-                    <span class="genre ">{{movie.genres | join:" | "}}</span>
-                    <span class="line"> 
-                    <span class="time">{{duration(movie.duration)}}</span>
-                    </span>
+                    <div class="item-content">
+                        <span class="title">{{movie.name}}</span>
+                        <span class="country">{{movie.countries | join: ", "}}</span>
+                        <span class="genre ">{{movie.genres | join:" | "}}</span>
+                        <span class="line"> 
+                            <span class="time">{{duration(movie.duration)}}</span>
+                        </span>
+                        <span class="tech">{{ticket.techId}}</span>
+                    </div> 
                 </div>
             </div>
-        </div>
-        <div class="tech-content">
-            <div class="name"><span>{{ticket.techId}}</span></div>
-        </div>
-        <div class="location-content">
-            <ion-icon name="pin"></ion-icon>
-            <div class="cinema">
-                <div class="name">{{cinema.name}}</div>
-                <address>{{cinema.address}}</address>
+            <div class="location-content">
+                <ion-icon name="pin"></ion-icon>
+                <div class="cinema">
+                    <div class="name">{{cinema.name}}</div>
+                    <address>{{cinema.address}}</address>
+                </div>
             </div>
-        </div>
 
-        <div class="seats-content">
-            <ion-slides pager="true">
-                <ion-slide *ngFor="let seat of ticket.seats" class="seat-container">
-                    <div class="seat-info seat-info-main">
-                        <div class="screen">
-                            <span>screen</span>
-                            <span>{{hall.name}}</span>
-                        </div>
-                        <div class="row">
-                            <span>row</span>
-                            <span>{{seat.row}}</span>
-                        </div>
-                        <div class="seat">
-                            <span>seat</span>
-                            <span>{{seat.seat}}</span>
-                        </div>
+            <div class="seats-content">
+                <ion-slides pager="true">
+                    <ion-slide *ngFor="let seat of ticket.seats" class="seat-container">
+                        <div class="seat-info seat-info-main">
+                            <div class="screen">
+                                <span>screen</span>
+                                <span>{{hall.name}}</span>
+                            </div>
+                            <div class="row">
+                                <span>row</span>
+                                <span>{{seat.row}}</span>
+                            </div>
+                            <div class="seat">
+                                <span>seat</span>
+                                <span>{{seat.seat}}</span>
+                            </div>
 
-                    </div>
-                    <div class="seat-info seat-info-other">
-                        <div class="price">
-                            <span>price</span>
-                            <span>{{seat.price}}</span>
                         </div>
-                        <div class="date">
-                            <span>date</span>
-                            <span>{{ticket.time | moment:"D/MM/YYYY"}}</span>
+                        <div class="seat-info seat-info-other">
+                            <div class="price">
+                                <span>price</span>
+                                <span>{{seat.price}}</span>
+                            </div>
+                            <div class="date">
+                                <span>date</span>
+                                <span>{{ticket.time | moment:"D/MM/YYYY"}}</span>
+                            </div>
+                            <div class="time">
+                                <span>time</span>
+                                <span>{{ticket.time | moment:"HH:mm"}}</span>
+                            </div>
                         </div>
-                        <div class="time">
-                            <span>time</span>
-                            <span>{{ticket.time | moment:"HH:mm"}}</span>
+                        <div class="seat-barcode">
+                            <barcode [data]="seat.id"></barcode>
                         </div>
-                    </div>
-                    <div class="seat-barcode">
-
-                    </div>
-                </ion-slide>
-            </ion-slides>
+                    </ion-slide>
+                </ion-slides>
+            </div>
         </div>
     </ng-container>
 </ion-content>

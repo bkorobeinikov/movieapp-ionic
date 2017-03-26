@@ -1,8 +1,9 @@
 page-ticket {
 
-
-    .movie-content {
+    .ticket-content {
         flex: 1;
+        display: flex;
+        flex-direction: column;
     }
 
     .movie-summary {
@@ -21,7 +22,7 @@ page-ticket {
 
             @include aspect-ratio(1, 1.5);
 
-            flex: 1;
+            flex: 2;
             min-width: auto;
             min-height: auto;
 
@@ -40,7 +41,7 @@ page-ticket {
         .item-content {
             overflow: hidden;
 
-            flex: 3;
+            flex: 4;
 
             display: flex;
             flex-direction: column;
@@ -96,22 +97,15 @@ page-ticket {
 
                 color: $color-subtitle;
         }
-    }
 
-    .tech-content {
-        text-align: center;
-        margin-bottom: 1em;
-
-        .name {
+        .tech {
             padding: .5em;
             border-radius: 2px;
 
-            background-color: #1aa3e0;   
-            span {
-                font-size: 1.5em;
-                color: white;
-                text-shadow: 0 0 1px white;
-            }
+            background-color: #1aa3e0;
+            color: white;
+            text-shadow: 0 0 1px white;
+            align-self: flex-start;
         }
     }
 
@@ -162,6 +156,7 @@ page-ticket {
                 }
 
                 span:first-child {
+                    color: #555;
                     font-size: .6em;
                     text-transform: uppercase;
                 }
@@ -174,9 +169,14 @@ page-ticket {
 
             &.seat-info-main {
                 margin-bottom: .5em;
+                padding-top: .5em;
+                border-top: 1px dashed #999;
             }
 
             &.seat-info-other {
+                padding-bottom: .5em;
+                border-bottom: 1px dashed #999;
+                
                 > div {
                     span:last-child {
                         font-size: .9em;
