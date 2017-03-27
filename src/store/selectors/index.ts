@@ -118,4 +118,5 @@ export const getTicketSelected = createSelector(getTicketState, fromTicket.getSe
 const getAccountState = (state: State) => state.account;
 export const getAccount = createSelector(getAccountState, fromAccount.getAccount);
 export const getAccountLoggingIn = createSelector(getAccountState, fromAccount.getLoggingIn);
+export const getAccountLoggedIn = createSelector(getAccountState, fromAccount.getLoggedIn);
 export const getAccountUpdating = createSelector(getAccountState, fromAccount.getUpdating);

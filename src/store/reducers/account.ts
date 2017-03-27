@@ -6,14 +6,18 @@ import { Account } from './../models';
 export interface State {
     account: Account;
 
+    loggedIn: boolean;
     loggingIn: boolean;
+
     updating: boolean;
 }
 
 export const initialState: State = {
     account: null,
 
+    loggedIn: false,
     loggingIn: false,
+    
     updating: false,
 };
 
@@ -31,6 +35,7 @@ export function reducer(state: State, actionRaw: actionsAccount.Actions) {
             return Object.assign({}, state, {
                 account: account,
                 loggingIn: false,
+                loggedIn: true,
                 updating: false,
             });
         }
@@ -43,6 +48,7 @@ export function reducer(state: State, actionRaw: actionsAccount.Actions) {
             return Object.assign({}, state, {
                 account: null,
                 logggingIn: false,
+                loggedIn: false,
                 updating: false,
             });
         }
@@ -84,4 +90,5 @@ export function reducer(state: State, actionRaw: actionsAccount.Actions) {
 
 export const getAccount = (state: State) => state.account;
 export const getLoggingIn = (state: State) => state.loggingIn;
+export const getLoggedIn = (state: State) => state.loggedIn;
 export const getUpdating = (state: State) => state.updating;
