@@ -108,7 +108,7 @@ export class CinemaService extends BaseService {
             seats: seats,
         };
 
-        return Observable.of(hall).delay(1000);
+        return Observable.of(hall).delay(300);
     }
 
     private parseCinema(obj: any): Cinema {

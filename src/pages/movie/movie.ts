@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-import { App, NavController } from 'ionic-angular';
+import { NavController } from 'ionic-angular';
 
 import { Movie } from './../../store/models'
 
@@ -24,7 +24,6 @@ export class MoviePage {
     public movie: Movie;
 
     constructor(
-        private appCtrl: App,
         private navCtrl: NavController,
         private store: Store<State>
     ) {
@@ -51,12 +50,10 @@ export class MoviePage {
     }
 
     goBack() {
-        this.appCtrl.getRootNav().pop().then(() => {
-
-        });
+        this.navCtrl.pop();
     }
 
     goToBooking() {
-        this.appCtrl.getRootNav().push(BookingPage);
+        this.navCtrl.push(BookingPage);
     }
 }

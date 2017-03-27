@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { App } from 'ionic-angular';
+import { NavController } from 'ionic-angular';
 
 import moment from 'moment';
 import * as _ from 'lodash';
@@ -54,7 +54,7 @@ export class BookingPage {
     public subscriptions: Subscription = new Subscription();
 
     constructor(
-        private appCtrl: App,
+        private navCtrl: NavController,
         private store: Store<State>) {
 
         this.screenings$ = store.select(selectors.getCinemaCurrentScreenings);
@@ -161,7 +161,7 @@ export class BookingPage {
     }
 
     checkout() {
-        this.appCtrl.getRootNav().push(CheckoutPage);
+        this.navCtrl.push(CheckoutPage);
     }
 
     isAfterNow(time: moment.Moment | Date) {
