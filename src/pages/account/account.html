@@ -1,17 +1,94 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>
-      Contact
-    </ion-title>
+    <ion-title>{{account == null ? "Login" : "Me"}}</ion-title>
   </ion-navbar>
 </ion-header>
 
+
 <ion-content>
-  <ion-list>
-    <ion-list-header>Follow us on Twitter</ion-list-header>
-    <ion-item>
-      <ion-icon name="ionic" item-left></ion-icon>
-      @ionicframework
-    </ion-item>
-  </ion-list>
+  <div>
+    <div class="logo">
+      <img src="https://cabinet.planetakino.ua/StaticContent/images/logo.png">
+    </div>
+    <div *ngIf="account == null" class="no-account">
+      <div class="company">
+        <div class="name"><span>Planeta Kino</span></div>
+        <div class="link"><a href="http://planetakino.ua" target="_blank">http://planetakino.ua</a></div>
+      </div>
+      <div class="login-social">
+        <button ion-button color="primary" (click)="loginFacebook()" icon-left>
+        <ion-icon name="logo-facebook"></ion-icon>
+        Login with Facebook
+      </button>
+      </div>
+      <div class="login-separator" padding>
+        <div></div>
+        <div>OR</div>
+        <div></div>
+      </div>
+      <div class="login-username">
+        <ion-list inset>
+          <ion-item>
+            <ion-input type="text" placeholder="Username" [(ngModel)]="creds.username"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-input type="password" placeholder="Password" [(ngModel)]="creds.password"></ion-input>
+          </ion-item>
+        </ion-list>
+        <div>
+          <button ion-button color="primary" [disabled]="canLoginUsername() == false" (click)="loginUsername()">
+          Login
+        </button>
+        </div>
+      </div>
+      <ion-spinner *ngIf="loggingIn$ | async"></ion-spinner>
+    </div>
+    <div *ngIf="account != null" class="account">
+      <div class="profile">
+        <div class="name">
+          <span>{{account.name}}</span>
+        </div>
+        <div class="email">
+          <span>{{account.email}}</span>
+        </div>
+      </div>
+      <ion-list>
+        <ion-item>
+          <ion-icon name="call" item-left></ion-icon>
+          <ion-label>Phone</ion-label>
+          <div item-right>{{account.phone | tel}}</div>
+        </ion-item>
+        <ion-item>
+          <ion-icon name="happy" item-left outline></ion-icon>
+          <ion-label>Bonuses</ion-label>
+          <div item-right>{{account.bonuses}}</div>
+        </ion-item>
+      </ion-list>
+      <ion-list>
+        <ion-item detail-push (tap)="onCinemaChange()">
+          <ion-label>Cinema</ion-label>
+          <div item-right>
+            {{cinema?.nameShort}}
+          </div>
+        </ion-item>
+      </ion-list>
+      <ion-list>
+        <ion-list-header>Notification</ion-list-header>
+        <ion-item>
+          <ion-label>Purchased Ticket</ion-label>
+          <ion-toggle [ngModel]="account.notifications.tickets" (ionChange)="onNotifTickets($event.checked)"></ion-toggle>
+        </ion-item>
+        <ion-item>
+          <ion-label>Schedule Updates</ion-label>
+          <ion-toggle [ngModel]="account.notifications.updates" (ionChange)="onNotifUpdates($event.checked)"></ion-toggle>
+        </ion-item>
+      </ion-list>
+      <div class="buttons" padding>
+        <button ion-button color="danger" outline icon-left (click)="logout()">
+        <ion-icon name="log-out"></ion-icon>
+        Log out
+      </button>
+      </div>
+    </div>
+  </div>
 </ion-content>

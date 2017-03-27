@@ -13,13 +13,13 @@ import { BookingPage } from '../pages/booking/booking';
 import { CheckoutPage } from '../pages/checkout/checkout';
 import { PaymentPage } from '../pages/payment/payment';
 import { TabsPage } from '../pages/tabs/tabs';
-import { NewsPage } from '../pages/news/news';
 import { AccountPage } from '../pages/account/account';
 import { TicketsPage } from './../pages/tickets/tickets';
 import { TicketPage } from './../pages/ticket/ticket';
 
 import { JoinPipe } from './../shared/join.pipe';
 import { MomentPipe } from './../shared/moment.pipe';
+import { TelPipe } from './../shared/tel.pipe';
 
 import { HallComponent } from './../pages/booking/hall/hall.component';
 import { DatePicker } from './../pages/booking/datepicker/datepicker.component';
@@ -34,7 +34,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
 import { reducer, initialState } from './../store';
-import { MovieEffects, CinemaEffects, BookingEffects } from './../store/effects';
+import { MovieEffects, CinemaEffects, BookingEffects, AccountEffects } from './../store/effects';
 
 @NgModule({
   imports: [
@@ -49,10 +49,12 @@ import { MovieEffects, CinemaEffects, BookingEffects } from './../store/effects'
     EffectsModule.run(MovieEffects),
     EffectsModule.run(CinemaEffects),
     EffectsModule.run(BookingEffects),
+    EffectsModule.run(AccountEffects),
   ],
   declarations: [
     JoinPipe,
     MomentPipe,
+    TelPipe,
 
     MyApp,
 
@@ -62,7 +64,6 @@ import { MovieEffects, CinemaEffects, BookingEffects } from './../store/effects'
     CheckoutPage,
     PaymentPage,
     TabsPage,
-    NewsPage,
     AccountPage,
     TicketsPage,
     TicketPage,
@@ -84,7 +85,6 @@ import { MovieEffects, CinemaEffects, BookingEffects } from './../store/effects'
     CheckoutPage,
     PaymentPage,
     TabsPage,
-    NewsPage,
     AccountPage,
     TicketsPage,
     TicketPage,
