@@ -21,6 +21,8 @@ page-account {
     .account {
         display: flex;
         flex-direction: column;
+        
+        margin-top: 1em;
 
         .profile {
             margin-bottom: 1em;
@@ -29,6 +31,12 @@ page-account {
             .name span {
                 font-size: 2em;
             }
+        }
+
+        .barcode-container {
+            margin-left: -16px;
+            margin-bottom: 1em;
+            text-align: center;
         }
     }
 
