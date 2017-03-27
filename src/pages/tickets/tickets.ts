@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, NgZone, OnDestroy, OnInit } from '@angular/core';
+import { Component, NgZone, OnDestroy, OnInit } from '@angular/core';
 import { App } from "ionic-angular";
 
 import { Store } from "@ngrx/store";
@@ -6,8 +6,6 @@ import { State } from "./../../store";
 import { Ticket, Movie } from './../../store/models';
 import * as selectors from "./../../store/selectors";
 import * as actionsTicket from "./../../store/actions/ticket";
-
-import { Observable } from "rxjs/Observable";
 import { Subscription } from "rxjs/Subscription";
 
 import { TicketPage } from "../ticket/ticket";

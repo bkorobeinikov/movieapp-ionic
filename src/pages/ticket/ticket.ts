@@ -1,14 +1,11 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { App, NavParams } from "ionic-angular";
+import { Component } from '@angular/core';
+import { App } from "ionic-angular";
 
 import { Store } from "@ngrx/store";
 import { State } from "./../../store";
 import { Ticket, Movie, Cinema } from './../../store/models';
-import * as actionsUi from './../../store/actions/ui';
 import * as actionsTicket from './../../store/actions/ticket';
 import * as selectors from "./../../store/selectors";
-
-import { Observable } from "rxjs/Observable";
 import { Subscription } from "rxjs/Subscription";
 
 import moment from 'moment';
