@@ -13,7 +13,7 @@ import * as _ from 'lodash';
 // movie state
 const getMovieState = (state: State) => state.movie;
 
-const getMovieEntities = createSelector(getMovieState, fromMovie.getEntities);
+export const getMovieEntities = createSelector(getMovieState, fromMovie.getEntities);
 const getMovieLoading = createSelector(getMovieState, fromMovie.getLoading);
 
 export const getMovieSelectedId = createSelector(getMovieState, fromMovie.getSelectedId);
@@ -28,7 +28,7 @@ export const getUiMoviesCategory = createSelector(getUiState, fromUi.getMoviesCa
 // cinema state
 export const getCinemaState = (state: State) => state.cinema;
 
-const getCinemaEntities = createSelector(getCinemaState, fromCinema.getCinemas);
+export const getCinemaEntities = createSelector(getCinemaState, fromCinema.getCinemas);
 export const getCinemas = createSelector(getCinemaEntities, (cinemas) => {
     return Object.keys(cinemas).map(key => cinemas[key]);
 });

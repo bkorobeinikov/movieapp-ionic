@@ -29,6 +29,7 @@
     "ionic-angular": "2.2.0",
     "ionic-native": "2.4.1",
     "ionicons": "3.0.0",
+    "jsbarcode": "^3.5.9",
     "lodash": "4.17.4",
     "moment": "2.17.1",
     "ngrx-store-freeze": "0.1.9",

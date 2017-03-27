@@ -27,6 +27,7 @@ import { BookingCartComponent } from './../pages/booking/cart/booking-cart.compo
 import { CinemasPopoverComponent } from './../pages/movies/cinemas-popover/cinemas-popover.component';
 
 import { SvgPanZoomDirective } from './../shared/svg-pan-zoom.directive';
+import { BarcodeComponent } from './../shared/barcode.component';
 
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
@@ -71,6 +72,7 @@ import { MovieEffects, CinemaEffects, BookingEffects } from './../store/effects'
     BookingCartComponent,
     CinemasPopoverComponent,
     SvgPanZoomDirective,
+    BarcodeComponent,
   ],
   bootstrap: [IonicApp],
   entryComponents: [
