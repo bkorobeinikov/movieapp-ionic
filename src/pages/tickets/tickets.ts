@@ -1,5 +1,5 @@
 import { Component, NgZone, OnDestroy, OnInit } from '@angular/core';
-import { App } from "ionic-angular";
+import { App, NavController } from "ionic-angular";
 
 import { Store } from "@ngrx/store";
 import { State } from "./../../store";
@@ -25,6 +25,7 @@ export class TicketsPage implements OnInit, OnDestroy {
 
     constructor(
         private appCtrl: App,
+        private navCtrl: NavController,
         private store: Store<State>,
         private zone: NgZone,
     ) {
@@ -47,7 +48,7 @@ export class TicketsPage implements OnInit, OnDestroy {
 
     onSelect(ticket: Ticket) {
         this.store.dispatch(new actionsTicket.SelectAction(ticket.id));
-        this.appCtrl.getRootNav().push(TicketPage);
+        this.navCtrl.push(TicketPage);
     }
 
     duration(duration: number) {

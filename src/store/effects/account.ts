@@ -60,9 +60,9 @@ export class AccountEffects {
         var payload = action.payload;
 
         switch(payload.loginMethod) {
-            case actionsAccount.LoginMethod.Username: {
+            case actionsAccount.LoginMethod.Email: {
                 return this.accountService.loginPassword({
-                    username: payload.username,
+                    username: payload.email,
                     password: payload.password,
                 });
             }

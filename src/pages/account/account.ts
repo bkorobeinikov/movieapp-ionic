@@ -35,9 +35,6 @@ export class AccountPage implements OnInit, OnDestroy {
         this.creds = {};
 
         this.loggingIn$ = this.store.select(selectors.getAccountLoggingIn);
-    }
-
-    ngOnInit() {
 
         let s = this.store.select(selectors.getAccount)
             .withLatestFrom(this.store.select(selectors.getCinemaEntities))
@@ -56,38 +53,22 @@ export class AccountPage implements OnInit, OnDestroy {
         this.subscription.add(s);
     }
 
+    ngOnInit() {
+    }
+
     ngOnDestroy() {
         this.subscription.unsubscribe();
     }
 
-    loginFacebook() {
-        this.creds = {};
-        this.store.dispatch(new actionsAccount.LoginAction({
-            loginMethod: actionsAccount.LoginMethod.Facebook,
-        }));
-    }
-
-    canLoginUsername() {
-        return _.isEmpty(this.creds.username) == false && _.isEmpty(this.creds.password) == false;
-    }
-
-    loginUsername() {
-        this.store.dispatch(new actionsAccount.LoginAction({
-            loginMethod: actionsAccount.LoginMethod.Username,
-            username: this.creds.username,
-            password: this.creds.password,
+    onNotifUpdates(checked: boolean) {
+        this.store.dispatch(new actionsAccount.ChangeNotificationsAction({
+            updates: checked,
         }));
     }
 
     onNotifTickets(checked: boolean) {
         this.store.dispatch(new actionsAccount.ChangeNotificationsAction({
             tickets: checked,
-        }));
-    }
-
-    onNotifUpdates(checked: boolean) {
-        this.store.dispatch(new actionsAccount.ChangeNotificationsAction({
-            updates: checked,
         }));
     }
 

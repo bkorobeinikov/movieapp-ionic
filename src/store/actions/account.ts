@@ -18,7 +18,7 @@ export const ActionTypes = {
 
 export enum LoginMethod {
     Facebook,
-    Username,
+    Email,
 }
 
 export class LoginAction implements Action {
@@ -26,7 +26,7 @@ export class LoginAction implements Action {
 
     constructor(public payload: {
         loginMethod: LoginMethod,
-        username?: string,
+        email?: string,
         password?: string,
     }) {
     }

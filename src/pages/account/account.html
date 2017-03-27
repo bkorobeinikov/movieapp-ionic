@@ -10,39 +10,6 @@
     <div class="logo">
       <img src="https://cabinet.planetakino.ua/StaticContent/images/logo.png">
     </div>
-    <div *ngIf="account == null" class="no-account">
-      <div class="company">
-        <div class="name"><span>Planeta Kino</span></div>
-        <div class="link"><a href="http://planetakino.ua" target="_blank">http://planetakino.ua</a></div>
-      </div>
-      <div class="login-social">
-        <button ion-button color="primary" (click)="loginFacebook()" icon-left>
-        <ion-icon name="logo-facebook"></ion-icon>
-        Login with Facebook
-      </button>
-      </div>
-      <div class="login-separator" padding>
-        <div></div>
-        <div>OR</div>
-        <div></div>
-      </div>
-      <div class="login-username">
-        <ion-list inset>
-          <ion-item>
-            <ion-input type="text" placeholder="Username" [(ngModel)]="creds.username"></ion-input>
-          </ion-item>
-          <ion-item>
-            <ion-input type="password" placeholder="Password" [(ngModel)]="creds.password"></ion-input>
-          </ion-item>
-        </ion-list>
-        <div>
-          <button ion-button color="primary" [disabled]="canLoginUsername() == false" (click)="loginUsername()">
-          Login
-        </button>
-        </div>
-      </div>
-      <ion-spinner *ngIf="loggingIn$ | async"></ion-spinner>
-    </div>
     <div *ngIf="account != null" class="account">
       <div class="profile">
         <div class="name">

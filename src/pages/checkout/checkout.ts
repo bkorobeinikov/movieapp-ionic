@@ -99,10 +99,12 @@ export class CheckoutPage {
     }
 
     askToLogin() {
-        let modal = this.modalCtrl.create(LoginNavPage, {
-        });
+        let modal = this.modalCtrl.create(LoginNavPage);
 
-        modal.onDidDismiss(data => {
+        this.store.select(selectors.getAccountLoggedIn).skip(1).first().subscribe(loggedIn => {
+            if (loggedIn) {
+                modal.dismiss();
+            }
         });
 
         modal.present();

@@ -1,3 +1,37 @@
 page-login {
-    
+    .content {
+        text-align: center;
+
+        .logo {
+            padding: 2em 0;
+            text-align: center;
+
+            img {
+                margin-left: 20px;
+            }
+        }
+
+        .login-separator {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+
+            margin: 1em 0;
+
+            div:first-child {
+                flex: 1;
+                height: 1px;
+                margin-right: .5em;
+
+                border-bottom: 1px dashed #666;
+            }
+            div:last-child {
+                flex: 1;
+                height: 1px;
+                margin-left: .5em;
+
+                border-bottom: 1px dashed #666;
+            }
+        }
+    }
 }
