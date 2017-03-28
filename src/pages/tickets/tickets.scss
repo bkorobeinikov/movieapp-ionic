@@ -5,19 +5,49 @@ page-tickets {
         margin-bottom: 41px;
     }
 
+    .keyvalue-row {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+
+        .keyvalue {
+            flex: 1;
+        }
+    }
+
+    .keyvalue {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+
+        >:first-child {
+            color: #555;
+            font-size: .6em;
+            text-transform: uppercase;
+        }
+
+        >:last-child {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #444;
+        }
+    }
+
     .ticket-list {
         .ticket-item {
+            padding-bottom: 1em;
+            margin-bottom: 1em;
 
+            border-bottom: 1px solid #eee;
         }
     }
 
     .movie-summary {
         overflow: visible;
         
-        margin-bottom: 1em;
         padding: 0;
 
-        align-items: flex-start;
+        align-items: stretch;
 
         display: flex;
         flex-direction: row;
@@ -44,7 +74,7 @@ page-tickets {
         .item-content {
             overflow: hidden;
 
-            flex: 3;
+            flex: 4;
 
             display: flex;
             flex-direction: column;
@@ -58,58 +88,46 @@ page-tickets {
             font-size: 1.2em;
             font-weight: bold;
 
-            color: $color-title;
-        }
-
-        .country {
-            margin-bottom: .2em;
-
-            font-size: .8em;
-
-            color: $color-subtitle;
-        }
-
-        .genre {
-            margin-bottom: .5em;
-
-            font-size: .8em;
-
-            color: $color-subsubtitle;
-        }
-
-        .line {
-            margin-bottom: .5em;
-
-            display: flex;
-            flex-direction: row;
-
-            >* {
-                margin: 0 .4em 0 0;
-            }
-        }           
-
-        .duration {
-            font-size: .8em;
-            font-weight: bold;
-
-            color: $color-subtitle;
-        }
-
-        .time {
-            font-weight: bold;
             color: #333;
-            font-size: 1.2em;
         }
 
-        .tech {
-            margin-bottom: .5em;
-            padding: .5em;
-            border-radius: 2px;
+        .time-content {
+            font-size: 18px;
+            margin-bottom: .1em;
+            //flex: 1;
+            //align-items: flex-end;
 
-            background-color: #1aa3e0;
-            color: white;
-            text-shadow: 0 0 1px white;
-            align-self: flex-start;
+            .keyvalue {
+                >:last-child {
+                    color: #333;
+                }
+            }
+        }
+
+        .tech-content {
+            margin-bottom: .5em;
+            .keyvalue {
+                >:last-child {
+                    font-size: 1em;
+                    font-weight: normal;
+                }
+            }
+        }
+
+        .cinema {
+            font-size: .9em;
+            margin-bottom: 1em;
+
+            color: #555;
+
+            .icon {
+                font-size: 1em;
+            }
+
+            address {
+                font-style: normal;
+                display: inline-block;
+            }
         }
     }
 }

@@ -3,7 +3,7 @@ import { App, NavController } from "ionic-angular";
 
 import { Store } from "@ngrx/store";
 import { State } from "./../../store";
-import { Ticket, Movie } from './../../store/models';
+import { Ticket, Movie, Cinema } from './../../store/models';
 import * as selectors from "./../../store/selectors";
 import * as actionsTicket from "./../../store/actions/ticket";
 import { Subscription } from "rxjs/Subscription";
@@ -20,6 +20,7 @@ export class TicketsPage implements OnInit, OnDestroy {
 
     public tickets: Ticket[];
     public movies: { [movieId: string]: Movie };
+    public cinemas: { [cinemaId: string]: Cinema }
 
     private subscription: Subscription = new Subscription();
 
@@ -29,17 +30,22 @@ export class TicketsPage implements OnInit, OnDestroy {
         private store: Store<State>,
         private zone: NgZone,
     ) {
-    }
 
-    ngOnInit() {
         let s = this.store.select(selectors.getTicketAll)
             .withLatestFrom(this.store.select(selectors.getMovieEntities))
-            .subscribe(([tickets, movies]) => {
+            .withLatestFrom(this.store.select(selectors.getCinemaEntities))
+            .subscribe(([[tickets, movies], cinemas]) => {
                 this.tickets = tickets;
                 this.movies = movies;
+                this.cinemas = cinemas;
             });
 
         this.subscription.add(s);
+        
+    }
+
+    ngOnInit() {
+
     }
 
     ngOnDestroy() {

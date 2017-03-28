@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { NavController } from 'ionic-angular';
 
@@ -8,6 +8,7 @@ import moment from 'moment';
 import { BookingPage } from "../booking/booking";
 
 import { Observable } from "rxjs/Observable";
+import { Subscription } from "rxjs/Subscription";
 
 import { Store } from "@ngrx/store";
 
@@ -18,22 +19,26 @@ import * as selectors from './../../store/selectors'
     selector: 'page-movie',
     templateUrl: 'movie.html'
 })
-export class MoviePage {
+export class MoviePage implements OnInit, OnDestroy {
 
-    public movie$: Observable<Movie>;
     public movie: Movie;
+
+    private subscription: Subscription = new Subscription();
 
     constructor(
         private navCtrl: NavController,
         private store: Store<State>
     ) {
-        this.movie$ = store.select(selectors.getMovieSelected);
+        this.subscription.add(this.store.select(selectors.getMovieSelected).subscribe(m => {
+            this.movie = m
+        }));
     }
 
     ngOnInit() {
-        this.movie$.subscribe(m => {
-            this.movie = m
-        });
+    }
+
+    ngOnDestroy() {
+        this.subscription.unsubscribe();
     }
 
     ionViewWillEnter() {

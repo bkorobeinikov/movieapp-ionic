@@ -39,7 +39,7 @@ export class AccountService extends BaseService {
             email: "johndoe@example.com",
             phone: "+380681234567",
             bonuses: Math.round(Math.random() * 1000),
-            cardId: Math.round(Math.random() * 1000000000000) + "",
+            cardId: "900000168212",
 
             cinemaId: "pk-lvov2",
             notifications: {
