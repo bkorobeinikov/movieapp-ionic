@@ -14,4 +14,5 @@ export interface CinemaHallSeat {
     available: boolean;
 
     price: number;
+    bonus: number;
 }

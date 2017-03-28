@@ -96,6 +96,7 @@ export class CinemaService extends BaseService {
                     available: Math.round(Math.random() * 10) % 5 != 0,
 
                     price: 115,
+                    bonus: 3600,
                 };
                 seats[seat.id] = seat;
             }

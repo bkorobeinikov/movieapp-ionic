@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { App, ModalController, ToastController } from "ionic-angular";
+import { App, ModalController, ToastController, ActionSheetController, AlertController } from "ionic-angular";
 
 import { Observable } from "rxjs/Observable";
 import 'rxjs/add/operator/first';
@@ -33,6 +33,8 @@ export class CheckoutPage {
 
     public order$: Observable<Order>;
     public order: Order;
+    public cinema: Cinema;
+    public showtime: Showtime;
 
     public canPay: boolean = true;
 
@@ -42,17 +44,22 @@ export class CheckoutPage {
         private appCtrl: App,
         private modalCtrl: ModalController,
         private toastCtrl: ToastController,
+        private actionCtrl: ActionSheetController,
+        private alertCtrl: AlertController,
         private store: Store<State>
     ) {
         this.order$ = store.select(selectors.getBookingOrder);
-    }
 
-    ngOnInit() {
-        let s = this.order$.subscribe(order => {
+        let s = this.order$.filter(o => o != null).subscribe(order => {
             this.order = order;
+            this.cinema = this.order.cinema;
+            this.showtime = this.order.showtime;
         });
         this.subscription.add(s);
         this.canPay = true;
+    }
+
+    ngOnInit() {
     }
 
     ngOnDetroy() {
@@ -63,18 +70,52 @@ export class CheckoutPage {
         return _.sumBy(this.order.seats, s => s.price);
     }
 
+    getTotalBonus() {
+        return _.sumBy(this.order.seats, s => s.bonus);
+    }
+
     pay() {
         this.store.select(selectors.getAccountLoggedIn).first().subscribe(loggedIn => {
             if (!loggedIn) {
                 this.askToLogin();
             } else {
-                this.canPay = false;
-                this.askToPay();
+                this.askHowToPay();
             }
         });
     }
 
-    askToPay() {
+    askHowToPay() {
+        let actionSheet = this.actionCtrl.create({
+            title: 'How to pay for tickets?',
+            buttons: [
+                {
+                    text: 'Credit/Debit Card',
+                    handler: () => {
+                        this.payWithCard();
+                    }
+                },
+                {
+                    text: 'With Bonuses',
+                    handler: () => {
+                        this.payWithBonuses();
+                    }
+                },
+                {
+                    text: 'Cancel',
+                    role: 'cancel',
+                    handler: () => {
+                        console.log('Cancel clicked');
+                    }
+                }
+            ]
+        });
+
+        actionSheet.present();
+    }
+
+    payWithCard() {
+        this.canPay = false;
+
         let modal = this.modalCtrl.create(PaymentPage, {
             order: this.order,
         });
@@ -96,6 +137,14 @@ export class CheckoutPage {
         });
 
         modal.present();
+    }
+
+    payWithBonuses() {
+        let alert = this.alertCtrl.create({
+            title: "Warning",
+            message: "You dont have bonuses for this operation",
+        });
+        alert.present();
     }
 
     askToLogin() {

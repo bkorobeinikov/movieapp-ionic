@@ -6,37 +6,80 @@
     </ion-navbar>
 </ion-header>
 
-<ion-content>
-    <div>
-        <div>
-            <span>{{order.showtime.time | moment:"D"}}</span>
-            <span>{{order.showtime.time | moment:"MMMM"}}</span>
-            <span>{{order.showtime.time | moment:"dddd"}}</span>
-            <span>{{order.showtime.time | moment:"HH:mm"}}</span>
+<ion-content padding>
+    <div class="content">
+        <div class="movie-content">
+            <div class="title"><span>{{order.movie.name}}</span></div>
         </div>
-        <div> 
-            <span>{{order.movie.name}}</span>
-        </div>
-        <div>
-            <span>{{order.cinema.name}}</span>
-            <span>{{order.cinema.address}}</span>
-        </div>
-        <div>
-            <span>{{order.showtime.techId}}</span>
-            <span>{{order.hall.name}}</span>
-        </div>
-        <div>
-            <div *ngFor="let seat of order.seats">
-                <span>row: {{seat.row}}</span><span> seat: {{seat.seat}}</span>
+        <div class="time-content keyvalue-row">
+            <div class="date keyvalue">
+                <div class="label">DATE</div>
+                <div class="value">
+                    <div><span>{{showtime.time | moment:"D"}}</span></div>
+                    <div>
+                        <span>{{showtime.time | moment:"MMMM"}}</span>
+                        <span>{{showtime.time | moment:"dddd"}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="time keyvalue">
+                <div class="label">TIME</div>
+                <div class="value">
+                    <span>{{showtime.time | moment:"HH:mm"}}</span>
+                </div>
             </div>
         </div>
+        <div class="location-content">
+            <div class="keyvalue">
+                <div>CINEMA</div>
+                <div class="cinema">
+                    <div class="name">{{cinema.name}}</div>
+                    <address>{{cinema.address}}</address>
+                </div>
+            </div>
+        </div>
+        <ion-grid>
+            <ion-row>
+                <ion-col>
+                    <div class="hall-content">
+                        <div class="hall keyvalue">
+                            <div class="label">HALL</div>
+                            <div class="value">{{order.hall.name}}</div>
+                        </div>
+                        <div class="tech keyvalue">
+                            <div class="label">TECHNOLOGY</div>
+                            <div class="value">{{showtime.techId}}</div>
+                        </div>
+                    </div>
+                </ion-col>
+                <ion-col>
+                    <div class="seats-content">
+                        <div *ngFor="let seat of order.seats" class="seat-container keyvalue-row">
+                            <div class="row keyvalue">
+                                <span>ROW</span>
+                                <span>{{seat.row}}</span>
+                            </div>
+                            <div class="seat keyvalue">
+                                <span>SEAT</span>
+                                <span>{{seat.seat}}</span>
+                            </div>
+                            <div class="price keyvalue">
+                                <span>Price</span>
+                                <span>₴{{seat.price}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </ion-col>
+            </ion-row>
+        </ion-grid>
     </div>
 </ion-content>
 
 <ion-footer>
     <ion-toolbar padding-left padding-right>
-        <div>
-            total: {{getTotalPrice()}}
+        <div class="total">
+            <div class="cash">₴{{getTotalPrice()}}</div>
+            <div class="bonus">or {{getTotalBonus()}} bonuses</div>
         </div>
         <button class="pay" ion-button color="secondary" (click)="pay()" icon-left large [disabled]="canPay == false">
             <ion-icon name="card"></ion-icon>
