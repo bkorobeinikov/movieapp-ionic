@@ -20,6 +20,7 @@ import { LoginPage } from './../pages/login/login';
 import { LoginNavPage } from './../pages/login/login-nav';
 import { SignUpPage } from './../pages/signup/signup';
 import { CinemasPage } from './../pages/cinemas/cinemas';
+import { NewsPage } from './../pages/news/news';
 
 import { JoinPipe } from './../shared/join.pipe';
 import { MomentPipe } from './../shared/moment.pipe';
@@ -75,6 +76,7 @@ import { MovieEffects, CinemaEffects, BookingEffects, AccountEffects } from './.
     LoginNavPage,
     SignUpPage,
     CinemasPage,
+    NewsPage,
 
     HallComponent,
     DatePicker,
@@ -100,6 +102,7 @@ import { MovieEffects, CinemaEffects, BookingEffects, AccountEffects } from './.
     LoginNavPage,
     SignUpPage,
     CinemasPage,
+    NewsPage,
 
     CinemasPopoverComponent,
   ],

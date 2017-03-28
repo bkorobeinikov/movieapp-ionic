@@ -106,9 +106,34 @@ page-booking {
                         }
                     }
 
-                    .radio-icon {
+                    .radio-ios .radio-icon {
                         display: block;
                         visibility: hidden;
+                        width: 16px;
+                        height: 16px; 
+
+                        &.radio-checked {
+                            visibility: visible;
+                        }
+
+                        .radio-inner {
+                            width: 12px;
+                            height: 12px;
+
+                            left: 11px;
+
+                            background-color: #1EA1DC;
+                            border-color: #1EA1DC;
+                        }
+                    }
+
+                    .radio-md .radio-icon {
+                        display: block;
+                        visibility: hidden;
+                        width: 16px;
+                        height: 16px; 
+
+                        border: none;
 
                         &.radio-checked {
                             visibility: visible;
@@ -223,6 +248,7 @@ page-booking {
                 display: flex;
                 flex-direction: row;
                 justify-content: space-between;
+                align-items: center;
             }
             
             .checkout {

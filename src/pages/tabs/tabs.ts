@@ -3,6 +3,7 @@ import { Component, ViewChild, OnInit, OnDestroy } from '@angular/core';
 import { MoviesPage } from '../movies/movies';
 import { AccountPage } from '../account/account';
 import { TicketsPage } from './../tickets/tickets';
+import { NewsPage } from './../news/news';
 import { LoginPage } from './../login/login';
 
 import { Store } from "@ngrx/store";
@@ -16,6 +17,7 @@ import { Subscription } from "rxjs/Subscription";
 import { Tabs, NavController } from "ionic-angular";
 
 @Component({
+    selector: 'page-tabs',
     templateUrl: 'tabs.html',
 })
 export class TabsPage implements OnInit, OnDestroy {
@@ -24,13 +26,15 @@ export class TabsPage implements OnInit, OnDestroy {
 
     public movies: any = MoviesPage;
     public tickets: any = TicketsPage;
-    public account: any = LoginPage;
+    public news: any = NewsPage;
+    public account: any;
 
     public index$: Observable<number>;
 
     public subscription: Subscription = new Subscription();
 
     public ticketsCount: number = 0;
+    public unreadNewsCount: number = 0;
 
     constructor(
         private store: Store<State>,
@@ -40,7 +44,6 @@ export class TabsPage implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        console.log('ngOnInit');
         let s = this.index$.subscribe(index => {
             this.tabs.select(index);
         });
@@ -61,7 +64,7 @@ export class TabsPage implements OnInit, OnDestroy {
     onLoggedInChange(loggedIn) {
         let page = loggedIn ? AccountPage : LoginPage;
 
-        let tabView = this.tabs.getByIndex(2).getActive();
+        let tabView = this.tabs.getByIndex(3).getActive();
         if (tabView) {
             tabView.getNav().setRoot(page, {}, {
                 animate: tabView.getNav().getViews().length > 1 ? false : true,

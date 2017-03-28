@@ -78,12 +78,17 @@
 <ion-footer>
     <ion-toolbar padding-left padding-right>
         <div class="total">
-            <div class="cash">₴{{getTotalPrice()}}</div>
-            <div class="bonus">or {{getTotalBonus()}} bonuses</div>
+            <div class="label">
+                До Сплати
+            </div>
+            <div class="sum">
+                <div class="cash">₴{{getTotalPrice()}}</div>
+                <div class="bonus">or {{getTotalBonus()}} bonuses</div>
+            </div>
         </div>
         <button class="pay" ion-button color="secondary" (click)="pay()" icon-left large [disabled]="canPay == false">
             <ion-icon name="card"></ion-icon>
-            Pay
+            Buy
         </button>
     </ion-toolbar>
 </ion-footer>

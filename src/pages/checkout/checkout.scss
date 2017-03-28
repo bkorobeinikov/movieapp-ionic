@@ -190,13 +190,29 @@ page-checkout {
                 display: flex;
                 flex-direction: column;
 
-                .cash {
+                .label {
+                    margin-bottom: .2em;
+
                     font-size: 1.1em;
                     font-weight: bold;
+
+                    color: #666;
                 }
-                .bonus {
-                    font-size: .9em;
-                    color: gray;
+
+                .sum {
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+
+                    .cash {
+                        margin-right: .2em;
+                        font-size: 1.1em;
+                        font-weight: bold;
+                    }
+                    .bonus {
+                        font-size: .9em;
+                        color: gray;
+                    }
                 }
             }
 
