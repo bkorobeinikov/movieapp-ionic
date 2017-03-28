@@ -6,9 +6,11 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class TelPipe implements PipeTransform {
     transform(value: string) {
 
-        if (!value) { 
-            return ''; 
+        if (!value) {
+            return '';
         }
+
+        let startsWith0 = value.startsWith("0");
 
         value = value.toString().trim().replace(/^\+/, '');
 
@@ -47,6 +49,7 @@ export class TelPipe implements PipeTransform {
 
         number = number.slice(0, 3) + '-' + number.slice(3);
 
-        return "+" + (country + " (" + city + ") " + number).trim();
+        let prefix = startsWith0 ? "" : "+";
+        return prefix + (country + " (" + city + ") " + number).trim();
     }
 }

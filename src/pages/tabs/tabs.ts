@@ -13,7 +13,7 @@ import * as ui from './../../store/actions/ui';
 import { Observable } from "rxjs/Observable";
 import { Subscription } from "rxjs/Subscription";
 
-import { Tabs, NavController, Tab } from "ionic-angular";
+import { Tabs, NavController } from "ionic-angular";
 
 @Component({
     templateUrl: 'tabs.html',

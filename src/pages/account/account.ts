@@ -1,15 +1,15 @@
 import { Component, OnDestroy } from '@angular/core';
+import { NavController } from "ionic-angular";
 
 import { Account, Cinema } from './../../store/models';
 
-import { Observable } from "rxjs/Observable";
 import { Subscription } from "rxjs/Subscription";
 import { Store } from "@ngrx/store";
 import { State } from "./../../store";
 import * as actionsAccount from './../../store/actions/account';
 import * as selectors from './../../store/selectors';
 
-import * as _ from 'lodash';
+import { CinemasPage } from './../cinemas/cinemas';
 
 @Component({
     selector: 'page-account',
@@ -28,6 +28,7 @@ export class AccountPage implements OnDestroy {
     private subscription: Subscription = new Subscription();
 
     constructor(
+        private navCtrl: NavController,
         private store: Store<State>
     ) {
         this.creds = {};
@@ -68,7 +69,7 @@ export class AccountPage implements OnDestroy {
     }
 
     onCinemaChange() {
-        console.log('cinema tapped');
+        this.navCtrl.push(CinemasPage);
     }
 
     logout() {

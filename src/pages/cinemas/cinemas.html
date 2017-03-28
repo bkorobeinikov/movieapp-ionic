@@ -1,0 +1,24 @@
+<ion-header>
+    <ion-navbar>
+        <ion-title>
+            Select Cinema
+        </ion-title>
+    </ion-navbar>
+</ion-header>
+
+<ion-content>
+
+    <div class="content">
+        <ion-list radio-group [ngModel]="currentCinemaId">
+            <ion-item class="cinema" *ngFor="let cinema of cinemas$ | async">
+                <div item-content class="content">
+                    <span class="name">{{cinema.name}}</span>
+                    <span class="address">{{cinema.address}}</span> 
+                    <a href="tel:{{cinema.phone}}" class="phone">{{cinema.phone | tel}}</a>
+                </div>
+                <ion-radio [value]="cinema.id" (ionSelect)="select(cinema.id)"></ion-radio>
+            </ion-item>
+        </ion-list>
+    </div>
+
+</ion-content>
