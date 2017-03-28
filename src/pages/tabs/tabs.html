@@ -1,5 +1,5 @@
 <ion-tabs #tabs>
-  <ion-tab [root]="movies" tabIcon="list-box" tabTitle="Movies" (ionSelect)="onSelect(0)"></ion-tab>
-  <ion-tab [root]="tickets" tabIcon="paper" tabTitle="tickets" tabBadgeStyle="secondary" [tabBadge]="ticketsCount" (ionSelect)="onSelect(1)"></ion-tab>
-  <ion-tab [root]="account" tabIcon="person" tabTitle="Profile" (ionSelect)="onSelect(2)"></ion-tab>
+  <ion-tab [root]="movies" tabIcon="list-box" tabTitle="Movies" (ionSelect)="onSelect(0)" tabsHideOnSubPages="true" ></ion-tab>
+  <ion-tab [root]="tickets" tabIcon="paper" tabTitle="tickets" tabBadgeStyle="secondary" [tabBadge]="ticketsCount" (ionSelect)="onSelect(1)" tabsHideOnSubPages="true"></ion-tab>
+  <ion-tab [root]="account" tabIcon="person" tabTitle="Profile" (ionSelect)="onSelect(2)" tabsHideOnSubPages="true"></ion-tab>
 </ion-tabs>

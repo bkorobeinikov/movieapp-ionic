@@ -17,7 +17,7 @@ export class BaseService {
         this.headers.append('Access-Control-Allow-Origin', '*');
     }
 
-    public getData<T>(url: string): Observable<T> {
+    protected getData<T>(url: string): Observable<T> {
         var a = this.http
             .get(url, {
                 headers: this.headers

@@ -1,5 +1,5 @@
 ﻿import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
-import { App, ViewController, NavController, Content, PopoverController } from 'ionic-angular';
+import { NavController, Content, PopoverController } from 'ionic-angular';
 
 import { Observable } from "rxjs/Observable";
 
@@ -33,8 +33,6 @@ export class MoviesPage {
     @ViewChild(Content) content: Content;
 
     constructor(
-        private appCtrl: App,
-        private viewCtrl: ViewController,
         private navCtrl: NavController,
         private popoverCtrl: PopoverController,
         private store: Store<State>) {
@@ -61,7 +59,7 @@ export class MoviesPage {
 
     openMovie(movie: Movie) {
         this.store.dispatch(new actionsMovie.SelectAction(movie.id));
-        this.appCtrl.getRootNav().push(MoviePage);
+        this.navCtrl.push(MoviePage);
     }
 
     onCinemaChange(event: any) {

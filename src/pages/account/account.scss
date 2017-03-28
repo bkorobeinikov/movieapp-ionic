@@ -1,3 +1,48 @@
 page-account {
+    .logo {
+        padding: 2em 0;
+        text-align: center;
 
+        img {
+            margin-left: 20px;
+        }
+    }
+
+    .company {
+        margin-bottom: 1em;
+        text-align: center;
+        .name {
+            span {
+                font-size: 2em;
+            }
+        }
+    }
+
+    .account {
+        display: flex;
+        flex-direction: column;
+        
+        margin-top: 1em;
+
+        .profile {
+            margin-bottom: 1em;
+            text-align: center;
+
+            .name span {
+                font-size: 2em;
+            }
+        }
+
+        .barcode-container {
+            margin-left: -16px;
+            margin-bottom: 1em;
+            text-align: center;
+        }
+    }
+
+    .buttons {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
 }

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { App, NavParams, ViewController, AlertController, LoadingController } from "ionic-angular";
+import { App, NavParams, ViewController, AlertController, LoadingController, NavController, Tabs } from "ionic-angular";
 import { TicketPage } from "../ticket/ticket";
 
 import { Store } from "@ngrx/store";
@@ -30,6 +30,7 @@ export class PaymentPage {
     constructor(
         private appCtrl: App,
         private viewCtrl: ViewController,
+        private navCtrl: NavController,
         private alertCtrl: AlertController,
         private loadingCtrl: LoadingController,
         private navParams: NavParams,
@@ -71,15 +72,20 @@ export class PaymentPage {
     }
 
     onPaymentSuccess() {
-        var nav = this.appCtrl.getRootNav();
 
         let loading = this.loadingCtrl.create({
             content: 'Please wait...'
         });
         loading.present();
 
-        nav.push(TicketPage).then(() => {
-            return nav.remove(1, nav.length() - 2);
+        let tabs: Tabs = this.appCtrl.getRootNav().getActiveChildNav()
+        let getTabNavByIndex = index => {
+            return tabs.getByIndex(index).getActive().getNav();
+        };
+
+        getTabNavByIndex(0).popToRoot({ animate: false }).then(() => {
+            tabs.select(1);
+            return getTabNavByIndex(1).push(TicketPage, {}, { animate: false });
         }).then(() => {
             // load real ticket
             let ticket: Ticket = {

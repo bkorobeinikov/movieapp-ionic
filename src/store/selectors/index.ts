@@ -7,6 +7,7 @@ import * as fromUi from './../reducers/ui';
 import * as fromCinema from './../reducers/cinema';
 import * as fromBooking from './../reducers/booking';
 import * as fromTicket from './../reducers/ticket';
+import * as fromAccount from './../reducers/account';
 
 import * as _ from 'lodash';
 
@@ -56,7 +57,7 @@ export const getCinemaCurrentMovies = createSelector(getUiMoviesCategory, getMov
 export const getCinemaCurrentLoading = createSelector(getMovieLoading, getCinemaCurrentScreenings, (loading, screenings) => {
     if (loading || screenings == null)
         return true;
-    
+
     return screenings.loading;
 });
 
@@ -108,6 +109,14 @@ export const getBookingOrder = createSelector(getBookingShowtimeCinema, getBooki
 
 // ticket state
 
-const getTicketState = (state:State) => state.ticket;
+const getTicketState = (state: State) => state.ticket;
 export const getTicketAll = createSelector(getTicketState, fromTicket.getTickets);
 export const getTicketSelected = createSelector(getTicketState, fromTicket.getSelectedTicket);
+
+// account state
+
+const getAccountState = (state: State) => state.account;
+export const getAccount = createSelector(getAccountState, fromAccount.getAccount);
+export const getAccountLoggingIn = createSelector(getAccountState, fromAccount.getLoggingIn);
+export const getAccountLoggedIn = createSelector(getAccountState, fromAccount.getLoggedIn);
+export const getAccountUpdating = createSelector(getAccountState, fromAccount.getUpdating);

@@ -2,6 +2,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { App, ModalController, ToastController } from "ionic-angular";
 
 import { Observable } from "rxjs/Observable";
+import 'rxjs/add/operator/first';
 import { Subscription } from "rxjs/Subscription";
 import { Store } from "@ngrx/store";
 
@@ -9,6 +10,7 @@ import { State } from './../../store';
 import * as selectors from './../../store/selectors';
 
 import { PaymentPage } from "../payment/payment";
+import { LoginNavPage } from "./../login/login-nav";
 
 import { Cinema, CinemaHall, CinemaHallSeat, Movie, Showtime } from "../../store/models";
 
@@ -62,8 +64,17 @@ export class CheckoutPage {
     }
 
     pay() {
-        this.canPay = false;
+        this.store.select(selectors.getAccountLoggedIn).first().subscribe(loggedIn => {
+            if (!loggedIn) {
+                this.askToLogin();
+            } else {
+                this.canPay = false;
+                this.askToPay();
+            }
+        });
+    }
 
+    askToPay() {
         let modal = this.modalCtrl.create(PaymentPage, {
             order: this.order,
         });
@@ -87,5 +98,18 @@ export class CheckoutPage {
         modal.present();
     }
 
+    askToLogin() {
+        let modal = this.modalCtrl.create(LoginNavPage, {
+            modal: true,
+        });
+
+        this.store.select(selectors.getAccountLoggedIn).skip(1).first().subscribe(loggedIn => {
+            if (loggedIn) {
+                modal.dismiss();
+            }
+        });
+
+        modal.present();
+    }
 
 }
