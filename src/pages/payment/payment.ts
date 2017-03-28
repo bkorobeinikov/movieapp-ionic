@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { App, NavParams, ViewController, AlertController, LoadingController, NavController, Tabs } from "ionic-angular";
+import { App, NavParams, ViewController, AlertController, LoadingController, NavController, Tabs, ToastController } from "ionic-angular";
 import { TicketPage } from "../ticket/ticket";
 
 import { Store } from "@ngrx/store";
@@ -9,6 +9,8 @@ import { Ticket, Cinema, CinemaHall, Movie, Showtime, CinemaHallSeat } from './.
 import * as actionsUi from './../../store/actions/ui';
 import * as actionsBooking from './../../store/actions/booking';
 import * as actionsTicket from './../../store/actions/ticket';
+
+import { BookingPage } from './../booking/booking';
 
 type Order = {
     cinema: Cinema,
@@ -34,6 +36,7 @@ export class PaymentPage {
         private alertCtrl: AlertController,
         private loadingCtrl: LoadingController,
         private navParams: NavParams,
+        private toastCtrl: ToastController,
         private store: Store<State>
     ) {
         this.order = navParams.get("order");
@@ -66,9 +69,7 @@ export class PaymentPage {
     }
 
     fail() {
-        this.viewCtrl.dismiss({
-            fail: true
-        });
+        this.onPaymentFail();
     }
 
     onPaymentSuccess() {
@@ -78,14 +79,9 @@ export class PaymentPage {
         });
         loading.present();
 
-        let tabs: Tabs = this.appCtrl.getRootNav().getActiveChildNav()
-        let getTabNavByIndex = index => {
-            return tabs.getByIndex(index).getActive().getNav();
-        };
-
-        getTabNavByIndex(0).popToRoot({ animate: false }).then(() => {
-            tabs.select(1);
-            return getTabNavByIndex(1).push(TicketPage, {}, { animate: false });
+        this.getTabNavByIndex(0).popToRoot({ animate: false }).then(() => {
+            this.getTabs().select(1);
+            return this.getTabNavByIndex(1).push(TicketPage, {}, { animate: false });
         }).then(() => {
             // load real ticket
             let ticket: Ticket = {
@@ -108,17 +104,60 @@ export class PaymentPage {
 
             return loading.dismiss();
         }).then(() => {
+
+            this.toastCtrl.create({
+                message: "Congrats! You have purchased tickets.",
+                duration: 3000,
+                position: "top",
+                dismissOnPageChange: true,
+                showCloseButton: true,
+                closeButtonText: "OK",
+            }).present();
+
+            return this.viewCtrl.dismiss();
+        });
+    }
+
+    onPaymentFail() {
+        let loading = this.loadingCtrl.create({
+            content: 'Loading...'
+        });
+        loading.present();
+
+        this.getActiveTabNav().popTo(BookingPage).then(() => {
+            this.store.dispatch(new actionsBooking.HallLoadAction(this.order.showtime));
+            return loading.dismiss();
+        }).then(() => {
+            this.toastCtrl.create({
+                message: "Your transaction failed. If you think it is our problem please contact us",
+                duration: 4000,
+                position: "bottom",
+                dismissOnPageChange: true,
+                showCloseButton: true,
+                closeButtonText: "OK",
+            }).present();
+
             return this.viewCtrl.dismiss();
         });
     }
 
     onPaymentCancel() {
-        var nav = this.appCtrl.getRootNav();
-
-        nav.pop().then(() => {
+        this.getActiveTabNav().popTo(BookingPage).then(() => {
             this.store.dispatch(new actionsBooking.HallLoadAction(this.order.showtime))
         }).then(() => {
             this.viewCtrl.dismiss();
         });
+    }
+
+    private getTabs(): Tabs {
+        return this.appCtrl.getRootNav().getActiveChildNav()
+    }
+
+    private getTabNavByIndex(index) {
+        return this.getTabs().getByIndex(index).getActive().getNav();
+    };
+
+    private getActiveTabNav() {
+        return this.getTabs().getSelected().getActive().getNav();
     }
 }

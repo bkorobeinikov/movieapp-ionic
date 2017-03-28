@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { App, ModalController, ToastController, ActionSheetController, AlertController } from "ionic-angular";
+import { App, ModalController, ToastController, ActionSheetController, AlertController, LoadingController } from "ionic-angular";
 
 import { Observable } from "rxjs/Observable";
 import 'rxjs/add/operator/first';
@@ -46,6 +46,7 @@ export class CheckoutPage {
         private toastCtrl: ToastController,
         private actionCtrl: ActionSheetController,
         private alertCtrl: AlertController,
+        private loadingCtrl: LoadingController,
         private store: Store<State>
     ) {
         this.order$ = store.select(selectors.getBookingOrder);
@@ -97,7 +98,9 @@ export class CheckoutPage {
                 {
                     text: 'With Bonuses',
                     handler: () => {
-                        this.payWithBonuses();
+                        actionSheet.onDidDismiss(() => {
+                            this.payWithBonuses();
+                        });
                     }
                 },
                 {
@@ -119,33 +122,30 @@ export class CheckoutPage {
         let modal = this.modalCtrl.create(PaymentPage, {
             order: this.order,
         });
-        modal.onDidDismiss(data => {
-            if (data == null)
-                return;
-
-            if (data.fail) {
-                this.toastCtrl.create({
-                    message: "Your transaction failed. If you think it is our problem please contact us",
-                    duration: 2000,
-                    position: "bottom",
-                    dismissOnPageChange: true,
-                    showCloseButton: true,
-                    closeButtonText: "OK",
-                }).present();
-            }
-
-        });
-
+        
         modal.present();
     }
 
     payWithBonuses() {
-        let alert = this.alertCtrl.create({
-            title: "Warning",
-            message: "You dont have bonuses for this operation",
-            buttons: ['Dismiss']
+        let loading = this.loadingCtrl.create({
+            content: "Please wait..."
         });
-        alert.present();
+
+        loading.present();
+
+        loading.onDidDismiss(() => {
+            let alert = this.alertCtrl.create({
+                title: "Warning",
+                message: "You dont have bonuses for this operation",
+                buttons: ['Dismiss']
+            });
+            alert.present();
+        });
+
+        setTimeout(function () {
+            loading.dismiss();
+        }, 500);
+
     }
 
     askToLogin() {
@@ -156,6 +156,13 @@ export class CheckoutPage {
         this.store.select(selectors.getAccountLoggedIn).skip(1).first().subscribe(loggedIn => {
             if (loggedIn) {
                 modal.dismiss();
+
+                this.toastCtrl.create({
+                    message: "Successfully logged in",
+                    duration: 2000,
+                    position: "top",
+                    dismissOnPageChange: true,
+                }).present();
             }
         });
 
