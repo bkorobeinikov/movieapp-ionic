@@ -143,6 +143,7 @@ export class CheckoutPage {
         let alert = this.alertCtrl.create({
             title: "Warning",
             message: "You dont have bonuses for this operation",
+            buttons: ['Dismiss']
         });
         alert.present();
     }
