@@ -11,7 +11,11 @@ page-tickets {
         justify-content: space-between;
 
         .keyvalue {
-            flex: 1;
+            flex: 2
+        }
+        
+        .keyvalue:first-child {
+            flex: 3;
         }
     }
 
