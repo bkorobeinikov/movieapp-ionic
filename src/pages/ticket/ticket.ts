@@ -32,9 +32,9 @@ export class TicketPage {
             .withLatestFrom(store.select(selectors.getMovieEntities))
             .withLatestFrom(store.select(selectors.getCinemaEntities))
             .subscribe(([[ticket, movies], cinemas]) => {
-                console.log('ticketselected', ticket, movies, cinemas);
                 if (ticket == null)
                     return null;
+
                 this.ticket = ticket;
                 this.movie = movies[ticket.movieId];
                 this.cinema = cinemas[ticket.cinemaId];

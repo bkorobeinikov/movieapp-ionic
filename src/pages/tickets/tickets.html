@@ -22,12 +22,30 @@
                     </div>
                     <div class="item-content">
                         <span class="title">{{movies[ticket.movieId]?.name}}</span>
-                        <span class="genre ">{{movies[ticket.movieId]?.genres | join:" | "}}</span>
-                        <span class="line"> 
-                            <span class="duration">{{duration(movies[ticket.movieId]?.duration)}}</span>
-                        </span>
-                        <span class="tech">{{ticket.techId}}</span>
-                        <span class="time">{{ticket.time | moment:"D/MM/YYYY"}} at {{ticket.time | moment:"HH:mm"}}</span>
+                        <div class="tech-content keyvalue-row">
+                            <div class="keyvalue">
+                                <div>TECHNOLOGY</div>
+                                <div>{{ticket.techId}}</div>
+                            </div>
+                            <div class="keyvalue">
+                                <div>duration</div>
+                                <div>{{duration(movies[ticket.movieId]?.duration)}}</div>
+                            </div>
+                        </div>
+                        <div class="cinema">
+                            <ion-icon name="pin"></ion-icon>
+                            <address>{{cinemas[ticket.cinemaId]?.nameShort}}</address>
+                        </div>
+                        <div class="time-content keyvalue-row">
+                            <div class="keyvalue">
+                                <div>DATE</div>
+                                <div>{{ticket.time | moment:"D MMMM"}}</div>
+                            </div>
+                            <div class="keyvalue">
+                                <div>TIME</div>
+                                <div>{{ticket.time | moment:"HH:mm"}}</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
