@@ -7,6 +7,11 @@
 <ion-content padding>
 
     <div class="ticket-list">
+        <div *ngIf="tickets?.length === 0">
+            <ion-note>
+                Buy some tickets dude!
+            </ion-note>
+        </div>
         <div class="ticket-item" *ngFor="let ticket of tickets" (tap)="onSelect(ticket)">
             <div class="movie-content">
                 <div class="movie-summary">

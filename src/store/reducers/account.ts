@@ -1,5 +1,5 @@
 import * as actionsAccount from './../actions/account';
-import * as _ from 'lodash';
+import * as actionsCinema from './../actions/cinema';
 
 import { Account } from './../models';
 
@@ -21,7 +21,7 @@ export const initialState: State = {
     updating: false,
 };
 
-export function reducer(state: State, actionRaw: actionsAccount.Actions) {
+export function reducer(state: State, actionRaw: actionsAccount.Actions | actionsCinema.ChangeCurrentAction) {
     switch (actionRaw.type) {
         case actionsAccount.ActionTypes.LOGIN: {
             return Object.assign({}, state, {
@@ -79,6 +79,15 @@ export function reducer(state: State, actionRaw: actionsAccount.Actions) {
             return Object.assign({}, state, {
                 account: Object.assign({}, state.account, {
                     notifications: Object.assign({}, state.account.notifications, action.payload)
+                }),
+            });
+        }
+        case actionsCinema.ActionTypes.CHANGE_CURRENT: {
+            let action = <actionsCinema.ChangeCurrentAction>actionRaw;
+
+            return Object.assign({}, state, {
+                account: Object.assign({}, state.account, {
+                    cinemaId: action.payload,
                 }),
             });
         }

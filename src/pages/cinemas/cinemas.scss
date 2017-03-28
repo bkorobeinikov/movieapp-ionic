@@ -1,0 +1,26 @@
+page-cinemas {
+    .cinema {
+
+        .content {
+            display: flex;
+            flex-direction: column;
+            margin: .5em 0;
+        }
+
+        .name {
+            margin-bottom: .2em;
+            font-size: 1.1em;
+            color: #222;
+        }
+        .address {
+            margin-bottom: .2em;
+            font-size: .8em;
+            color: #444;
+        }
+        .phone {
+            font-size: .8em;
+            color: #666;
+            text-decoration: none;
+        }
+    }
+}

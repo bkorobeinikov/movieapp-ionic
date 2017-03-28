@@ -3,7 +3,7 @@
     <ng-container *ngFor="let cinema of cinemas$ | async">
         <ion-item>
             <ion-label>{{cinema.nameShort}}</ion-label>
-            <ion-radio [value]="cinema.id" (ionSelect)="onSelect(cinema.id)"></ion-radio>
+            <ion-radio [value]="cinema.id" [checked]="cinema.id == currentId" (ionSelect)="onSelect(cinema.id)"></ion-radio>
         </ion-item>
     </ng-container> 
 </ion-list>

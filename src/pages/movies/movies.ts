@@ -44,7 +44,7 @@ export class MoviesPage {
     }
 
     ionViewDidEnter() {
-        this.content.scrollToTop(0);
+        //this.content.scrollToTop(0);
     }
 
     onCategoryChange(ev: { value: "current" | "future" }) {
