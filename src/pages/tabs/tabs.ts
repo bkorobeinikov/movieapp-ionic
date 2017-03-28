@@ -44,7 +44,6 @@ export class TabsPage implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        console.log('ngOnInit');
         let s = this.index$.subscribe(index => {
             this.tabs.select(index);
         });
@@ -65,7 +64,7 @@ export class TabsPage implements OnInit, OnDestroy {
     onLoggedInChange(loggedIn) {
         let page = loggedIn ? AccountPage : LoginPage;
 
-        let tabView = this.tabs.getByIndex(2).getActive();
+        let tabView = this.tabs.getByIndex(3).getActive();
         if (tabView) {
             tabView.getNav().setRoot(page, {}, {
                 animate: tabView.getNav().getViews().length > 1 ? false : true,
