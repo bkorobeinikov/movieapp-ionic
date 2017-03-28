@@ -17,8 +17,6 @@ import * as _ from 'lodash';
 })
 export class AccountPage implements OnDestroy {
 
-    public loggingIn$: Observable<boolean>;
-
     public account: Account;
     public cinema: Cinema;
 
@@ -33,8 +31,6 @@ export class AccountPage implements OnDestroy {
         private store: Store<State>
     ) {
         this.creds = {};
-
-        this.loggingIn$ = this.store.select(selectors.getAccountLoggingIn);
 
         let s = this.store.select(selectors.getAccount)
             .withLatestFrom(this.store.select(selectors.getCinemaEntities))

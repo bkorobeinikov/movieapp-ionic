@@ -64,8 +64,8 @@ export class CheckoutPage {
     }
 
     pay() {
-        this.store.select(selectors.getAccount).first().subscribe(account => {
-            if (account == null) {
+        this.store.select(selectors.getAccountLoggedIn).first().subscribe(loggedIn => {
+            if (!loggedIn) {
                 this.askToLogin();
             } else {
                 this.canPay = false;
@@ -99,7 +99,9 @@ export class CheckoutPage {
     }
 
     askToLogin() {
-        let modal = this.modalCtrl.create(LoginNavPage);
+        let modal = this.modalCtrl.create(LoginNavPage, {
+            modal: true,
+        });
 
         this.store.select(selectors.getAccountLoggedIn).skip(1).first().subscribe(loggedIn => {
             if (loggedIn) {

@@ -11,45 +11,46 @@
     </ion-navbar>
 </ion-header>
 
-<ion-content>
+<ion-content padding no-bounce>
     <div class="content">
         <div class="logo">
             <img src="https://cabinet.planetakino.ua/StaticContent/images/logo.png">
         </div>
         <div class="company">
             <div class="name"><span>Planeta Kino</span></div>
-            <div class="link"><a href="http://planetakino.ua" target="_blank">http://planetakino.ua</a></div>
+            <div class="link"><a href="http://planetakino.ua" target="_blank">www.planetakino.ua</a></div>
         </div>
-        <div class="login-social">
-            <button ion-button color="primary" (click)="loginFacebook()" icon-left>
-                <ion-icon name="logo-facebook"></ion-icon>
-                <span>Login with Facebook</span>
-            </button>
-        </div>
-        <div class="login-separator" padding>
-            <div></div>
-            <div>OR</div>
-            <div></div>
-        </div>
-        <div class="login-username">
-            <ion-list inset>
+        <div class="login-form">
+            <ion-list>
                 <ion-item>
-                    <ion-input type="email" placeholder="Email" [(ngModel)]="creds.email"></ion-input>
+                    <ion-input type="email" placeholder="Email" [(ngModel)]="creds.email" clearInput></ion-input>
                 </ion-item>
                 <ion-item>
-                    <ion-input type="password" placeholder="Password" [(ngModel)]="creds.password"></ion-input>
+                    <ion-input type="password" placeholder="Password" [(ngModel)]="creds.password" clearInput></ion-input>
                 </ion-item>
             </ion-list>
-            <div>
-                <button ion-button color="primary" [disabled]="canLogin() == false" (click)="login()">
-                    <span>Login</span>
-                </button>
-                <span>OR</span>
-                <button ion-button color="secondary" (click)="register()">
-                    <span>Register</span>
-                </button>
-            </div>
+            <button ion-button block color="primary" [disabled]="canLogin() == false" (click)="login()">
+                <span>Login</span>
+            </button>
         </div>
-        <ion-spinner *ngIf="loggingIn$ | async"></ion-spinner>
+        <div class="login-separator">
+            <div></div>
+            <div class="text">OR</div>
+            <div></div>
+        </div>
+        <div class="login-social">
+            <button ion-button clear color="primary" (click)="facebook()" icon-left>
+                <ion-icon name="logo-facebook"></ion-icon>
+                <span>Log In With Facebook</span>
+            </button>
+        </div>
+        <ion-spinner *ngIf="loggingIn"></ion-spinner>
     </div>
 </ion-content>
+
+<ion-footer no-border>
+    <div class="login-signup">
+        <span class="text">Don't have an account?</span>
+        <button ion-button clear color="primary" (click)="signup()">Sign Up</button>
+    </div>
+</ion-footer>

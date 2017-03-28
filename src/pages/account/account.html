@@ -6,7 +6,7 @@
 
 
 <ion-content *ngIf="account != null">
-  <div class="account">
+  <ion-no class="account">
     <div class="barcode-container">
       <barcode [data]="account.cardId" format="EAN13" width="2"></barcode>
     </div>
@@ -22,21 +22,21 @@
       <ion-item>
         <ion-icon name="call" item-left></ion-icon>
         <ion-label>Phone</ion-label>
-        <div item-right>{{account.phone | tel}}</div>
+        <ion-note item-right>{{account.phone | tel}}</ion-note>
       </ion-item>
       <ion-item>
         <ion-icon name="happy" item-left outline></ion-icon>
         <ion-label>Bonuses</ion-label>
-        <div item-right>{{account.bonuses}}</div>
+        <ion-note item-right>{{account.bonuses}}</ion-note>
       </ion-item>
     </ion-list>
     <ion-list>
-      <ion-item detail-push (tap)="onCinemaChange()">
+      <button ion-item (tap)="onCinemaChange()">
         <ion-label>Cinema</ion-label>
-        <div item-right>
+        <ion-note item-right>
           {{cinema?.nameShort}}
-        </div>
-      </ion-item>
+        </ion-note>
+      </button>
     </ion-list>
     <ion-list>
       <ion-list-header>Notification</ion-list-header>

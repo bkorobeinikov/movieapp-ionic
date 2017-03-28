@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { Store } from "@ngrx/store";
 import { State } from "./../../store";
 import * as actionsAccount from './../../store/actions/account';
@@ -9,19 +9,23 @@ import { NavController, ViewController, NavParams } from "ionic-angular";
 import { SignUpPage } from './../signup/signup';
 
 import * as _ from "lodash";
+import { Subscription } from "rxjs/Subscription";
 
 @Component({
     selector: "page-login",
     templateUrl: "login.html"
 })
-export class LoginPage {
+export class LoginPage implements OnDestroy {
 
     public creds: {
         email?: string,
         password?: string,
     };
 
+    public loggingIn: boolean = false;
     private isModal: boolean = false;
+
+    private subscription: Subscription = new Subscription;
 
     constructor(
         private store: Store<State>,
@@ -31,10 +35,14 @@ export class LoginPage {
     ) {
         this.isModal = navParams.get('modal');
         this.creds = {};
+
+        this.subscription.add(this.store.select(selectors.getAccountLoggingIn).subscribe(loggingIn => {
+            this.loggingIn = loggingIn;
+        }));
     }
 
-    signup() {
-        this.navCtrl.push(SignUpPage);
+    ngOnDestroy() {
+        this.subscription.unsubscribe();
     }
 
     cancel() {
@@ -47,7 +55,10 @@ export class LoginPage {
         }
     }
 
-    loginFacebook() {
+    facebook() {
+        if (this.loggingIn)
+            return;
+
         this.creds = {};
         this.store.dispatch(new actionsAccount.LoginAction({
             loginMethod: actionsAccount.LoginMethod.Facebook,
@@ -59,6 +70,9 @@ export class LoginPage {
     }
 
     login() {
+        if (this.loggingIn)
+            return;
+
         this.store.dispatch(new actionsAccount.LoginAction({
             loginMethod: actionsAccount.LoginMethod.Email,
             email: this.creds.email,
@@ -66,7 +80,7 @@ export class LoginPage {
         }));
     }
 
-    register() {
+    signup() {
         this.navCtrl.push(SignUpPage);
     }
 }
