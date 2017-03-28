@@ -27,7 +27,7 @@ export class TabsPage implements OnInit, OnDestroy {
     public movies: any = MoviesPage;
     public tickets: any = TicketsPage;
     public news: any = NewsPage;
-    public account: any = LoginPage;
+    public account: any;
 
     public index$: Observable<number>;
 
