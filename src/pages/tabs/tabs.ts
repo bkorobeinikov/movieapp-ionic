@@ -3,6 +3,7 @@ import { Component, ViewChild, OnInit, OnDestroy } from '@angular/core';
 import { MoviesPage } from '../movies/movies';
 import { AccountPage } from '../account/account';
 import { TicketsPage } from './../tickets/tickets';
+import { NewsPage } from './../news/news';
 import { LoginPage } from './../login/login';
 
 import { Store } from "@ngrx/store";
@@ -16,6 +17,7 @@ import { Subscription } from "rxjs/Subscription";
 import { Tabs, NavController } from "ionic-angular";
 
 @Component({
+    selector: 'page-tabs',
     templateUrl: 'tabs.html',
 })
 export class TabsPage implements OnInit, OnDestroy {
@@ -24,6 +26,7 @@ export class TabsPage implements OnInit, OnDestroy {
 
     public movies: any = MoviesPage;
     public tickets: any = TicketsPage;
+    public news: any = NewsPage;
     public account: any = LoginPage;
 
     public index$: Observable<number>;
@@ -31,6 +34,7 @@ export class TabsPage implements OnInit, OnDestroy {
     public subscription: Subscription = new Subscription();
 
     public ticketsCount: number = 0;
+    public unreadNewsCount: number = 0;
 
     constructor(
         private store: Store<State>,
