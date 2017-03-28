@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 
 import { Account, Cinema } from './../../store/models';
 
@@ -15,7 +15,7 @@ import * as _ from 'lodash';
     selector: 'page-account',
     templateUrl: 'account.html'
 })
-export class AccountPage implements OnInit, OnDestroy {
+export class AccountPage implements OnDestroy {
 
     public loggingIn$: Observable<boolean>;
 
@@ -38,26 +38,25 @@ export class AccountPage implements OnInit, OnDestroy {
 
         let s = this.store.select(selectors.getAccount)
             .withLatestFrom(this.store.select(selectors.getCinemaEntities))
-            .subscribe(([account, cinemas]) => {
-                if (!account) {
-                    this.account = null;
-                    this.cinema = null;
-                    return;
-                }
-
-                this.account = account;
-                if (cinemas != null)
-                    this.cinema = cinemas[account.cinemaId];
-            });
+            .subscribe(([account, cinemas]) => this.onAccountChange(account, cinemas));
 
         this.subscription.add(s);
     }
 
-    ngOnInit() {
-    }
-
     ngOnDestroy() {
         this.subscription.unsubscribe();
+    }
+
+    onAccountChange(account, cinemas) {
+        if (!account) {
+            this.account = null;
+            this.cinema = null;
+            return;
+        }
+
+        this.account = account;
+        if (cinemas != null)
+            this.cinema = cinemas[account.cinemaId];
     }
 
     onNotifUpdates(checked: boolean) {
@@ -77,6 +76,7 @@ export class AccountPage implements OnInit, OnDestroy {
     }
 
     logout() {
+        this.subscription.unsubscribe();
         this.store.dispatch(new actionsAccount.LogoutAction());
     }
 
