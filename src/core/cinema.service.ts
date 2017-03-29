@@ -13,6 +13,8 @@ import moment from 'moment';
 
 import * as _ from 'lodash';
 
+import { PlanetaKinoV2City, PlanetaKinoTheater, PlanetaKinoV2Theater } from "./planetakino-api/models";
+
 @Injectable()
 export class CinemaService extends BaseService {
 
@@ -42,48 +44,15 @@ export class CinemaService extends BaseService {
 
                 return cities.map(c => {
                     var theater = theaters.find(t => t.theaterName.toUpperCase() == c.__text.toUpperCase());
-                    if (theater == null) {
-                        return null;
-                    }
-
-                    return <Cinema>{
-                        id: theater._id,
-                        city: {
-                            id: c._id,
-                            groupId: c._cid,
-                            name: c.__text,
-                        },
-                        name: theater.theaterName,
-                        nameShort: theater.theaterNameShort,
-                        address: theater.theaterAddress,
-                        addressShort: theater.theaterAddressShort,
-                        phone: theater.phone,
-
-                        // those fields needs to be updated from .getTheaters() call
-                        commissionForSaleInBonus: undefined,
-                        vatRate: undefined,
-                        technologies: undefined,
-                    };
+                    return theater != null ? this.mapToCinemaWithCityAndTheater(c, theater) : null;
                 }).filter(cinema => cinema != null);
+
             });
     }
 
-    getCinemasExByCity(cityGroupId: string): Observable<Cinema[]> {
+    getCinemasByCityGroup(cityGroupId: string): Observable<Cinema[]> {
         return this.planetakinoService.getTheaters({ cityGroupId: cityGroupId })
-            .map(res => {
-                return res.map(t => <Cinema>{
-                    id: t._id,
-                    address: t.theaterAddress,
-                    addressShort: undefined,
-                    city: undefined,
-                    name: t.theaterName,
-                    nameShort: undefined,
-                    phone: t.phone,
-                    technologies: t.technology,
-                    vatRate: t.VATrate,
-                    commissionForSaleInBonus: t.CommissionForSaleInBonus
-                });
-            });
+            .map(res => res.map(t => this.mapToCinemaWithTheater(t)));
     }
 
     getShowtimes(cinemaId: string): Observable<{ cinemaId: string, showtimes: Showtime[], moviesMap: CinemaMovie[] }> {
@@ -159,19 +128,6 @@ export class CinemaService extends BaseService {
         return Observable.of(hall).delay(300);
     }
 
-    // private parseCinema(obj: PlanetaKinoV2Theater): Cinema {
-    //     return {
-    //         id: obj._id,
-    //         name: obj.theaterName,
-    //         nameShort: obj.theaterName,
-    //         address: obj.theaterAddress,
-    //         addressShort: obj.theaterAddress,
-    //         phone: obj.phone,
-    //         cityId: obj.cityId,
-    //         cityName: obj.city,
-    //     };
-    // }
-
     private parseShow(showObj: any): Showtime {
         try {
             var res: Showtime = {
@@ -200,5 +156,41 @@ export class CinemaService extends BaseService {
             movieStartDate: moment(movieObj["dt-start"]).toDate(),
             movieEndDate: moment(movieObj["dt-end"]).toDate(),
         }
+    }
+
+    private mapToCinemaWithCityAndTheater(c: PlanetaKinoV2City, theater: PlanetaKinoTheater): Cinema {
+        return <Cinema>{
+            id: theater._id,
+            city: {
+                id: c._id,
+                groupId: c._cid,
+                name: c.__text,
+            },
+            name: theater.theaterName,
+            nameShort: theater.theaterNameShort,
+            address: theater.theaterAddress,
+            addressShort: theater.theaterAddressShort,
+            phone: theater.phone,
+
+            // those fields needs to be updated from .getTheaters() call
+            commissionForSaleInBonus: undefined,
+            vatRate: undefined,
+            technologies: undefined,
+        };
+    }
+
+    private mapToCinemaWithTheater(t: PlanetaKinoV2Theater) {
+        return <Cinema>{
+            id: t._id,
+            address: t.theaterAddress,
+            addressShort: undefined,
+            city: undefined,
+            name: t.theaterName,
+            nameShort: undefined,
+            phone: t.phone,
+            technologies: t.technology,
+            vatRate: t.VATrate,
+            commissionForSaleInBonus: t.CommissionForSaleInBonus
+        };
     }
 }

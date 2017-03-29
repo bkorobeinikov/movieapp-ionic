@@ -15,6 +15,7 @@ import * as _ from 'lodash';
 const getMovieState = (state: State) => state.movie;
 
 export const getMovieEntities = createSelector(getMovieState, fromMovie.getEntities);
+const getMovieMapToCinema = createSelector(getMovieState, fromMovie.getMapToCinema);
 const getMovieLoading = createSelector(getMovieState, fromMovie.getLoading);
 
 export const getMovieSelectedId = createSelector(getMovieState, fromMovie.getSelectedId);
@@ -38,20 +39,19 @@ export const getCinemaCurrent = createSelector(getCinemaState, fromCinema.getCur
 export const getCinemaAllScreenings = createSelector(getCinemaState, fromCinema.getScreenings);
 export const getCinemaCurrentScreenings = createSelector(getCinemaState, fromCinema.getCurrentScreenings);
 
-export const getCinemaCurrentMovies = createSelector(getUiMoviesCategory, getMovieEntities, getCinemaCurrentScreenings,
-    (category, allMovies, screenings) => {
-        if (_.isEmpty(allMovies) || _.isEmpty(screenings) || _.isEmpty(screenings.movies))
+export const getCinemaCurrentMovies = createSelector(getUiMoviesCategory, getMovieEntities, getCinemaCurrentId, getMovieMapToCinema,
+    (category, allMovies, cinemaId, movieMapToCinema) => {
+        if (_.isEmpty(allMovies) || _.isEmpty(movieMapToCinema[cinemaId]))
             return [];
 
-        let movies = screenings.movies.map(m => allMovies[m.movieId]).filter(m => m !== undefined);
+        let map = movieMapToCinema[cinemaId];
 
-        return movies.filter(m => {
-            if (category == "future")
-                return m.soon == true;
-            else if (category == "current")
-                return m.soon == false;
-        });
-
+        if (category == "future")
+            return map.otherIds.map(id => allMovies[id]);
+        else if (category == "current")
+            return map.releasedIds.map(id => allMovies[id]);
+        else
+            return [];
     });
 
 export const getCinemaCurrentLoading = createSelector(getMovieLoading, getCinemaCurrentScreenings, (loading, screenings) => {

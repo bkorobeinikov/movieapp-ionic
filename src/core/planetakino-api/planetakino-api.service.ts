@@ -36,6 +36,7 @@ export class PlanetaKinoV2Service extends BaseService {
         let options = this.buildOptions(data.cityId);
         options.search = this.buildParams(data);
         return this.getData<any>(this.moviesUrl, options).map(res => {
+            console.log('movies', res.inTheaters.movie);
             return {
                 inTheaters: res.inTheaters.movie,
                 soon: res.soon.movie

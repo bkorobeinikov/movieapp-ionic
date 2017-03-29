@@ -9,12 +9,14 @@ import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/skip';
 import 'rxjs/add/operator/takeUntil';
 
-import { Action } from "@ngrx/store";
+import { Action, Store } from "@ngrx/store";
 import { Effect, Actions, toPayload } from '@ngrx/effects';
 
 import { MovieService } from './../../core/movie.service';
 
 import * as actionsMovie from './../actions/movie';
+import { State } from "./../../store";
+import * as selectors from './../selectors';
 
 @Injectable()
 export class MovieEffects {
@@ -22,13 +24,25 @@ export class MovieEffects {
     @Effect()
     load$: Observable<Action> = this.actions$
         .ofType(actionsMovie.ActionTypes.LOAD)
-        .startWith(new actionsMovie.LoadAction())
-        .map(toPayload)
-        .switchMap(payload => {
-            return this.movieService.getMovies()
-                .map(movies => new actionsMovie.LoadSuccessAction(movies))
-                .catch(() => of(new actionsMovie.LoadFailAction([])));
+        .withLatestFrom(this.store.select(selectors.getCinemaEntities))
+        .switchMap(([actionRaw, cinemas]) => {
+            let action = <actionsMovie.LoadAction>actionRaw;
+            let cinema = cinemas[action.payload.cinemaId];
+
+            let next$ = this.actions$.ofType(actionsMovie.ActionTypes.LOAD);
+
+            return this.movieService.getMoviesByCity(cinema.city.id)
+                .map(res => new actionsMovie.LoadSuccessAction({
+                    cinemaId: cinema.id,
+                    released: res.released,
+                    other: res.other
+                }))
+                .catch(() => of(new actionsMovie.LoadFailAction({
+                    cinemaId: cinema.id
+                })));
         });
 
-    constructor(private actions$: Actions, private movieService: MovieService) { }
+    constructor(private actions$: Actions,
+        private movieService: MovieService,
+        private store: Store<State>) { }
 }

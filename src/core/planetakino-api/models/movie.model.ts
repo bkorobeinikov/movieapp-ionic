@@ -20,7 +20,7 @@ export interface PlanetaKinoV2Movie {
     id: string;
     uid: string;
     technologies: string;
-    technologyId: string;
+    technologyId: string | string[];
     movieLink: string;
     movieShortLink: string;
 }

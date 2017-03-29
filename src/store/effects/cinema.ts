@@ -34,13 +34,9 @@ import * as _ from 'lodash';
 export class CinemaEffects {
 
     @Effect()
-    onMoviesLoad$ = this.actions$
-        .ofType(actionsMovie.ActionTypes.LOAD_SUCCESS)
-        .map(() => new actionsCinema.LoadAction());
-
-    @Effect()
     load$ = this.actions$
         .ofType(actionsCinema.ActionTypes.LOAD)
+        .startWith(() => new actionsCinema.LoadAction())
         .switchMap(payload => {
             return this.cinemaService.getCinemas()
                 .map(cinemas => new actionsCinema.LoadSuccessAction(cinemas))
@@ -55,6 +51,7 @@ export class CinemaEffects {
         // tslint:disable-next-line:no-unused-variable
         .mergeMap(([action, cinemaId]) => ([
             new actionsCinema.UpdateAction({ cinemaId: cinemaId }),
+            new actionsMovie.LoadAction({cinemaId: cinemaId}),
             new actionsCinema.ShowtimeCheckAndLoadAction(cinemaId),
         ]));
 
@@ -76,7 +73,7 @@ export class CinemaEffects {
             if (!isOutdated)
                 return of(new actionsCinema.UpdateSuccessAction({ cinemas: [cinemaOld] }));
 
-            return <Observable<any>>this.cinemaService.getCinemasExByCity(cinemaOld.city.groupId)
+            return <Observable<any>>this.cinemaService.getCinemasByCityGroup(cinemaOld.city.groupId)
                 .map(res => {
                     let result = res.map(cinemaNew => _.merge({}, cinemas[cinemaNew.id], cinemaNew));
                     return new actionsCinema.UpdateSuccessAction({ cinemas: result })

@@ -6,14 +6,24 @@ import { Movie } from './../models';
 import * as _ from 'lodash';
 
 export interface State {
-    entities: { [movieId: string]: Movie },
-    loading: boolean,
+    entities: { [movieId: string]: Movie };
+
+    mapMovieToCinema: {
+        [cinemaId: string]: {
+            releasedIds: string[]
+            otherIds: string[]
+        }
+    };
+
+    loading: boolean;
 
     selectedId: string;
 }
 
 export const initialState: State = {
     entities: {},
+    mapMovieToCinema: {},
+
     loading: false,
 
     selectedId: null,
@@ -27,13 +37,25 @@ export function reducer(state = initialState, actionRaw: movie.Actions): State {
             });
         }
         case movie.ActionTypes.LOAD_SUCCESS: {
-            const movies = (<movie.LoadSuccessAction>actionRaw).payload;
-            const newMovies = movies.filter(m => !state.entities[m.id]);
+            let action = <movie.LoadSuccessAction>actionRaw;
 
-            const newMoviesEntities: { [movieId: string]: Movie } = _.keyBy(newMovies, m => m.id);
+            let entities = _.flatten([action.payload.released, action.payload.other])
+                .reduce((entities, movie) => {
+                    return Object.assign({}, entities, {
+                        [movie.id]: movie,
+                    });
+                }, state.entities);
+
+            let map = {
+                releasedIds: action.payload.released.map(m => m.id),
+                otherIds: action.payload.other.map(m => m.id),
+            };
 
             return Object.assign({}, state, {
-                entities: Object.assign({}, state.entities, newMoviesEntities),
+                entities: entities,
+                mapMovieToCinema: Object.assign({}, state.mapMovieToCinema, {
+                    [action.payload.cinemaId]: map
+                }),
                 loading: false,
             });
         }
@@ -55,6 +77,7 @@ export function reducer(state = initialState, actionRaw: movie.Actions): State {
 }
 
 export const getEntities = (state: State) => state.entities;
+export const getMapToCinema = (state: State) => state.mapMovieToCinema;
 export const getLoading = (state: State) => state.loading;
 export const getSelectedId = (state: State) => state.selectedId;
 
