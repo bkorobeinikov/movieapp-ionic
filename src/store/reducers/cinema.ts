@@ -9,7 +9,9 @@ import * as _ from 'lodash';
 export interface State {
     cinemas: { [id: string]: Cinema };
     currentCinemaId: string,
+
     loading: boolean,
+    updates: { [cinemaId: string]: { updating: boolean, updatedAt: Date } },
 
     screenings: { [cinemaId: string]: ScreeningsViewModel },
 }
@@ -17,7 +19,9 @@ export interface State {
 export const initialState: State = {
     cinemas: {},
     currentCinemaId: null,
+
     loading: false,
+    updates: {},
 
     screenings: {},
 };
@@ -52,6 +56,59 @@ export function reducer(state = initialState, actionRaw: cinema.Actions): State 
 
             return Object.assign({}, state, {
                 loading: false,
+            });
+        }
+        case cinema.ActionTypes.UPDATE: {
+            let action = <cinema.UpdateAction>actionRaw;
+
+            let cinemaId = action.payload.cinemaId;
+            let updates = Object.assign({}, state.updates[cinemaId], {
+                updating: true,
+            });
+
+            return Object.assign({}, state, {
+                updates: Object.assign({}, state.updates, {
+                    [action.payload.cinemaId]: updates
+                }),
+            });
+        }
+        case cinema.ActionTypes.UPDATE_SUCCESS: {
+            let action = <cinema.UpdateSuccessAction>actionRaw;
+
+            let cinemas = action.payload.cinemas;
+
+            let updatesState = cinemas.reduce((updates, cinema) => {
+                return Object.assign({}, updates, {
+                    [cinema.id]: Object.assign({}, updates[cinema.id], {
+                        updating: false,
+                        updatedAt: new Date(),
+                    }),
+                });
+            }, state.updates);
+
+            let cinemasState = cinemas.reduce((cinemas, cinema) => {
+                return Object.assign({}, cinemas, {
+                    [cinema.id]: cinema
+                });
+            }, state.cinemas);
+
+            return Object.assign({}, state, {
+                cinemas: cinemasState,
+                updates: updatesState
+            });
+        }
+        case cinema.ActionTypes.UPDATE_FAIL: {
+            let action = <cinema.UpdateFailAction>actionRaw;
+
+            let cinemaId = action.payload.cinemaId;
+            let updates = Object.assign({}, state.updates[cinemaId], {
+                updating: false,
+            });
+
+            return Object.assign({}, state, {
+                updates: Object.assign({}, state.updates, {
+                    [action.payload.cinemaId]: updates
+                }),
             });
         }
         case cinema.ActionTypes.CHANGE_CURRENT: {
@@ -131,6 +188,8 @@ export const getCurrentCinemaId = (state: State) => state.currentCinemaId;
 export const getCurrentCinema = createSelector(getCinemas, getCurrentCinemaId, (entities, currentId) => {
     return entities[currentId];
 });
+
+export const getUpdates = (state: State) => state.updates;
 
 export const getScreenings = (state: State) => state.screenings;
 export const getCurrentScreenings = createSelector(getCurrentCinemaId, getScreenings, (cinemaId, screenings) => {

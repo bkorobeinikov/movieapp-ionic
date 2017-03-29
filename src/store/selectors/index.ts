@@ -61,6 +61,8 @@ export const getCinemaCurrentLoading = createSelector(getMovieLoading, getCinema
     return screenings.loading;
 });
 
+export const getCinemaUpdates = createSelector(getCinemaState, fromCinema.getUpdates);
+
 // booking state
 const getBookingState = (state: State) => state.booking;
 

@@ -23,10 +23,12 @@ import { State } from './../reducers';
 import * as actionsCinema from './../actions/cinema';
 import * as actionsMovie from './../actions/movie';
 import * as selectors from './../selectors';
+import { Cinema } from './../models';
 
 import { CinemaService } from "../../core/cinema.service";
 
 import moment from 'moment';
+import * as _ from 'lodash';
 
 @Injectable()
 export class CinemaEffects {
@@ -49,8 +51,38 @@ export class CinemaEffects {
     cinemaChange$ = this.actions$
         .ofType(actionsCinema.ActionTypes.CHANGE_CURRENT, actionsCinema.ActionTypes.LOAD_SUCCESS)
         .withLatestFrom(this.store.select(selectors.getCinemaCurrentId))
+        //.map(([action, cinemaId]) => new actionsCinema.ShowtimeCheckAndLoadAction(cinemaId));
         // tslint:disable-next-line:no-unused-variable
-        .map(([action, cinemaId]) => new actionsCinema.ShowtimeCheckAndLoadAction(cinemaId));
+        .mergeMap(([action, cinemaId]) => ([
+            new actionsCinema.UpdateAction({ cinemaId: cinemaId }),
+            new actionsCinema.ShowtimeCheckAndLoadAction(cinemaId),
+        ]));
+
+    @Effect()
+    update$ = this.actions$
+        .ofType(actionsCinema.ActionTypes.UPDATE)
+        .withLatestFrom(this.store.select(selectors.getCinemaUpdates))
+        .withLatestFrom(this.store.select(selectors.getCinemaEntities))
+        // tslint:disable-next-line:no-unused-variable
+        .switchMap(([[action, updates], cinemas]) => {
+            let a = <actionsCinema.UpdateAction>action;
+            let cinemaId = a.payload.cinemaId;
+            let cinemaOld = cinemas[cinemaId];
+
+            let isOutdated = updates[cinemaId] == null
+                || updates[cinemaId].updatedAt == null
+                || moment(updates[cinemaId].updatedAt).isBefore(moment().subtract(5, "minutes"));
+
+            if (!isOutdated)
+                return of(new actionsCinema.UpdateSuccessAction({ cinemas: [cinemaOld] }));
+
+            return <Observable<any>>this.cinemaService.getCinemasExByCity(cinemaOld.city.groupId)
+                .map(res => {
+                    let result = res.map(cinemaNew => _.merge({}, cinemas[cinemaNew.id], cinemaNew));
+                    return new actionsCinema.UpdateSuccessAction({ cinemas: result })
+                })
+                .catch(() => of(new actionsCinema.UpdateFailAction({ cinemaId: cinemaId })));
+        });
 
     @Effect()
     checkAndLoad$: Observable<Action> = this.actions$

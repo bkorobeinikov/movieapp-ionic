@@ -1,10 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Observable } from "rxjs/Observable";
+import 'rxjs/add/observable/forkJoin'
+import 'rxjs/add/observable/concat'
 
 import { Cinema, Showtime, CinemaHallSeat, CinemaHall, CinemaMovie } from "../store/models";
 import { Http, } from "@angular/http";
 
 import { BaseService } from "./base.service";
+import { PlanetaKinoV2Service } from "./planetakino-api/planetakino-api.service";
 
 import moment from 'moment';
 
@@ -13,7 +16,6 @@ import * as _ from 'lodash';
 @Injectable()
 export class CinemaService extends BaseService {
 
-    private cinemaListUrl = "http://planetakino.ua/api/theatres";
     private showtimeUrl = {
         "pk-lvov": "http://planetakino.ua/lvov/ua/showtimes/xml/",
         "pk-lvov2": "http://planetakino.ua/lvov2/ua/showtimes/xml/",
@@ -26,16 +28,61 @@ export class CinemaService extends BaseService {
         "pk-yalta": "http://planetakino.ua/yalta/ua/showtimes/xml/"
     };
 
-    constructor(http: Http) {
+    constructor(http: Http, private planetakinoService: PlanetaKinoV2Service) {
         super(http);
     }
 
     getCinemas(): Observable<Cinema[]> {
-        return this.getData<any>(this.cinemaListUrl)
-            .map(res => {
-                var cinemas: any[] = res.theatres.theatre;
+        // horrible peace of code, api blocks multiple request
+        // so just using this hack to map cities to theaters
+        return Observable.forkJoin(
+            this.planetakinoService.getCities(),
+            this.planetakinoService.getTheatersAll())
+            .map(([cities, theaters]) => {
 
-                return cinemas.map(v => this.parseCinema(v));
+                return cities.map(c => {
+                    var theater = theaters.find(t => t.theaterName.toUpperCase() == c.__text.toUpperCase());
+                    if (theater == null) {
+                        return null;
+                    }
+
+                    return <Cinema>{
+                        id: theater._id,
+                        city: {
+                            id: c._id,
+                            groupId: c._cid,
+                            name: c.__text,
+                        },
+                        name: theater.theaterName,
+                        nameShort: theater.theaterNameShort,
+                        address: theater.theaterAddress,
+                        addressShort: theater.theaterAddressShort,
+                        phone: theater.phone,
+
+                        // those fields needs to be updated from .getTheaters() call
+                        commissionForSaleInBonus: undefined,
+                        vatRate: undefined,
+                        technologies: undefined,
+                    };
+                }).filter(cinema => cinema != null);
+            });
+    }
+
+    getCinemasExByCity(cityGroupId: string): Observable<Cinema[]> {
+        return this.planetakinoService.getTheaters({ cityGroupId: cityGroupId })
+            .map(res => {
+                return res.map(t => <Cinema>{
+                    id: t._id,
+                    address: t.theaterAddress,
+                    addressShort: undefined,
+                    city: undefined,
+                    name: t.theaterName,
+                    nameShort: undefined,
+                    phone: t.phone,
+                    technologies: t.technology,
+                    vatRate: t.VATrate,
+                    commissionForSaleInBonus: t.CommissionForSaleInBonus
+                });
             });
     }
 
@@ -112,17 +159,18 @@ export class CinemaService extends BaseService {
         return Observable.of(hall).delay(300);
     }
 
-    private parseCinema(obj: any): Cinema {
-        return {
-            id: obj._id,
-            name: obj.theaterName,
-            nameShort: obj.theaterNameShort,
-            address: obj.theaterAddress,
-            addressShort: obj.theaterAddressShort,
-            phone: obj.phone,
-            city: obj.city
-        };
-    }
+    // private parseCinema(obj: PlanetaKinoV2Theater): Cinema {
+    //     return {
+    //         id: obj._id,
+    //         name: obj.theaterName,
+    //         nameShort: obj.theaterName,
+    //         address: obj.theaterAddress,
+    //         addressShort: obj.theaterAddress,
+    //         phone: obj.phone,
+    //         cityId: obj.cityId,
+    //         cityName: obj.city,
+    //     };
+    // }
 
     private parseShow(showObj: any): Showtime {
         try {

@@ -1,4 +1,4 @@
-import { Http, Headers, Response } from '@angular/http';
+import { Http, Headers, Response, RequestOptionsArgs } from '@angular/http';
 
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
@@ -7,6 +7,8 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/delay';
 
 import X2JS from 'x2js';
+
+import * as _ from 'lodash';
 
 export class BaseService {
     private headers: Headers;
@@ -17,11 +19,20 @@ export class BaseService {
         this.headers.append('Access-Control-Allow-Origin', '*');
     }
 
-    protected getData<T>(url: string): Observable<T> {
-        var a = this.http
-            .get(url, {
-                headers: this.headers
-            })
+    protected getData<T>(url: string, options?: RequestOptionsArgs): Observable<T> {
+
+        options = options != null ? _.clone<RequestOptionsArgs>(options) : {};
+        if (options.headers) {
+            this.headers.forEach((values, name) => {
+                values.forEach(value => {
+                    options.headers.append(name, value);
+                });
+            });
+        } else {
+            options.headers = this.headers;
+        }
+
+        var a = this.http.get(url, options)
             .map(res => {
                 //console.log('service:response', res);
                 var x2js = new X2JS();
@@ -52,5 +63,9 @@ export class BaseService {
 
         console.error(errMsg);
         return Observable.throw(errMsg);
+    }
+
+    protected joinUrl(...parts: string[]) {
+        return parts.join("");
     }
 }
