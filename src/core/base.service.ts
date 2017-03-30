@@ -12,6 +12,7 @@ import * as _ from 'lodash';
 
 import { Store } from "@ngrx/store";
 import { State } from "./../store/";
+import * as selectors from './../store/selectors';
 
 export class BaseService {
     private headers: Headers;
@@ -19,14 +20,14 @@ export class BaseService {
     constructor(
         private http: Http,
         protected store?: Store<State>) {
+
         this.headers = new Headers();
         this.headers.append('Content-Type', 'text/xml');
         this.headers.append('Access-Control-Allow-Origin', '*');
         console.log("base:service", store);
     }
 
-    protected getData<T>(url: string, options?: RequestOptionsArgs): Observable<T> {
-
+    private makeOptions(options?: RequestOptionsArgs) {
         options = options != null ? _.clone<RequestOptionsArgs>(options) : {};
         if (options.headers) {
             this.headers.forEach((values, name) => {
@@ -38,21 +39,54 @@ export class BaseService {
             options.headers = this.headers;
         }
 
-        var a = this.http.get(url, options)
-            .map(res => {
-                //console.log('service:response', res);
-                var x2js = new X2JS();
-                var text = res.text();
-                var jsonObj: any = x2js.xml2js<any>(text);
-                jsonObj = jsonObj[Object.keys(jsonObj)[0]];
+        return options;
+    }
 
-                //console.log('service:response parsed', jsonObj);
+    protected postData<T>(url: string, body: any, options?: RequestOptionsArgs): Observable<T> {
+        options = this.makeOptions(options);
 
-                return jsonObj;
-            })
-            .catch(this.handleError);
+        return this.store.select(selectors.getAccountAuthToken)
+            .first().switchMap(authToken => {
+                if (authToken)
+                    options.headers.append("Auth-Token", authToken);
 
-        return a;
+                return this.http.post(url, body, options)
+                    .map(res => this.parseResponse(res))
+                    .catch(this.handleError)
+            });
+    }
+
+    protected getData<T>(url: string, options?: RequestOptionsArgs): Observable<T> {
+        options = this.makeOptions(options);
+
+        return this.store.select(selectors.getAccountAuthToken)
+            .first().switchMap(authToken => {
+                if (authToken)
+                    options.headers.append("Auth-Token", authToken);
+
+                return this.http.get(url, options)
+                    .map(res => this.parseResponse(res))
+                    .catch(this.handleError)
+            });
+    }
+
+    private parseResponse(res: Response) {
+        console.log("response", res);
+        let contentType = res.headers.get("Content-Type");
+        if (contentType.indexOf("application/json") > -1) {
+            return res.json();
+        } else if (
+            contentType.indexOf("application/xml") > -1 ||
+            contentType.indexOf("text/xml") > -1) {
+            var x2js = new X2JS();
+            var text = res.text();
+            var jsonObj: any = x2js.xml2js<any>(text);
+            jsonObj = jsonObj[Object.keys(jsonObj)[0]];
+
+            return jsonObj;
+        }
+
+        throw new Error("Unsupported response content type - " + contentType);
     }
 
     private handleError(error: Response | any) {

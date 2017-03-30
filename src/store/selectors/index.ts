@@ -126,3 +126,6 @@ export const getAccount = createSelector(getAccountState, fromAccount.getAccount
 export const getAccountLoggingIn = createSelector(getAccountState, fromAccount.getLoggingIn);
 export const getAccountLoggedIn = createSelector(getAccountState, fromAccount.getLoggedIn);
 export const getAccountUpdating = createSelector(getAccountState, fromAccount.getUpdating);
+export const getAccountUpdatedAt = createSelector(getAccountState, fromAccount.getUpdatedAt);
+export const getAccountAuth = createSelector(getAccountState, fromAccount.getAuth);
+export const getAccountAuthToken = createSelector(getAccountAuth, auth => auth.token);

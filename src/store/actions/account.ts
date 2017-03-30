@@ -9,6 +9,8 @@ export const ActionTypes = {
     LOGIN_FAIL: type("[Account] Login Fail"),
     LOGOUT: type("[Account] Logout"),
 
+    VERIFY_AUTH: type("[Account] Verify Auth"),
+
     UPDATE: type("[Account] Update"),
     UPDATE_SUCCESS: type("[Account] Update Success"),
     UPDATE_FAIL: type("[Account] Update Fail"),
@@ -17,6 +19,7 @@ export const ActionTypes = {
 };
 
 export enum LoginMethod {
+    None,
     Facebook,
     Email,
 }
@@ -35,7 +38,7 @@ export class LoginAction implements Action {
 export class LoginSuccessAction implements Action {
     readonly type = ActionTypes.LOGIN_SUCCESS;
 
-    constructor(public payload: Account) { }
+    constructor(public payload: { authToken: string }) { }
 }
 
 export class LoginFailAction implements Action {
@@ -50,22 +53,30 @@ export class LogoutAction implements Action {
     constructor() { }
 }
 
+export class VerifyAuthAction implements Action {
+    readonly type = ActionTypes.VERIFY_AUTH;
+
+    constructor() { }
+}
+
 export class UpdateAction implements Action {
     readonly type = ActionTypes.UPDATE;
 
-    constructor(public payload: any) { }
+    constructor() { }
 }
 
 export class UpdateSuccessAction implements Action {
     readonly type = ActionTypes.UPDATE_SUCCESS;
 
-    constructor(public payload: Account) { }
+    constructor(public payload: { account: Account }) { }
 }
 
 export class UpdateFailAction implements Action {
     readonly type = ActionTypes.UPDATE_FAIL;
 
-    constructor(public payload: any) { }
+    constructor(public payload: {
+        requireLogin: boolean
+    }) { }
 }
 
 export class ChangeNotificationsAction implements Action {

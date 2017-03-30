@@ -18,6 +18,14 @@ page-account {
         }
     }
 
+    .spinner {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-top: -20px;
+        margin-left: -20px;
+    }
+
     .account {
         display: flex;
         flex-direction: column;

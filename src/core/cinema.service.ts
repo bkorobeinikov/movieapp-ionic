@@ -86,33 +86,33 @@ export class CinemaService extends BaseService {
         }).delay(2000);
     }
 
-    getShowtimes(cinemaId: string): Observable<{ cinemaId: string, showtimes: Showtime[], moviesMap: CinemaMovie[] }> {
-        return this.getData<any>(this.showtimeUrl[cinemaId])
-            .map(res => {
-                try {
-                    var days: { show: any[] }[] = res.showtimes.day;
-                    var showtimes = _.flatMap(days, d => {
-                        if (d.show instanceof Array) {
-                            return _.map(d.show, s => this.parseShow(s));
-                        } else {
-                            return this.parseShow(d.show);
-                        }
-                    });
-                    var movies = _.flatMap(res.movies.movie, m => {
-                        return this.parseCinemaMovie(cinemaId, m);
-                    });
+    // getShowtimes(cinemaId: string): Observable<{ cinemaId: string, showtimes: Showtime[], moviesMap: CinemaMovie[] }> {
+    //     return this.getData<any>(this.showtimeUrl[cinemaId])
+    //         .map(res => {
+    //             try {
+    //                 var days: { show: any[] }[] = res.showtimes.day;
+    //                 var showtimes = _.flatMap(days, d => {
+    //                     if (d.show instanceof Array) {
+    //                         return _.map(d.show, s => this.parseShow(s));
+    //                     } else {
+    //                         return this.parseShow(d.show);
+    //                     }
+    //                 });
+    //                 var movies = _.flatMap(res.movies.movie, m => {
+    //                     return this.parseCinemaMovie(cinemaId, m);
+    //                 });
 
-                    return {
-                        cinemaId: cinemaId,
-                        showtimes: showtimes,
-                        moviesMap: movies,
-                    };
-                }
-                catch (err) {
-                    console.error(err);
-                }
-            });
-    }
+    //                 return {
+    //                     cinemaId: cinemaId,
+    //                     showtimes: showtimes,
+    //                     moviesMap: movies,
+    //                 };
+    //             }
+    //             catch (err) {
+    //                 console.error(err);
+    //             }
+    //         });
+    // }
 
     getHall(cityId: string, showtime: Showtime): Observable<CinemaHall> {
         return this.planetakinoService.getHall({
