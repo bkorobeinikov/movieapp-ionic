@@ -21,7 +21,7 @@
                         <span class="line"> 
                             <span class="time">{{duration(movie?.duration)}}</span>
                         </span>
-                        <span class="tech">{{ticket.techId}}</span>
+                        <span class="tech">{{cinema.technologies[ticket.techId]?.name}}</span>
                     </div> 
                 </div>
             </div>

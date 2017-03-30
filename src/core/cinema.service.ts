@@ -189,7 +189,7 @@ export class CinemaService extends BaseService {
             name: t.theaterName,
             nameShort: undefined,
             phone: t.phone,
-            technologies: t.technology,
+            technologies: _.keyBy(t.technology, t => t.id),
             vatRate: t.VATrate,
             commissionForSaleInBonus: t.CommissionForSaleInBonus
         };

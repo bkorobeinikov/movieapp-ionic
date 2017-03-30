@@ -26,13 +26,15 @@ export interface Cinema {
     commissionForSaleInBonus: string;
 
     technologies: {
-        id: string;
-        name: string;
+        [techId: string]: {
+            id: string;
+            name: string;
 
-        idFormat: string;
-        nameFormat: string;
+            idFormat: string;
+            nameFormat: string;
 
-        idAggrTechnology: string;
-        nameAggrTechnology: string;
-    }[];
+            idAggrTechnology: string;
+            nameAggrTechnology: string;
+        }
+    };
 }
