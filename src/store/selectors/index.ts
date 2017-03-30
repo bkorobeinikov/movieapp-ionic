@@ -36,8 +36,8 @@ export const getCinemas = createSelector(getCinemaEntities, (cinemas) => {
 });
 export const getCinemaCurrentId = createSelector(getCinemaState, fromCinema.getCurrentCinemaId);
 export const getCinemaCurrent = createSelector(getCinemaState, fromCinema.getCurrentCinema);
-export const getCinemaAllScreenings = createSelector(getCinemaState, fromCinema.getScreenings);
-export const getCinemaCurrentScreenings = createSelector(getCinemaState, fromCinema.getCurrentScreenings);
+export const getCinemaAllScreeningsEntities = createSelector(getCinemaState, fromCinema.getAllScreeningEntities);
+const getCinemaCurrentScreenings = createSelector(getCinemaState, fromCinema.getCurrentCinemaShowtimes);
 
 export const getCinemaCurrentMovies = createSelector(getUiMoviesCategory, getMovieEntities, getCinemaCurrentId, getMovieMapToCinema,
     (category, allMovies, cinemaId, movieMapToCinema) => {
@@ -54,11 +54,8 @@ export const getCinemaCurrentMovies = createSelector(getUiMoviesCategory, getMov
             return [];
     });
 
-export const getCinemaCurrentLoading = createSelector(getMovieLoading, getCinemaCurrentScreenings, (loading, screenings) => {
-    if (loading || screenings == null)
-        return true;
-
-    return screenings.loading;
+export const getCinemaCurrentLoading = createSelector(getMovieLoading, (loading) => {
+    return loading;
 });
 
 export const getCinemaUpdates = createSelector(getCinemaState, fromCinema.getUpdates);
@@ -66,13 +63,20 @@ export const getCinemaUpdates = createSelector(getCinemaState, fromCinema.getUpd
 // booking state
 const getBookingState = (state: State) => state.booking;
 
+export const getBookingLoading = createSelector(getMovieSelectedId, getCinemaCurrentScreenings, (movieId, screenings) => {
+    if (movieId == null || _.isEmpty(screenings) || _.isEmpty(screenings[movieId])) {
+        return false;
+    }
+
+    return screenings[movieId].loading;
+})
+
 export const getBookingAvailableShowtimes = createSelector(getMovieSelectedId, getCinemaCurrentScreenings, (movieId, screenings) => {
-    if (movieId == null || _.isEmpty(screenings) || _.isEmpty(screenings.map[movieId])) {
+    if (movieId == null || _.isEmpty(screenings) || _.isEmpty(screenings[movieId])) {
         return [];
     }
 
-    let showtimeIds = screenings.map[movieId];
-    return showtimeIds.map(id => screenings.showtimes[id]).filter(s => s !== undefined);
+    return _.values(screenings[movieId].showtimes);
 });
 
 const getBookingShowtimeId = createSelector(getBookingState, fromBooking.getShowtimeId);

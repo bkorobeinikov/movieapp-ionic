@@ -19,6 +19,14 @@ page-booking {
 
     font-size: 16px;
 
+    .spinner {
+        position: absolute; 
+        top: 50%;
+        left: 50%;
+        margin-top: -20px;
+        margin-left: -20px;
+    }
+
     .content {
 
         .scroll-content {
@@ -36,6 +44,10 @@ page-booking {
         }
 
         .booking-time {
+
+            padding-bottom: .1em;
+            margin-bottom: .3em;
+            border-bottom: 1px dashed #d8d8d8;
 
             .item {
                 width: auto;
@@ -214,6 +226,7 @@ page-booking {
         .seats-container {
             flex: 1;
             display: flex;
+            justify-content: center;
 
             margin: 0 -12px;
 

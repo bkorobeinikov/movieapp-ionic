@@ -26,8 +26,7 @@ import { ScreeningsViewModel } from "../../store/viewModels";
 })
 export class BookingPage {
 
-    public screenings$: Observable<ScreeningsViewModel>;
-    public screenings: ScreeningsViewModel;
+    public loading$: Observable<boolean>;
 
     public movie$: Observable<Movie>;
 
@@ -57,7 +56,7 @@ export class BookingPage {
         private navCtrl: NavController,
         private store: Store<State>) {
 
-        this.screenings$ = store.select(selectors.getCinemaCurrentScreenings);
+        this.loading$ = store.select(selectors.getBookingLoading);
 
         this.movie$ = store.select(selectors.getMovieSelected);
         this.showtimes$ = store.select(selectors.getBookingAvailableShowtimes);
@@ -69,11 +68,7 @@ export class BookingPage {
     }
 
     ngOnInit() {
-        let s = this.screenings$.subscribe(screenings => {
-            this.screenings = screenings;
-        });
-        this.subscriptions.add(s);
-        s = this.showtimes$.subscribe(showtimes => {
+        let s = this.showtimes$.subscribe(showtimes => {
             this.showtimes = showtimes;
             this.onShowtimesChange();
         });

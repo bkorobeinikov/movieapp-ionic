@@ -17,7 +17,7 @@ export class BookingCartComponent {
         return _.chain(seats).map(s => s.row).uniq().value();
     }
 
-    filterByRow(row: number, seats: CinemaHallSeat[]) {
+    filterByRow(row: string, seats: CinemaHallSeat[]) {
         return seats.filter(s => s.row == row);
     }
 

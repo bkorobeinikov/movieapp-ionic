@@ -51,7 +51,7 @@ export class CinemaEffects {
         // tslint:disable-next-line:no-unused-variable
         .mergeMap(([action, cinemaId]) => ([
             new actionsCinema.UpdateAction({ cinemaId: cinemaId }),
-            new actionsMovie.LoadAction({cinemaId: cinemaId}),
+            new actionsMovie.LoadAction({ cinemaId: cinemaId }),
             new actionsCinema.ShowtimeCheckAndLoadAction(cinemaId),
         ]));
 
@@ -82,35 +82,52 @@ export class CinemaEffects {
         });
 
     @Effect()
-    checkAndLoad$: Observable<Action> = this.actions$
-        .ofType(actionsCinema.ActionTypes.SHOWTIME_CHECK_AND_LOAD)
-        .map(toPayload)
-        .withLatestFrom(this.store.select(selectors.getCinemaAllScreenings))
-        .switchMap(([cinemaId, screenings]) => {
-            var cinemanScreenings = screenings[cinemaId];
-
-            if (cinemanScreenings == null ||
-                moment(cinemanScreenings.loadedAt).isBefore(moment().subtract(5, "minutes"))) {
-                return of(new actionsCinema.ShowtimeLoadAction(cinemaId));
-            }
-
-            return empty();
+    movieSelect: Observable<Action> = this.actions$
+        .ofType(actionsMovie.ActionTypes.SELECT)
+        .withLatestFrom(this.store.select(selectors.getCinemaCurrentId))
+        .map(([actionRaw, cinemaId]) => {
+            let action = <actionsMovie.SelectAction>actionRaw;
+            let movieId = action.payload;
+            return new actionsCinema.ShowtimeLoadAction({
+                cinemaId: cinemaId,
+                movieId: movieId
+            });
         });
+
+
+    // @Effect()
+    // checkAndLoad$: Observable<Action> = this.actions$
+    //     .ofType(actionsCinema.ActionTypes.SHOWTIME_CHECK_AND_LOAD)
+    //     .map(toPayload)
+    //     .withLatestFrom(this.store.select(selectors.getCinema))
+    //     .switchMap(([cinemaId, screenings]) => {
+    //         var cinemanScreenings = screenings[cinemaId];
+
+    //         if (cinemanScreenings == null ||
+    //             moment(cinemanScreenings.loadedAt).isBefore(moment().subtract(5, "minutes"))) {
+    //             return of(new actionsCinema.ShowtimeLoadAction(cinemaId));
+    //         }
+
+    //         return empty();
+    //     });
 
     @Effect()
     loadShowtimes$: Observable<Action> = this.actions$
         .ofType(actionsCinema.ActionTypes.SHOWTIME_LOAD)
-        .map(toPayload)
-        .switchMap((cinemaId) => {
+        .switchMap(actionRaw => {
+            let action = <actionsCinema.ShowtimeLoadAction>actionRaw;
+            let cinemaId = action.payload.cinemaId;
+            let movieId = action.payload.movieId;
 
-            const next$ = this.actions$.ofType(actionsCinema.ActionTypes.SHOWTIME_LOAD).skip(1);
-
-            return this.cinemaService.getShowtimes(cinemaId)
-                .takeUntil(next$)
-                .map(result => new actionsCinema.ShowtimeLoadSuccessAction(result))
-                .catch((err) => of(new actionsCinema.ShowtimeLoadFailAction({
-                    cinemaId: cinemaId,
-                })));
+            return this.cinemaService.getShowtimesByMovie(cinemaId, movieId)
+                .map(res => {
+                    return new actionsCinema.ShowtimeLoadSuccessAction({
+                        cinemaId: cinemaId,
+                        movieId: movieId,
+                        showtimes: res,
+                    });
+                })
+                .catch(() => of(new actionsCinema.ShowtimeLoadFailAction({ cinemaId: cinemaId, movieId: movieId })))
         });
 
     constructor(

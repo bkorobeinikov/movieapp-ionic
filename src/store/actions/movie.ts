@@ -36,6 +36,10 @@ export class LoadFailAction implements Action {
 export class SelectAction implements Action {
     readonly type = ActionTypes.SELECT;
 
+    /**
+     * 
+     * @param payload movie id
+     */
     constructor(public payload: string) { }
 }
 

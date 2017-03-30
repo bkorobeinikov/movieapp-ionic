@@ -10,5 +10,5 @@ export interface Ticket {
     techId: string;
     time: Date;
 
-    seats: { id: string, row: number, seat: number, price: number }[]
+    seats: { id: string, row: string, seat: string, price: number }[]
 }

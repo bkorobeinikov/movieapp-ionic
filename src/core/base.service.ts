@@ -10,13 +10,19 @@ import X2JS from 'x2js';
 
 import * as _ from 'lodash';
 
+import { Store } from "@ngrx/store";
+import { State } from "./../store/";
+
 export class BaseService {
     private headers: Headers;
 
-    constructor(private http: Http) {
+    constructor(
+        private http: Http,
+        protected store?: Store<State>) {
         this.headers = new Headers();
         this.headers.append('Content-Type', 'text/xml');
         this.headers.append('Access-Control-Allow-Origin', '*');
+        console.log("base:service", store);
     }
 
     protected getData<T>(url: string, options?: RequestOptionsArgs): Observable<T> {

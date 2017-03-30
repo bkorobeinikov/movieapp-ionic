@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Observable } from "rxjs/Observable";
+import 'rxjs/add/observable/combineLatest'
 import 'rxjs/add/observable/forkJoin'
 import 'rxjs/add/observable/concat'
+import 'rxjs/add/operator/last'
 
 import { Cinema, Showtime, CinemaHallSeat, CinemaHall, CinemaMovie } from "../store/models";
 import { Http, } from "@angular/http";
@@ -13,7 +15,10 @@ import moment from 'moment';
 
 import * as _ from 'lodash';
 
-import { PlanetaKinoV2City, PlanetaKinoTheater, PlanetaKinoV2Theater } from "./planetakino-api/models";
+import { PlanetaKinoV2City, PlanetaKinoTheater, PlanetaKinoV2Theater, PlanetaKinoV2Hall, PlanetaKinoV2Showtime } from "./planetakino-api/models";
+import { Store } from "@ngrx/store";
+import { State } from "./../store";
+import * as selectors from './../store/selectors';
 
 @Injectable()
 export class CinemaService extends BaseService {
@@ -30,8 +35,12 @@ export class CinemaService extends BaseService {
         "pk-yalta": "http://planetakino.ua/yalta/ua/showtimes/xml/"
     };
 
-    constructor(http: Http, private planetakinoService: PlanetaKinoV2Service) {
-        super(http);
+    constructor(
+        http: Http,
+        store: Store<State>,
+        private planetakinoService: PlanetaKinoV2Service, ) {
+        super(http, store);
+        console.log("cinema service", store);
     }
 
     getCinemas(): Observable<Cinema[]> {
@@ -53,6 +62,28 @@ export class CinemaService extends BaseService {
     getCinemasByCityGroup(cityGroupId: string): Observable<Cinema[]> {
         return this.planetakinoService.getTheaters({ cityGroupId: cityGroupId })
             .map(res => res.map(t => this.mapToCinemaWithTheater(t)));
+    }
+
+    getShowtimesByMovie(cinemaId: string, movieId: string): Observable<Showtime[]> {
+        return this.startWithCinema(cinemaId).flatMap(cinema => {
+            let cityId = cinema.city.id;
+
+            return this.planetakinoService.getMovieDates({
+                cityId: cityId,
+                movieId: movieId
+            }).flatMap((res) => {
+
+                let requests = res.map(date => this.planetakinoService.getMovieShowtimes({
+                    cityId: cityId,
+                    movieId: movieId,
+                    date: date
+                }));
+
+                return Observable.combineLatest(requests).last().map(res1 => {
+                    return _.flatten(res1).map(s => this.mapToShowtime(cinemaId, movieId, s));
+                });
+            });
+        }).delay(2000);
     }
 
     getShowtimes(cinemaId: string): Observable<{ cinemaId: string, showtimes: Showtime[], moviesMap: CinemaMovie[] }> {
@@ -83,49 +114,19 @@ export class CinemaService extends BaseService {
             });
     }
 
-    getHall(showtime: Showtime): Observable<CinemaHall> {
+    getHall(cityId: string, showtime: Showtime): Observable<CinemaHall> {
+        return this.planetakinoService.getHall({
+            cityId: cityId,
+            showtimeId: showtime.id,
+            cinemaId: showtime.cinemaId,
+        }).map(res => {
+            return this.mapToHall(res);
+        });
+    }
 
-        var seats: { [seatId: string]: CinemaHallSeat } = {};
-
-        for (let r = 0; r < 15; r++) {
-            for (let c = 0; c < 23; c++) {
-                let style = {
-                    width: 30,
-                    height: 34,
-                    marginLeft: 2,
-                    marginRight: 2,
-                    marginTop: 4,
-                    marginBottom: 4
-                };
-
-                var seat: CinemaHallSeat = {
-                    id: `${showtime.cinemaId}_${showtime.hallId}_${r + 1}_${c + 1}`,
-
-                    x: c * (style.width + style.marginLeft + style.marginRight),
-                    y: r * (style.height + style.marginBottom + style.marginTop),
-                    width: style.width,
-                    height: style.height,
-
-                    row: r + 1,
-                    seat: c + 1,
-
-                    available: Math.round(Math.random() * 10) % 5 != 0,
-
-                    price: 115,
-                    bonus: 3600,
-                };
-                seats[seat.id] = seat;
-            }
-
-        }
-
-        let hall: CinemaHall = {
-            id: showtime.hallId,
-            name: "Hall " + showtime.hallId,
-            seats: seats,
-        };
-
-        return Observable.of(hall).delay(300);
+    protected startWithCinema(cinemaId): Observable<Cinema> {
+        return this.store.select(selectors.getCinemaEntities)
+            .first().map(cinemas => cinemas[cinemaId]);
     }
 
     private parseShow(showObj: any): Showtime {
@@ -192,5 +193,55 @@ export class CinemaService extends BaseService {
             vatRate: t.VATrate,
             commissionForSaleInBonus: t.CommissionForSaleInBonus
         };
+    }
+
+    private mapToHall(h: PlanetaKinoV2Hall): CinemaHall {
+        let seats: { [seatId: string]: CinemaHallSeat } = {};
+
+        h.seat.map(s => {
+            seats[s._id] = {
+                id: s._id,
+                row: s._row,
+                seat: s._seat,
+                x: parseInt(s._x),
+                y: parseInt(s._y),
+                vip: false,
+                available: parseInt(s._state) === 0,
+                price: parseFloat(s._price),
+                bonus: parseFloat(s._price) * 100,
+                width: 18,
+                height: 28,
+            };
+        });
+
+        try {
+            let seatsValues = _.values(seats);
+            let minPrice = _.minBy(seatsValues, s => s.price).price;
+            seatsValues.filter(s => s.price > minPrice).forEach(s => s.vip = true);
+            console.log('seats', seats);
+        } catch (err) {
+            console.log(err);
+        }
+
+        return {
+            id: h._id,
+            name: h._name,
+            sectorId: h._sectorId,
+            bookingFee: parseFloat(h._bookingFee),
+            purchaseFee: parseFloat(h._purchaseFee),
+            ticketsLeftForPurchase: parseInt(h._ticketsLeftForPurchasing),
+            seats: seats,
+        };
+    }
+
+    private mapToShowtime(cinemaId: string, movieId: string, s: PlanetaKinoV2Showtime): Showtime {
+        return {
+            id: s.showtimeId,
+            cinemaId: cinemaId,
+            hallId: undefined,
+            movieId: movieId,
+            techId: s.technologyId,
+            time: moment(s.time.__text)
+        }
     }
 }

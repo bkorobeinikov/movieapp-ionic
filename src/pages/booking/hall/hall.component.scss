@@ -1,17 +1,10 @@
 hall {
+    width: 100%;
     flex: 1;
     display: flex;
-    position: relative;
 
-    .content { 
-        position: absolute; 
-        top: 0; 
-        left: 0; 
-        bottom: 0; 
-        right: 0; 
-
+    .hall-content { 
         width: 100%;
-        height: 100%;
 
         touch-action: none;
 
@@ -21,13 +14,13 @@ hall {
             .screen {
                 height: 10px;
 
-                fill: gray;
+                fill: #ddd; 
             }
 
             .text {
-                font-size: 32px;
+                font-size: 14px;
 
-                fill: gray;
+                fill: #aaa;
             }
         }
 
@@ -40,19 +33,37 @@ hall {
                     fill: #1aa3e0;
                 }
 
+                &.vip.available {
+                    fill: #DD4459;
+                }
+
                 &.selected {
                     fill: orange;
                 }
             }
 
             text {
-                font-size: 24px;
+                font-size: 10px;
+
                 text-anchor: middle;
                 alignment-baseline: central;
                 
-                fill: white;
+                fill: darken(#ddd, 10%);
 
                 pointer-events: none;
+
+                &.available {
+                    fill: lighten(#1aa3e0, 20%);
+                }
+
+                &.vip.available {
+                    fill: lighten(#DD4459, 30%);
+                }
+
+                &.selected {
+                    font-size: 12px;
+                    fill: white;
+                }
             }
         }
     }

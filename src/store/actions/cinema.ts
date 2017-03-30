@@ -89,23 +89,22 @@ export class ShowtimeCheckAndLoadAction implements Action {
 export class ShowtimeLoadAction implements Action {
     readonly type = ActionTypes.SHOWTIME_LOAD;
 
-    /**
-     * 
-     * @param payload cinema id
-     */
-    constructor(public payload: string) { }
+    constructor(public payload: {
+        cinemaId: string,
+        movieId: string,
+    }) { }
 }
 
 export class ShowtimeLoadSuccessAction implements Action {
     readonly type = ActionTypes.SHOWTIME_LOAD_SUCCESS;
 
-    constructor(public payload: { cinemaId: string, showtimes: Showtime[], moviesMap: CinemaMovie[] }) { }
+    constructor(public payload: { cinemaId: string, movieId: string, showtimes: Showtime[] }) { }
 }
 
 export class ShowtimeLoadFailAction implements Action {
     readonly type = ActionTypes.SHOWTIME_LOAD_FAIL;
 
-    constructor(public payload: { cinemaId: string }) { }
+    constructor(public payload: { cinemaId: string, movieId: string }) { }
 }
 
 export type Actions
@@ -113,7 +112,7 @@ export type Actions
     | LoadSuccessAction
     | LoadFailAction
     | UpdateAction
-    | UpdateSuccessAction 
+    | UpdateSuccessAction
     | UpdateFailAction
     | ChangeCurrentAction
     | ShowtimeCheckAndLoadAction

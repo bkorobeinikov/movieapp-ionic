@@ -5,7 +5,7 @@ import { Http, RequestOptionsArgs, Headers, URLSearchParams } from "@angular/htt
 
 import { BaseService } from "./../base.service";
 
-import { PlanetaKinoV2City, PlanetaKinoV2Movie, PlanetaKinoV2Theater, PlanetaKinoTheater } from './models';
+import { PlanetaKinoV2City, PlanetaKinoV2Movie, PlanetaKinoV2Theater, PlanetaKinoTheater, PlanetaKinoV2Hall, PlanetaKinoV2Showtime } from './models';
 
 import moment from 'moment';
 
@@ -18,6 +18,9 @@ export class PlanetaKinoV2Service extends BaseService {
     private citiesUrl = "/cities";
     private moviesUrl = "/movies";
     private theatersUrl = "/theaters";
+    private hallSchemeUrl = "/hall-scheme";
+    private movieDatesUrl = "/movie-dates";
+    private showtimesUrl = "/showtimes";
 
     private theatersAllUrl = "http://planetakino.ua/api/theatres";
 
@@ -36,7 +39,6 @@ export class PlanetaKinoV2Service extends BaseService {
         let options = this.buildOptions(data.cityId);
         options.search = this.buildParams(data);
         return this.getData<any>(this.moviesUrl, options).map(res => {
-            console.log('movies', res.inTheaters.movie);
             return {
                 inTheaters: res.inTheaters.movie,
                 soon: res.soon.movie
@@ -57,6 +59,42 @@ export class PlanetaKinoV2Service extends BaseService {
         });
         return this.getData<any>(this.theatersUrl, options).map(res => {
             return res.theatres.theatre;
+        });
+    }
+
+    getHall(data: { cityId: string, showtimeId: string, cinemaId: string }): Observable<PlanetaKinoV2Hall> {
+        let options = this.buildOptions(data.cityId);
+        options.search = this.buildParams({
+            showtimeId: data.showtimeId,
+            theaterId: data.cinemaId,
+        });
+        return this.getData<any>(this.hallSchemeUrl, options).map(res => {
+            return res.hall;
+        });
+    }
+
+    getMovieDates(data: { movieId: string, cityId: string }): Observable<Date[]> {
+        let options = this.buildOptions(data.cityId);
+        options.search = this.buildParams({
+            movieId: data.movieId,
+            cityId: data.cityId,
+        });
+
+        return this.getData<any>(this.movieDatesUrl, options).map(res => {
+            return res.showDates.showDate.map(d => moment(d).toDate());
+        });
+    }
+
+    getMovieShowtimes(data: { movieId: string, cityId: string, date: Date}) : Observable<PlanetaKinoV2Showtime[]> {
+        let options = this.buildOptions(data.cityId);
+        options.search = this.buildParams({
+            movieId: data.movieId,
+            cityId: data.cityId,
+            date: moment(data.date).format("YYYY-MM-DD"),
+        });
+
+        return this.getData<any>(this.showtimesUrl, options).map(res => {
+            return res.theaters.theater.showtimes.showtime;
         });
     }
 

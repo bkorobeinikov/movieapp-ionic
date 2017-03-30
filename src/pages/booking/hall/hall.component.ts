@@ -42,7 +42,7 @@ export class HallComponent implements OnInit {
         var canvaHeight = lastBottom.y + lastBottom.height;
 
         this.width = canvaWidth;
-        this.height = canvaHeight + 100;
+        this.height = canvaHeight + 50;
     }
 
     randomColor() {

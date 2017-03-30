@@ -13,7 +13,7 @@ export interface State {
     loading: boolean,
     updates: { [cinemaId: string]: { updating: boolean, updatedAt: Date } },
 
-    screenings: { [cinemaId: string]: ScreeningsViewModel },
+    screenings: { [cinemaId: string]: { [movieId: string]: ScreeningsViewModel } },
 }
 
 export const initialState: State = {
@@ -128,30 +128,26 @@ export function reducer(state = initialState, actionRaw: cinema.Actions): State 
         }
         case cinema.ActionTypes.SHOWTIME_LOAD: {
             let action = <cinema.ShowtimeLoadAction>actionRaw;
-            let cinemaId = action.payload;
+            let cinemaId = action.payload.cinemaId;
+            let movieId = action.payload.movieId;
 
             return Object.assign({}, state, {
                 screenings: Object.assign({}, state.screenings, {
-                    [cinemaId]: {
-                        movies: [],
-                        showtimes: {},
-                        map: {},
-                        loading: true,
-                        loaded: false,
-                        loadedAt: null,
-                    } as ScreeningsViewModel,
+                    [cinemaId]: Object.assign({}, state.screenings[cinemaId], {
+                        [movieId]: <ScreeningsViewModel>{
+                            loading: true,
+                        },
+                    }),
                 }),
             });
         }
         case cinema.ActionTypes.SHOWTIME_LOAD_SUCCESS: {
             let action = <cinema.ShowtimeLoadSuccessAction>actionRaw;
             let cinemaId = action.payload.cinemaId;
+            let movieId = action.payload.movieId;
 
             let screenings: ScreeningsViewModel = {
-                movies: action.payload.moviesMap,
                 showtimes: _.keyBy(action.payload.showtimes, s => s.id),
-                map: _.chain(action.payload.showtimes).groupBy(s => s.movieId)
-                    .mapValues((arr: Showtime[]) => arr.map(s => s.id)).value(),
                 loading: false,
                 loaded: true,
                 loadedAt: new Date(),
@@ -159,20 +155,25 @@ export function reducer(state = initialState, actionRaw: cinema.Actions): State 
 
             return Object.assign({}, state, {
                 screenings: Object.assign({}, state.screenings, {
-                    [cinemaId]: screenings
+                    [cinemaId]: Object.assign({}, state.screenings[cinemaId], {
+                        [movieId]: screenings
+                    }),
                 }),
             });
         }
         case cinema.ActionTypes.SHOWTIME_LOAD_FAIL: {
             let action = <cinema.ShowtimeLoadFailAction>actionRaw;
             let cinemaId = action.payload.cinemaId;
+            let movieId = action.payload.movieId;
 
             return Object.assign({}, state, {
                 screenings: Object.assign({}, state.screenings, {
-                    [cinemaId]: {
-                        loading: false,
-                        loaded: false,
-                    }
+                    [cinemaId]: Object.assign({}, state, state.screenings[cinemaId], {
+                        [movieId]: {
+                            loading: false,
+                            loaded: false,
+                        },
+                    }),
                 })
             });
         }
@@ -191,7 +192,7 @@ export const getCurrentCinema = createSelector(getCinemas, getCurrentCinemaId, (
 
 export const getUpdates = (state: State) => state.updates;
 
-export const getScreenings = (state: State) => state.screenings;
-export const getCurrentScreenings = createSelector(getCurrentCinemaId, getScreenings, (cinemaId, screenings) => {
+export const getAllScreeningEntities = (state: State) => state.screenings;
+export const getCurrentCinemaShowtimes = createSelector(getCurrentCinemaId, getAllScreeningEntities, (cinemaId, screenings) => {
     return screenings[cinemaId];
 });
