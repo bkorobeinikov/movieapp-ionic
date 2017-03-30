@@ -15,7 +15,10 @@ import * as _ from 'lodash';
 const getMovieState = (state: State) => state.movie;
 
 export const getMovieEntities = createSelector(getMovieState, fromMovie.getEntities);
-const getMovieMapToCinema = createSelector(getMovieState, fromMovie.getMapToCinema);
+export const getMovieEntitiesUidKey = createSelector(getMovieEntities, (entities) => {
+    return _.keyBy(_.values(entities), m => m.uid);
+});
+export const getMovieMapToCinema = createSelector(getMovieState, fromMovie.getMapToCinema);
 const getMovieLoading = createSelector(getMovieState, fromMovie.getLoading);
 
 export const getMovieSelectedId = createSelector(getMovieState, fromMovie.getSelectedId);

@@ -7,6 +7,7 @@ import * as _ from 'lodash';
 
 export interface State {
     entities: { [movieId: string]: Movie };
+    //mapUidToId: { [uid: string]: string };
 
     mapMovieToCinema: {
         [cinemaId: string]: {
@@ -22,6 +23,7 @@ export interface State {
 
 export const initialState: State = {
     entities: {},
+    //mapUidToId: {},
     mapMovieToCinema: {},
 
     loading: false,
@@ -45,6 +47,12 @@ export function reducer(state = initialState, actionRaw: movie.Actions): State {
                         [movie.id]: movie,
                     });
                 }, state.entities);
+            // let mapUidToId = _.flatten([action.payload.released, action.payload.other])
+            //     .reduce((map, movie) => {
+            //         return Object.assign({}, entities, {
+            //             [movie.uid]: movie.id
+            //         });
+            //     }, state.mapUidToId);
 
             let map = {
                 releasedIds: action.payload.released.map(m => m.id),
@@ -53,6 +61,7 @@ export function reducer(state = initialState, actionRaw: movie.Actions): State {
 
             return Object.assign({}, state, {
                 entities: entities,
+                //mapUidToId: mapUidToId,
                 mapMovieToCinema: Object.assign({}, state.mapMovieToCinema, {
                     [action.payload.cinemaId]: map
                 }),

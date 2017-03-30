@@ -11,15 +11,15 @@
                 <div class="movie-summary">
                     <div class="poster">
                         <div class="content">
-                            <img src="{{movie.poster}}">
+                            <img src="{{movie?.poster}}">
                         </div>
                     </div>
                     <div class="item-content">
-                        <span class="title">{{movie.name}}</span>
-                        <span class="country">{{movie.countries | join: ", "}}</span>
-                        <span class="genre ">{{movie.genres | join:" | "}}</span>
+                        <span class="title">{{movie?.name}}</span>
+                        <span class="country">{{movie?.countries | join: ", "}}</span>
+                        <span class="genre ">{{movie?.genres | join:" | "}}</span>
                         <span class="line"> 
-                            <span class="time">{{duration(movie.duration)}}</span>
+                            <span class="time">{{duration(movie?.duration)}}</span>
                         </span>
                         <span class="tech">{{ticket.techId}}</span>
                     </div> 
@@ -66,7 +66,7 @@
                             </div>
                         </div>
                         <div class="seat-barcode">
-                            <barcode [data]="seat.ticketBarcode" width="3"></barcode>
+                            <barcode [data]="seat.ticketBarcode" format="EAN13" width="2"></barcode>
                         </div>
                     </ion-slide>
                 </ion-slides>

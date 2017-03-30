@@ -1,7 +1,7 @@
 export interface Ticket {
     id: string;
 
-    movieId: string;
+    movieUid: string;
 
     cinemaId: string;
 

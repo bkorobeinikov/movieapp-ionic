@@ -48,6 +48,7 @@ export class MovieService extends BaseService {
 
         return {
             id: movieObj.id,
+            uid: movieObj.uid,
             name: movieObj.name,
             originalName: movieObj.nameOriginal,
 

@@ -19,7 +19,7 @@ import moment from 'moment';
 export class TicketsPage implements OnInit, OnDestroy {
 
     public tickets: Ticket[];
-    public movies: { [movieId: string]: Movie };
+    public movies: { [movieUId: string]: Movie };
     public cinemas: { [cinemaId: string]: Cinema }
 
     private subscription: Subscription = new Subscription();
@@ -32,15 +32,12 @@ export class TicketsPage implements OnInit, OnDestroy {
     ) {
 
         let s = this.store.select(selectors.getTicketAll)
-            .withLatestFrom(this.store.select(selectors.getMovieEntities))
+            .withLatestFrom(this.store.select(selectors.getMovieEntitiesUidKey))
             .withLatestFrom(this.store.select(selectors.getCinemaEntities))
             .subscribe(([[tickets, movies], cinemas]) => {
                 this.tickets = tickets;
                 this.movies = movies;
                 this.cinemas = cinemas;
-
-                if (tickets != null && movies != null)
-                    console.log('ticket', tickets, movies[tickets[0].movieId]);
             });
 
         this.subscription.add(s);

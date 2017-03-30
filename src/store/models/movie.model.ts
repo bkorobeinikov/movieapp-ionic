@@ -6,6 +6,7 @@ export interface MovieRating {
 
 export interface Movie {
     id: string;
+    uid: string;
 
     name: string;
     originalName: string;

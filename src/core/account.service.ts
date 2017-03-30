@@ -106,7 +106,7 @@ export class AccountService extends BaseService {
             cinemaId: t.theaterId,
             hallId: t.HallId,
             hallName: t.HallName,
-            movieId: parseInt(t.movieId).toString(),
+            movieUid: t.movieId,
             techId: t.technology.id,
             showtimeId: t.showtimeId,
             time: moment(t.movieDate).toDate(),

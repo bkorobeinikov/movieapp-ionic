@@ -86,7 +86,7 @@ export class PaymentPage {
             // load real ticket
             let ticket: Ticket = {
                 id: Math.round(Math.random() * 100000000) + "",
-                movieId: this.order.movie.id,
+                movieUid: this.order.movie.id,
                 cinemaId: this.order.cinema.id,
                 hallId: this.order.hall.id,
                 hallName: this.order.hall.name,

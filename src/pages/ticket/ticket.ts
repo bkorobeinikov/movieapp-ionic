@@ -29,14 +29,14 @@ export class TicketPage {
     ) {
 
         let s = store.select(selectors.getTicketSelected)
-            .withLatestFrom(store.select(selectors.getMovieEntities))
+            .withLatestFrom(store.select(selectors.getMovieEntitiesUidKey))
             .withLatestFrom(store.select(selectors.getCinemaEntities))
             .subscribe(([[ticket, movies], cinemas]) => {
                 if (ticket == null)
                     return null;
 
                 this.ticket = ticket;
-                this.movie = movies[ticket.movieId];
+                this.movie = movies[ticket.movieUid];
                 this.cinema = cinemas[ticket.cinemaId];
                 this.hall = {
                     id: ticket.hallId,
