@@ -52,7 +52,7 @@ export interface PlanetaKinoV2Profile {
                             purchaseFee: string;
                             typeDiscount: string;
                             valueDiscount: string;
-                        },
+                        }[],
                         row: string;
                         seat: string;
                         seatId: string;

@@ -50,7 +50,7 @@ export class AccountEffects {
         .ofType(actionsAccount.ActionTypes.UPDATE)
         .switchMap(action => this.accountService.getProfile())
         .map(res => {
-            return new actionsAccount.UpdateSuccessAction({ account: res.data })
+            return new actionsAccount.UpdateSuccessAction({ account: res.data.account, tickets: res.data.tickets })
         }).catch((res: ServiceResponse<any>) => {
             if (res.code == "-100") {
                 return of(new actionsAccount.UpdateFailAction({ requireLogin: true }));
@@ -88,7 +88,7 @@ export class AccountEffects {
         //.takeUntil(this.actions$.ofType(actionsAccount.ActionTypes.LOGOUT))
         .switchMap(() => this.accountService.getProfile())
         .map(res => {
-            return new actionsAccount.UpdateSuccessAction({ account: res.data });
+            return new actionsAccount.UpdateSuccessAction({ account: res.data.account, tickets: res.data.tickets });
         })
         .catch((res: ServiceResponse<any>) => {
             if (res.code == "-100") {
@@ -107,7 +107,7 @@ export class AccountEffects {
                     })
                     .map((res) => new actionsAccount.LoginSuccessAction({ authToken: res.data.authToken }))
                     .switchMap(() => this.accountService.getProfile())
-                    .map(res => new actionsAccount.UpdateSuccessAction({ account: res.data }))
+                    .map(res => new actionsAccount.UpdateSuccessAction({ account: res.data.account, tickets: res.data.tickets, }))
                     .catch(() => of(new actionsAccount.LogoutAction()));
             }
 

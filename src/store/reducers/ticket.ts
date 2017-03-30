@@ -1,6 +1,7 @@
 import { createSelector } from 'reselect';
 
 import * as actionsTicket from './../actions/ticket';
+import * as actionsAccount from './../actions/account';
 import * as _ from 'lodash';
 
 import { Ticket } from './../models';
@@ -23,7 +24,7 @@ export const initialState: State = {
     selectedTicketId: null,
 };
 
-export function reducer(state: State, actionRaw: actionsTicket.Actions) {
+export function reducer(state: State, actionRaw: actionsTicket.Actions | actionsAccount.UpdateSuccessAction) {
     switch (actionRaw.type) {
         case actionsTicket.ActionTypes.LOAD: {
             return Object.assign({}, state, {
@@ -54,6 +55,14 @@ export function reducer(state: State, actionRaw: actionsTicket.Actions) {
 
             return Object.assign({}, state, {
                 selectedTicketId: action.payload,
+            });
+        }
+        case actionsAccount.ActionTypes.UPDATE_SUCCESS: {
+            let action = <actionsAccount.UpdateSuccessAction>actionRaw;
+            let tickets = _.keyBy(action.payload.tickets, t => t.id);
+
+            return Object.assign({}, state, {
+                tickets: tickets,
             });
         }
         default: {

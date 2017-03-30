@@ -1,7 +1,7 @@
 import { Action } from '@ngrx/store';
 import { type } from './../util';
 
-import { Account } from './../models';
+import { Account, Ticket } from './../models';
 
 export const ActionTypes = {
     LOGIN: type("[Account] Login"),
@@ -68,7 +68,7 @@ export class UpdateAction implements Action {
 export class UpdateSuccessAction implements Action {
     readonly type = ActionTypes.UPDATE_SUCCESS;
 
-    constructor(public payload: { account: Account }) { }
+    constructor(public payload: { account: Account, tickets: Ticket[] }) { }
 }
 
 export class UpdateFailAction implements Action {

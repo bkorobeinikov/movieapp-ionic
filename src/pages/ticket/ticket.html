@@ -54,7 +54,7 @@
                         <div class="seat-info seat-info-other">
                             <div class="price">
                                 <span>price</span>
-                                <span>{{seat.price}}</span>
+                                <span>₴{{seat.price.priceTicketInclDiscount}}</span>
                             </div>
                             <div class="date">
                                 <span>date</span>
@@ -66,7 +66,7 @@
                             </div>
                         </div>
                         <div class="seat-barcode">
-                            <barcode [data]="seat.id" width="3"></barcode>
+                            <barcode [data]="seat.ticketBarcode" width="3"></barcode>
                         </div>
                     </ion-slide>
                 </ion-slides>

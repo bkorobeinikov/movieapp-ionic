@@ -38,6 +38,9 @@ export class TicketsPage implements OnInit, OnDestroy {
                 this.tickets = tickets;
                 this.movies = movies;
                 this.cinemas = cinemas;
+
+                if (tickets != null && movies != null)
+                    console.log('ticket', tickets, movies[tickets[0].movieId]);
             });
 
         this.subscription.add(s);
