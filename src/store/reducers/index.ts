@@ -1,6 +1,7 @@
 import { compose } from '@ngrx/core/compose';
 import { combineReducers, ActionReducer } from '@ngrx/store';
 import { storeFreeze } from 'ngrx-store-freeze';
+import { localStorageSync } from 'ngrx-store-localstorage';
 
 import * as fromMovie from './movie';
 import * as fromUi from './ui';
@@ -36,8 +37,9 @@ const reducers = {
     account: fromAccount.reducer,
 };
 
-const devReducer: ActionReducer<State> = compose(storeFreeze, combineReducers)(reducers);
-const prodReducer: ActionReducer<State> = combineReducers(reducers);
+const withLocalStorage = localStorageSync(["movie", "cinema", "ticket", "account"], true);
+const devReducer: ActionReducer<State> = compose(withLocalStorage, storeFreeze, combineReducers)(reducers);
+const prodReducer: ActionReducer<State> = compose(withLocalStorage, combineReducers)(reducers);
 
 export function reducer(state: State, action: any) {
     const production = false;

@@ -4,12 +4,19 @@ import { type } from './../util';
 import { Movie } from './../models';
 
 export const ActionTypes = {
+    LOAD_CHECK_CACHE: type("[Movie] Load Check Cache"),
     LOAD: type("[Movie] Load"),
     LOAD_SUCCESS: type("[Movie] Load Success"),
     LOAD_FAIL: type("[Movie] Load Fail"),
 
     SELECT: type("[Movie] Select"),
 };
+
+export class LoadCheckCacheAction implements Action {
+    readonly type = ActionTypes.LOAD_CHECK_CACHE;
+
+    constructor(public payload: { cinemaId: string }) { }
+}
 
 export class LoadAction implements Action {
     readonly type = ActionTypes.LOAD;
@@ -44,7 +51,8 @@ export class SelectAction implements Action {
 }
 
 export type Actions
-    = LoadAction
+    = LoadCheckCacheAction
+    | LoadAction
     | LoadSuccessAction
     | LoadFailAction
     | SelectAction;

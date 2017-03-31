@@ -12,7 +12,10 @@ export interface State {
     mapMovieToCinema: {
         [cinemaId: string]: {
             releasedIds: string[]
-            otherIds: string[]
+            otherIds: string[],
+
+            loading: true,
+            loadedAt: Date,
         }
     };
 
@@ -31,10 +34,20 @@ export const initialState: State = {
     selectedId: null,
 };
 
-export function reducer(state = initialState, actionRaw: movie.Actions): State {
+export function reducer(state: State = initialState, actionRaw: movie.Actions): State {
     switch (actionRaw.type) {
         case movie.ActionTypes.LOAD: {
+            let action = <movie.LoadAction>actionRaw;
+            let cinemaId = action.payload.cinemaId;
+
             return Object.assign({}, state, {
+                mapMovieToCinema: Object.assign({}, state.mapMovieToCinema, {
+                    [cinemaId]: Object.assign({}, state.mapMovieToCinema[cinemaId], {
+                        releasedIds: [],
+                        otherIds: [],
+                        loading: true,
+                    }),
+                }),
                 loading: true,
             });
         }
@@ -47,21 +60,16 @@ export function reducer(state = initialState, actionRaw: movie.Actions): State {
                         [movie.id]: movie,
                     });
                 }, state.entities);
-            // let mapUidToId = _.flatten([action.payload.released, action.payload.other])
-            //     .reduce((map, movie) => {
-            //         return Object.assign({}, entities, {
-            //             [movie.uid]: movie.id
-            //         });
-            //     }, state.mapUidToId);
 
             let map = {
                 releasedIds: action.payload.released.map(m => m.id),
                 otherIds: action.payload.other.map(m => m.id),
+                loading: false,
+                loadedAt: new Date(),
             };
 
             return Object.assign({}, state, {
                 entities: entities,
-                //mapUidToId: mapUidToId,
                 mapMovieToCinema: Object.assign({}, state.mapMovieToCinema, {
                     [action.payload.cinemaId]: map
                 }),
@@ -69,7 +77,15 @@ export function reducer(state = initialState, actionRaw: movie.Actions): State {
             });
         }
         case movie.ActionTypes.LOAD_FAIL: {
+            let action = <movie.LoadFailAction>actionRaw;
+            let cinemaId = action.payload.cinemaId;
+
             return Object.assign({}, state, {
+                mapMovieToCinema: Object.assign({}, state.mapMovieToCinema, {
+                    [cinemaId]: Object.assign({}, state.mapMovieToCinema[cinemaId], {
+                        loading: false,
+                    }),
+                }),
                 loading: false,
             });
         }

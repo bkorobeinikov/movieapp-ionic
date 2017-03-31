@@ -26,7 +26,7 @@ export const initialState: State = {
     screenings: {},
 };
 
-export function reducer(state = initialState, actionRaw: cinema.Actions): State {
+export function reducer(state: State = initialState, actionRaw: cinema.Actions): State {
     switch (actionRaw.type) {
         case cinema.ActionTypes.LOAD: {
 

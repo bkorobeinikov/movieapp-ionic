@@ -49,7 +49,7 @@ export const initialState: State = {
     updatedAt: null,
 };
 
-export function reducer(state: State, actionRaw: actionsAccount.Actions | actionsCinema.ChangeCurrentAction) {
+export function reducer(state: State = initialState, actionRaw: actionsAccount.Actions | actionsCinema.ChangeCurrentAction) {
     switch (actionRaw.type) {
         case actionsAccount.ActionTypes.LOGIN: {
             let action = <actionsAccount.LoginAction>actionRaw;
