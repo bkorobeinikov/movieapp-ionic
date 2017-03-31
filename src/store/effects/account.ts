@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 
 import { Observable } from "rxjs/Observable";
+import { empty } from 'rxjs/observable/empty';
 import { of } from 'rxjs/observable/of';
 import 'rxjs/add/observable/from';
 import 'rxjs/add/observable/merge';
@@ -63,13 +64,14 @@ export class AccountEffects {
                 });
         });
 
-    @Effect({ dispatch: false })
+    @Effect()
     logout$ = this.actions$
         .ofType(actionsAccount.ActionTypes.LOGOUT)
-        .switchMap(action => {
-            return this.accountService.logout();
+        .switchMap(() => {
+            return this.accountService.logout()
+                .map(() => new actionsAccount.LogoutSuccess())
+                .catch(() => of(new actionsAccount.LogoutSuccess()));
         });
-
 
     @Effect()
     onUpdateFail$ = this.actions$

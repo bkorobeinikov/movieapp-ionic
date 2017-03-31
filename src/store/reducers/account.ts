@@ -93,7 +93,7 @@ export function reducer(state: State = initialState, actionRaw: actionsAccount.A
                 updatedAt: null,
             });
         }
-        case actionsAccount.ActionTypes.LOGOUT: {
+        case actionsAccount.ActionTypes.LOGOUT_SUCCESS: {
             return Object.assign({}, state, {
                 account: null,
                 auth: {},
@@ -116,7 +116,7 @@ export function reducer(state: State = initialState, actionRaw: actionsAccount.A
         case actionsAccount.ActionTypes.UPDATE_SUCCESS: {
             if (actionRaw.type == actionsAccount.ActionTypes.VERIFY_AUTH_UPDATE_SUCCESS)
                 actionRaw = (<actionsAccount.VerifyAuthUpdateSuccessAction>actionRaw).payload;
-                
+
             let action = <actionsAccount.UpdateSuccessAction>actionRaw;
             let account = action.payload.account;
 

@@ -78,4 +78,37 @@ export class AccountService extends BaseService {
                 });
             });;
     }
+
+    sendActivationSms(phone: string): Observable<ServiceResponse<{ smsCode: string }>> {
+        return this.planetaKinoService.sendActivationSms({ phone: phone })
+            .map(res => {
+                return { smsCode: res.data.smsCode };
+            })
+            .catch((err: PlanetaKinoV2JsonResponse<any>) => {
+                return Observable.throw({
+                    code: err.code,
+                    message: err.message,
+                });
+            });
+    }
+
+    register(email: string, password: string, smsCode: string, phone: string): Observable<ServiceResponse<any>> {
+        return this.planetaKinoService.register({
+            email: email,
+            phone: phone,
+            smsCode: smsCode,
+            password: password,
+        }).map((res) => {
+            return {
+                code: res.code,
+                message: res.message,
+                data: res.data,
+            };
+        }).catch((err: PlanetaKinoV2JsonResponse<any>) => {
+            return Observable.throw({
+                code: err.code,
+                message: err.message,
+            });
+        });
+    }
 }

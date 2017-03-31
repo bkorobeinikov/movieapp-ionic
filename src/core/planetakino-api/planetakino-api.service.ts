@@ -30,13 +30,13 @@ export class PlanetaKinoV2Service extends BaseService {
     private hallSchemeUrl = this.baseUrl + "/hall-scheme";
     private movieDatesUrl = this.baseUrl + "/movie-dates";
     private showtimesUrl = this.baseUrl + "/showtimes";
-    
-
 
     private baseUrl2 = "https://cabinet.planeta-kino.com.ua/mapiv2";
     private profileUrl = this.baseUrl2 + "/GetProfile";
     private loginUrl = this.baseUrl2 + "/Login";
     private logoutUrl = this.baseUrl2 + "/Logout";
+    private sendActivationSmsUrl = this.baseUrl2 + "/SendActivationSMS";
+    private registerUrl = this.baseUrl2 + "/register";
 
     private theatersAllUrl = "http://planetakino.ua/api/theatres";
 
@@ -118,12 +118,25 @@ export class PlanetaKinoV2Service extends BaseService {
         });
     }
 
-    logout(): Observable<PlanetaKinoV2JsonResponse<any> {
+    logout(): Observable<PlanetaKinoV2JsonResponse<any>> {
         return this.postData<PlanetaKinoV2JsonResponse<any>>(this.logoutUrl, {});
     }
 
     getProfile(): Observable<PlanetaKinoV2JsonResponse<PlanetaKinoV2Profile>> {
         return this.postData<PlanetaKinoV2Profile>(this.profileUrl, { ticketsinfo: "y" });
+    }
+
+    sendActivationSms(data: { phone: string }): Observable<PlanetaKinoV2JsonResponse<{ smsCode: string }>> {
+        return this.postData<{ smsCode: string }>(this.sendActivationSmsUrl, { phone: data.phone });
+    }
+
+    register(data: { email: string, smsCode: string, password: string, phone: string }): Observable<PlanetaKinoV2JsonResponse<any>> {
+        return this.postData<any>(this.registerUrl, {
+            email: data.email,
+            smsCode: data.smsCode,
+            password: data.password,
+            phone: data.phone,
+        });
     }
 
     protected buildParams(params: any): URLSearchParams {

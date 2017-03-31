@@ -8,6 +8,7 @@ export const ActionTypes = {
     LOGIN_SUCCESS: type("[Account] Login Success"),
     LOGIN_FAIL: type("[Account] Login Fail"),
     LOGOUT: type("[Account] Logout"),
+    LOGOUT_SUCCESS: type("[Account] Logout Success"),
 
     VERIFY_AUTH: type("[Account] Verify Auth"),
     VERIFY_AUTH_LOGIN_SUCCESS: type("[Account] Verify Auth Login Success"),
@@ -52,6 +53,12 @@ export class LoginFailAction implements Action {
 
 export class LogoutAction implements Action {
     readonly type = ActionTypes.LOGOUT;
+
+    constructor() { }
+}
+
+export class LogoutSuccess implements Action {
+    readonly type = ActionTypes.LOGOUT_SUCCESS;
 
     constructor() { }
 }
@@ -114,6 +121,7 @@ export type Actions
     | LoginSuccessAction
     | LoginFailAction
     | LogoutAction
+    | LogoutSuccess
     | UpdateAction
     | UpdateSuccessAction
     | UpdateFailAction
