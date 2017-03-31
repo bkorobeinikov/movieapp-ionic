@@ -1,7 +1,7 @@
 import * as actionsAccount from './../actions/account';
 import * as actionsCinema from './../actions/cinema';
 
-import { Account } from './../models';
+import { Account, AsyncStatus } from './../models';
 
 export interface State {
     account: Account;
@@ -13,7 +13,12 @@ export interface State {
         password: string;
 
         token: string;
-    }
+    };
+
+    verifyAuth: {
+        status: AsyncStatus;
+        completedAt: Date;
+    };
 
     loggedIn: boolean;
     loggingIn: boolean;
@@ -32,9 +37,14 @@ export const initialState: State = {
         token: null,
     },
 
+    verifyAuth: {
+        status: AsyncStatus.None,
+        completedAt: null,
+    },
+
     loggedIn: false,
     loggingIn: false,
-    
+
     updating: false,
     updatedAt: null,
 };
@@ -83,6 +93,10 @@ export function reducer(state: State, actionRaw: actionsAccount.Actions | action
             return Object.assign({}, state, {
                 account: null,
                 auth: {},
+                verifyAuth: {
+                    status: AsyncStatus.None,
+                    completedAt: null
+                },
                 loggingIn: false,
                 loggedIn: false,
                 updating: false,
@@ -131,6 +145,25 @@ export function reducer(state: State, actionRaw: actionsAccount.Actions | action
                 }),
             });
         }
+        case actionsAccount.ActionTypes.VERIFY_AUTH: {
+            return Object.assign({}, state, {
+                verifyAuth: {
+                    status: AsyncStatus.InProgress,
+                    completedAt: null,
+                },
+            });
+        }
+        case actionsAccount.ActionTypes.VERIFY_AUTH_FINISH: {
+            let action = <actionsAccount.VerifyAuthFinishAction>actionRaw;
+            let status = action.payload.status;
+
+            return Object.assign({}, state, {
+                verifyAuth: {
+                    status: status,
+                    completedAt: new Date()
+                },
+            });
+        }
         default: {
             return state;
         }
@@ -143,3 +176,4 @@ export const getLoggedIn = (state: State) => state.loggedIn;
 export const getUpdating = (state: State) => state.updating;
 export const getUpdatedAt = (state: State) => state.updatedAt;
 export const getAuth = (state: State) => state.auth;
+export const getVerifyAuth = (state: State) => state.verifyAuth;

@@ -132,3 +132,4 @@ export const getAccountUpdating = createSelector(getAccountState, fromAccount.ge
 export const getAccountUpdatedAt = createSelector(getAccountState, fromAccount.getUpdatedAt);
 export const getAccountAuth = createSelector(getAccountState, fromAccount.getAuth);
 export const getAccountAuthToken = createSelector(getAccountAuth, auth => auth.token);
+export const getAccountVerifyAuth = createSelector(getAccountState, fromAccount.getVerifyAuth);

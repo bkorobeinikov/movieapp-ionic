@@ -3,7 +3,6 @@ import { NavController, AlertController } from "ionic-angular";
 import { Store } from "@ngrx/store";
 import { State } from "./../../store";
 import * as selectors from './../../store/selectors';
-import * as actionsAccount from './../../store/actions/account';
 
 import * as _ from 'lodash';
 import { Subscription } from "rxjs/Subscription";
@@ -56,8 +55,9 @@ export class SignUpPage implements OnDestroy {
     }
 
     facebook() {
-        this.store.dispatch(new actionsAccount.LoginAction({
-            loginMethod: actionsAccount.LoginMethod.Facebook,
-        }));
+        this.alertCtrl.create({
+            message: "Signing in via Facebook is not supported by PlanetaKino",
+            buttons: ["Dismiss"],
+        }).present();
     }
 }
