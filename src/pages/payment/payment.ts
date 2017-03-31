@@ -50,7 +50,7 @@ export class PaymentPage {
 
         let confirm = this.alertCtrl.create({
             title: 'Cancel Payment?',
-            message: 'Do you really want to cancel payment operation. You will be redirected back to chosing seats.',
+            message: 'Do you really want to cancel payment operation. You will be redirected back to choosing seats.',
             buttons: [
                 {
                     text: 'No',
@@ -86,7 +86,7 @@ export class PaymentPage {
             // load real ticket
             let ticket: Ticket = {
                 id: Math.round(Math.random() * 100000000) + "",
-                movieUid: this.order.movie.id,
+                movieUid: this.order.movie.uid,
                 cinemaId: this.order.cinema.id,
                 hallId: this.order.hall.id,
                 hallName: this.order.hall.name,
@@ -95,7 +95,7 @@ export class PaymentPage {
                 seats: this.order.seats.map(s => ({
                     id: Math.round(Math.random() * 1000000000) + "",
                     ticketId: undefined,
-                    ticketBarcode: Math.round(Math.random() * 1000000000) + "",
+                    ticketBarcode: "9000001682121",
                     row: s.row, seat: s.seat, price: {
                         algorithm: "fake",
                         amountBonuses: 0,
@@ -111,7 +111,7 @@ export class PaymentPage {
                     },
                     vatRate: undefined,
                 })),
-                showtimeId: undefined,
+                showtimeId: this.order.showtime.id,
                 transactionDate: undefined,
                 transactionId: undefined,
             };

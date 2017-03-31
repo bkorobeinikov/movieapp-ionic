@@ -23,6 +23,7 @@ import { NewsPage } from './../pages/news/news';
 import { JoinPipe } from './../shared/join.pipe';
 import { MomentPipe } from './../shared/moment.pipe';
 import { TelPipe } from './../shared/tel.pipe';
+import { SafePipe } from './../shared/safe.pipe';
 
 import { HallComponent } from './../pages/booking/hall/hall.component';
 import { DatePicker } from './../pages/booking/datepicker/datepicker.component';
@@ -62,6 +63,7 @@ import { PlanetaKinoV2Service } from './../core/planetakino-api/planetakino-api.
     JoinPipe,
     MomentPipe,
     TelPipe,
+    SafePipe,
 
     MyApp,
 

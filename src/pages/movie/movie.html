@@ -6,7 +6,7 @@
 <ion-content fullscreen="true">
 
     <div class="movie-header">
-        <img [ngStyle]="{'background-image': 'url(' + movie?.picture + ')'}">
+        <img [style.background-image]="'url(' + movie?.picture + ')' | safe: 'style'"> 
     </div>
     <div class="movie-content" padding *ngIf="movie != null">
         <div class="movie-summary">

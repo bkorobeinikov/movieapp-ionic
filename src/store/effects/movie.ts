@@ -67,6 +67,7 @@ export class MovieEffects {
                 return false;
 
             return true;
+        // tslint:disable-next-line:no-unused-variable
         }).map(([actionRaw, mapMovieToCinema]) => {
             let action = <actionsMovie.LoadCheckCacheAction>actionRaw;
             let cinemaId = action.payload.cinemaId;
@@ -81,8 +82,8 @@ export class MovieEffects {
             let action = <actionsMovie.LoadAction>actionRaw;
             let cinema = cinemas[action.payload.cinemaId];
 
-            let next$ = this.actions$.ofType(actionsMovie.ActionTypes.LOAD)
-                .filter((action: actionsMovie.LoadAction) => action.payload.cinemaId == cinema.id).skip(1);
+            // let next$ = this.actions$.ofType(actionsMovie.ActionTypes.LOAD)
+            //     .filter((action: actionsMovie.LoadAction) => action.payload.cinemaId == cinema.id).skip(1);
 
             return this.movieService.getMoviesByCity(cinema.city.id)
                 //.takeUntil(next$)

@@ -1,7 +1,6 @@
 import { Injectable } from "@angular/core";
 
 import { Observable } from "rxjs/Observable";
-import { empty } from 'rxjs/observable/empty';
 import { of } from 'rxjs/observable/of';
 import 'rxjs/add/observable/from';
 
@@ -17,7 +16,7 @@ import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/do';
 
 import { Action, Store } from "@ngrx/store";
-import { Effect, Actions, toPayload } from '@ngrx/effects';
+import { Effect, Actions } from '@ngrx/effects';
 
 import { State } from './../reducers';
 import * as actionsCinema from './../actions/cinema';
@@ -46,32 +45,46 @@ export class CinemaEffects {
     cinemaChange$ = this.actions$
         .ofType(actionsCinema.ActionTypes.CHANGE_CURRENT, actionsCinema.ActionTypes.LOAD_SUCCESS)
         .withLatestFrom(this.store.select(selectors.getCinemaCurrentId))
+        // tslint:disable-next-line:no-unused-variable
+        .filter(([action, cinemaId]) => cinemaId != null)
         //.map(([action, cinemaId]) => new actionsCinema.ShowtimeCheckAndLoadAction(cinemaId));
         // tslint:disable-next-line:no-unused-variable
         .mergeMap(([action, cinemaId]) => ([
-            new actionsCinema.UpdateAction({ cinemaId: cinemaId }),
+            new actionsCinema.UpdateTryAction({ cinemaId: cinemaId }),
             new actionsCinema.ShowtimeCheckAndLoadAction(cinemaId),
         ]));
 
     @Effect()
-    update$ = this.actions$
-        .ofType(actionsCinema.ActionTypes.UPDATE)
+    tryUpdate$ = this.actions$
+        .ofType(actionsCinema.ActionTypes.UPDATE_TRY)
         .withLatestFrom(this.store.select(selectors.getCinemaUpdates))
-        .withLatestFrom(this.store.select(selectors.getCinemaEntities))
-        // tslint:disable-next-line:no-unused-variable
-        .switchMap(([[action, updates], cinemas]) => {
-            let a = <actionsCinema.UpdateAction>action;
-            let cinemaId = a.payload.cinemaId;
-            let cinemaOld = cinemas[cinemaId];
+        .filter(([actionRaw, updates]) => {
+            let action = <actionsCinema.UpdateTryAction>actionRaw;
+            let cinemaId = action.payload.cinemaId;
 
             let isOutdated = updates[cinemaId] == null
                 || updates[cinemaId].updatedAt == null
-                || moment(updates[cinemaId].updatedAt).isBefore(moment().subtract(5, "minutes"));
+                || moment(updates[cinemaId].updatedAt).isBefore(moment().subtract(1, "minutes"));
 
-            if (!isOutdated)
-                return of(new actionsCinema.UpdateSuccessAction({ cinemas: [cinemaOld] }));
+            return isOutdated;
+            // tslint:disable-next-line:no-unused-variable
+        }).map(([actionRaw, updates]) => {
+            let action = <actionsCinema.UpdateTryAction>actionRaw;
+            let cinemaId = action.payload.cinemaId;
 
-            return <Observable<any>>this.cinemaService.getCinemasByCityGroup(cinemaOld.city.groupId)
+            return new actionsCinema.UpdateAction({ cinemaId: cinemaId });
+        });
+
+    @Effect()
+    update$ = this.actions$
+        .ofType(actionsCinema.ActionTypes.UPDATE)
+        .withLatestFrom(this.store.select(selectors.getCinemaEntities))
+        .switchMap(([actionRaw, cinemas]) => {
+            let action = <actionsCinema.UpdateAction>actionRaw;
+            let cinemaId = action.payload.cinemaId;
+            let cinemaOld = cinemas[cinemaId];
+
+            return this.cinemaService.getCinemasByCityGroup(cinemaOld.city.groupId)
                 .map(res => {
                     let result = res.map(cinemaNew => _.merge({}, cinemas[cinemaNew.id], cinemaNew));
                     return new actionsCinema.UpdateSuccessAction({ cinemas: result })

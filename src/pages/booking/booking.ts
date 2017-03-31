@@ -17,8 +17,6 @@ import * as actionsBooking from './../../store/actions/booking';
 
 import { Subscription } from "rxjs/Subscription";
 
-import { ScreeningsViewModel } from "../../store/viewModels";
-
 @Component({
     selector: 'page-booking',
     templateUrl: "booking.html",

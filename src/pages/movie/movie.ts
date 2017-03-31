@@ -7,7 +7,6 @@ import { Movie } from './../../store/models'
 import moment from 'moment';
 import { BookingPage } from "../booking/booking";
 
-import { Observable } from "rxjs/Observable";
 import { Subscription } from "rxjs/Subscription";
 
 import { Store } from "@ngrx/store";
@@ -30,7 +29,7 @@ export class MoviePage implements OnInit, OnDestroy {
         private store: Store<State>
     ) {
         this.subscription.add(this.store.select(selectors.getMovieSelected).subscribe(m => {
-            this.movie = m
+            this.movie = m;
         }));
     }
 
@@ -60,5 +59,9 @@ export class MoviePage implements OnInit, OnDestroy {
 
     goToBooking() {
         this.navCtrl.push(BookingPage);
+    }
+
+    safeUri(uri:string) {
+        return encodeURI(uri);
     }
 }
