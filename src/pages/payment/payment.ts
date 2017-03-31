@@ -147,7 +147,7 @@ export class PaymentPage {
             return loading.dismiss();
         }).then(() => {
             this.toastCtrl.create({
-                message: "Your transaction failed. If you think it is our problem please contact us",
+                message: "Transaction failed. If you think it is our problem please contact us",
                 duration: 4000,
                 position: "bottom",
                 dismissOnPageChange: true,

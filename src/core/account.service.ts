@@ -45,6 +45,20 @@ export class AccountService extends BaseService {
         });
     }
 
+    logout(): Observable<ServiceResponse<any>> {
+        return this.planetaKinoService.logout()
+            .map(res => ({
+                code: res.code,
+                message: res.message
+            }))
+            .catch((err: PlanetaKinoV2JsonResponse<any>) => {
+                return Observable.throw({
+                    code: err.code,
+                    message: err.message,
+                });
+            });
+    }
+
     getProfile(): Observable<ServiceResponse<{ account: Account, tickets: Ticket[] }>> {
         return this.planetaKinoService.getProfile()
             .map(res => {

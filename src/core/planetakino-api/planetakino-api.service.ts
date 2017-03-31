@@ -30,10 +30,13 @@ export class PlanetaKinoV2Service extends BaseService {
     private hallSchemeUrl = this.baseUrl + "/hall-scheme";
     private movieDatesUrl = this.baseUrl + "/movie-dates";
     private showtimesUrl = this.baseUrl + "/showtimes";
+    
+
 
     private baseUrl2 = "https://cabinet.planeta-kino.com.ua/mapiv2";
     private profileUrl = this.baseUrl2 + "/GetProfile";
     private loginUrl = this.baseUrl2 + "/Login";
+    private logoutUrl = this.baseUrl2 + "/Logout";
 
     private theatersAllUrl = "http://planetakino.ua/api/theatres";
 
@@ -113,6 +116,10 @@ export class PlanetaKinoV2Service extends BaseService {
             login: data.login,
             password: data.password,
         });
+    }
+
+    logout(): Observable<PlanetaKinoV2JsonResponse<any> {
+        return this.postData<PlanetaKinoV2JsonResponse<any>>(this.logoutUrl, {});
     }
 
     getProfile(): Observable<PlanetaKinoV2JsonResponse<PlanetaKinoV2Profile>> {

@@ -164,7 +164,8 @@ export class CheckoutPage {
                 if (verifyAuth.status != AsyncStatus.Success) {
                     loading.dismiss().then(() => {
                         this.alertCtrl.create({
-                            message: "Verification Failed. You where logged out."
+                            message: "Verification Failed. You where logged out.",
+                            buttons: ["Dismiss"],
                         }).present();
                     });
                 } else {

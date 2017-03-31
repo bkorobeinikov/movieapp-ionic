@@ -63,6 +63,13 @@ export class AccountEffects {
                 });
         });
 
+    @Effect({ dispatch: false })
+    logout$ = this.actions$
+        .ofType(actionsAccount.ActionTypes.LOGOUT)
+        .switchMap(action => {
+            return this.accountService.logout();
+        });
+
 
     @Effect()
     onUpdateFail$ = this.actions$
