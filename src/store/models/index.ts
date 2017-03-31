@@ -8,3 +8,4 @@ export { CinemaMovie } from './cinema-movie.model';
 export { Booking } from './booking.model';
 export * from './ticket.model';
 export * from './account.model';
+export * from './async-status.model'

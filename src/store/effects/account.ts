@@ -1,10 +1,10 @@
 import { Injectable } from "@angular/core";
 
 import { Observable } from "rxjs/Observable";
-import { empty } from 'rxjs/observable/empty';
 import { of } from 'rxjs/observable/of';
 import 'rxjs/add/observable/from';
 import 'rxjs/add/observable/merge';
+import 'rxjs/add/observable/throw';
 
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/startWith';
@@ -27,7 +27,7 @@ import { State } from './../reducers';
 import * as actionsAccount from './../actions/account';
 import * as selectors from './../selectors';
 
-import { Account } from './../models';
+import { AsyncStatus } from './../models';
 import { ServiceResponse } from "../../core/service-response.model";
 
 @Injectable()
@@ -36,9 +36,11 @@ export class AccountEffects {
     @Effect()
     login$: Observable<Action> = this.actions$
         .ofType(actionsAccount.ActionTypes.LOGIN)
-        .switchMap(action => this.doLogin(action))
-        .map(res => new actionsAccount.LoginSuccessAction({ authToken: res.data.authToken }))
-        .catch((res) => of(new actionsAccount.LoginFailAction(res)));
+        .switchMap(action => {
+            return this.doLogin(action)
+                .map(res => new actionsAccount.LoginSuccessAction({ authToken: res.data.authToken }))
+                .catch((res) => of(new actionsAccount.LoginFailAction(res)));
+        });
 
     @Effect()
     onLoginSuccess$: Observable<Action> = this.actions$
@@ -48,16 +50,18 @@ export class AccountEffects {
     @Effect()
     update$: Observable<Action> = this.actions$
         .ofType(actionsAccount.ActionTypes.UPDATE)
-        .switchMap(action => this.accountService.getProfile())
-        .map(res => {
-            return new actionsAccount.UpdateSuccessAction({ account: res.data.account, tickets: res.data.tickets })
-        }).catch((res: ServiceResponse<any>) => {
-            if (res.code == "-100") {
-                return of(new actionsAccount.UpdateFailAction({ requireLogin: true }));
-            } else {
-                return of(new actionsAccount.UpdateFailAction({ requireLogin: false }));
-            }
+        .switchMap(action => {
+            return this.accountService.getProfile()
+                .map(res => new actionsAccount.UpdateSuccessAction({ account: res.data.account, tickets: res.data.tickets }))
+                .catch((res: ServiceResponse<any>) => {
+                    if (res.code == "-100") {
+                        return of(new actionsAccount.UpdateFailAction({ requireLogin: true }));
+                    } else {
+                        return of(new actionsAccount.UpdateFailAction({ requireLogin: false }));
+                    }
+                });
         });
+
 
     @Effect()
     onUpdateFail$ = this.actions$
@@ -83,35 +87,27 @@ export class AccountEffects {
     @Effect()
     verifyAuth$ = this.actions$
         .ofType(actionsAccount.ActionTypes.VERIFY_AUTH)
+        .do(() => console.log("verifyAuth run"))
         .withLatestFrom(this.store.select(selectors.getAccountLoggedIn))
+        // tslint:disable-next-line:no-unused-variable
         .filter(([actionRaw, loggedIn]) => loggedIn == true)
         //.takeUntil(this.actions$.ofType(actionsAccount.ActionTypes.LOGOUT))
-        .switchMap(() => this.accountService.getProfile())
-        .map(res => {
-            return new actionsAccount.UpdateSuccessAction({ account: res.data.account, tickets: res.data.tickets });
-        })
-        .catch((res: ServiceResponse<any>) => {
-            if (res.code == "-100") {
-                // need to relogin
-                return this.store.select(selectors.getAccountAuth)
-                    .switchMap(auth => {
-                        if (auth.method != actionsAccount.LoginMethod.Email) {
-                            return Observable.throw(new Error("Unsupported auth method " + actionsAccount.LoginMethod[auth.method]));
-                        }
+        .switchMap(() => {
+            return this.accountService.getProfile()
+                .mergeMap((res: any) => ([
+                    new actionsAccount.UpdateSuccessAction({ account: res.data.account, tickets: res.data.tickets }),
+                    new actionsAccount.VerifyAuthFinishAction({ status: AsyncStatus.Success }),
+                ]))
+                .catch((res: ServiceResponse<any>) => {
+                    if (res.code == "-100") {
+                        return this.doReloginFlow();
+                    }
 
-                        return this.doLogin(new actionsAccount.LoginAction({
-                            loginMethod: auth.method,
-                            email: auth.email,
-                            password: auth.password
-                        }));
-                    })
-                    .map((res) => new actionsAccount.LoginSuccessAction({ authToken: res.data.authToken }))
-                    .switchMap(() => this.accountService.getProfile())
-                    .map(res => new actionsAccount.UpdateSuccessAction({ account: res.data.account, tickets: res.data.tickets, }))
-                    .catch(() => of(new actionsAccount.LogoutAction()));
-            }
-
-            return of(new actionsAccount.LogoutAction());
+                    return Observable.from([
+                        new actionsAccount.LogoutAction(),
+                        new actionsAccount.VerifyAuthFinishAction({ status: AsyncStatus.Failed })
+                    ]);
+                });
         });
 
     constructor(
@@ -134,5 +130,36 @@ export class AccountEffects {
                     });
             }
         }
+    }
+
+    private doReloginFlow() {
+        return this.store.select(selectors.getAccountAuth)
+            .switchMap(auth => {
+                if (auth.method != actionsAccount.LoginMethod.Email) {
+                    return Observable.throw(new Error("Unsupported auth method " + actionsAccount.LoginMethod[auth.method]));
+                }
+
+                let failed$ = Observable.from([
+                    new actionsAccount.LogoutAction(),
+                    new actionsAccount.VerifyAuthFinishAction({ status: AsyncStatus.Failed })
+                ]);
+
+                return this.doLogin(
+                    new actionsAccount.LoginAction({
+                        loginMethod: auth.method,
+                        email: auth.email,
+                        password: auth.password
+                    }))
+                    .switchMap((loginRes) => {
+                        return this.accountService.getProfile()
+                            .mergeMap(res => ([
+                                new actionsAccount.LoginSuccessAction({ authToken: loginRes.data.authToken }),
+                                new actionsAccount.UpdateSuccessAction({ account: res.data.account, tickets: res.data.tickets, }),
+                                new actionsAccount.VerifyAuthFinishAction({ status: AsyncStatus.Success }),
+                            ]))
+                            .catch(() => failed$);
+
+                    }).catch(() => failed$);
+            })
     }
 }
