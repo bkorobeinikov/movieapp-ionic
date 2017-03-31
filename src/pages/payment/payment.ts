@@ -86,7 +86,7 @@ export class PaymentPage {
             // load real ticket
             let ticket: Ticket = {
                 id: Math.round(Math.random() * 100000000) + "",
-                movieId: this.order.movie.id,
+                movieUid: this.order.movie.id,
                 cinemaId: this.order.cinema.id,
                 hallId: this.order.hall.id,
                 hallName: this.order.hall.name,
@@ -94,8 +94,26 @@ export class PaymentPage {
                 time: this.order.showtime.time.toDate(),
                 seats: this.order.seats.map(s => ({
                     id: Math.round(Math.random() * 1000000000) + "",
-                    row: s.row, seat: s.seat, price: s.price
+                    ticketId: undefined,
+                    ticketBarcode: Math.round(Math.random() * 1000000000) + "",
+                    row: s.row, seat: s.seat, price: {
+                        algorithm: "fake",
+                        amountBonuses: 0,
+                        amountCash: 149,
+                        bookingFee: 0,
+                        discount: 10,
+                        method: "fake",
+                        priceTicket: 150,
+                        priceTicketInclDiscount: 149,
+                        purchaseFee: 0,
+                        typeDiscount: "fake",
+                        valueDiscount: "1",
+                    },
+                    vatRate: undefined,
                 })),
+                showtimeId: undefined,
+                transactionDate: undefined,
+                transactionId: undefined,
             };
 
             this.store.dispatch(new actionsTicket.LoadSuccessAction([ticket]));

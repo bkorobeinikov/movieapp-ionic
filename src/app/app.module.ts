@@ -41,12 +41,17 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { reducer, initialState } from './../store';
 import { MovieEffects, CinemaEffects, BookingEffects, AccountEffects } from './../store/effects';
 
+import { MovieService } from './../core/movie.service';
+import { CinemaService } from "./../core/cinema.service";
+import { AccountService } from "./../core/account.service";
+import { PlanetaKinoV2Service } from './../core/planetakino-api/planetakino-api.service';
+
 @NgModule({
   imports: [
     IonicModule.forRoot(MyApp, {
       backButtonText: "",
     }),
-    CoreModule,
+    //CoreModule,
     HttpModule,
 
     StoreModule.provideStore(reducer, initialState),
@@ -106,6 +111,9 @@ import { MovieEffects, CinemaEffects, BookingEffects, AccountEffects } from './.
 
     CinemasPopoverComponent,
   ],
-  providers: [{provide: ErrorHandler, useClass: IonicErrorHandler}]
+  providers: [
+    { provide: ErrorHandler, useClass: IonicErrorHandler },
+    MovieService, CinemaService, AccountService, PlanetaKinoV2Service
+  ]
 })
-export class AppModule {}
+export class AppModule { }

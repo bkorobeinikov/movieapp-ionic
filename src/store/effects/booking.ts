@@ -24,6 +24,7 @@ import { CinemaService } from "../../core/cinema.service";
 
 import { State } from './../reducers';
 import * as actionsBooking from './../actions/booking';
+import * as selectors from './../selectors';
 
 @Injectable()
 export class BookingEffects {
@@ -38,15 +39,16 @@ export class BookingEffects {
     @Effect()
     hallLoad$: Observable<Action> = this.actions$
         .ofType(actionsBooking.ActionTypes.HALL_LOAD)
-        .map(toPayload)
-        .switchMap(payload => {
+        .withLatestFrom(this.store.select(selectors.getCinemaEntities))
+        .switchMap(([actionRaw, cinemas]) => {
+            let action = <actionsBooking.HallLoadAction>actionRaw;
+            let cinema = cinemas[action.payload.cinemaId];
 
             const next$ = Observable.merge(
                 this.actions$.ofType(actionsBooking.ActionTypes.HALL_LOAD).skip(1),
                 this.actions$.ofType(actionsBooking.ActionTypes.SELECT_SHOWTIME));
 
-
-            return this.cinemaService.getHall(payload)
+            return this.cinemaService.getHall(cinema.city.id, action.payload)
                 .takeUntil(next$)
                 .map(hall => new actionsBooking.HallLoadSuccessAction(hall))
                 .catch(() => of(new actionsBooking.HallLoadFailAction([])));

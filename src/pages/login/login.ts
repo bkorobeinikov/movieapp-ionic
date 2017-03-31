@@ -4,7 +4,7 @@ import { State } from "./../../store";
 import * as actionsAccount from './../../store/actions/account';
 import * as selectors from './../../store/selectors';
 
-import { NavController, ViewController, NavParams } from "ionic-angular";
+import { NavController, ViewController, NavParams, AlertController } from "ionic-angular";
 
 import { SignUpPage } from './../signup/signup';
 
@@ -31,6 +31,7 @@ export class LoginPage implements OnDestroy {
         private store: Store<State>,
         private viewCtrl: ViewController,
         private navCtrl: NavController,
+        private alertCtrl: AlertController,
         private navParams: NavParams,
     ) {
         this.isModal = navParams.get('modal');
@@ -59,10 +60,11 @@ export class LoginPage implements OnDestroy {
         if (this.loggingIn)
             return;
 
-        this.creds = {};
-        this.store.dispatch(new actionsAccount.LoginAction({
-            loginMethod: actionsAccount.LoginMethod.Facebook,
-        }));
+        this.alertCtrl.create({
+            message: "Sign In via Facebook is not supported by PlanetaKino",
+            buttons: ["Dismiss"],
+        }).present();
+
     }
 
     canLogin() {

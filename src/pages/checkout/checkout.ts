@@ -3,11 +3,14 @@ import { App, ModalController, ToastController, ActionSheetController, AlertCont
 
 import { Observable } from "rxjs/Observable";
 import 'rxjs/add/operator/first';
+import 'rxjs/add/operator/combineLatest';
+import 'rxjs/add/operator/distinctUntilChanged';
 import { Subscription } from "rxjs/Subscription";
 import { Store } from "@ngrx/store";
 
 import { State } from './../../store';
 import * as selectors from './../../store/selectors';
+import * as actionsAccount from './../../store/actions/account';
 
 import { PaymentPage } from "../payment/payment";
 import { LoginNavPage } from "./../login/login-nav";
@@ -78,9 +81,9 @@ export class CheckoutPage {
     pay() {
         this.store.select(selectors.getAccountLoggedIn).first().subscribe(loggedIn => {
             if (!loggedIn) {
-                this.askToLogin();
+                this.askToLogin()
             } else {
-                this.askHowToPay();
+                this.checkAuth();
             }
         });
     }
@@ -122,7 +125,7 @@ export class CheckoutPage {
         let modal = this.modalCtrl.create(PaymentPage, {
             order: this.order,
         });
-        
+
         modal.present();
     }
 
@@ -146,6 +149,44 @@ export class CheckoutPage {
             loading.dismiss();
         }, 500);
 
+    }
+
+    checkAuth() {
+
+        let loading = this.loadingCtrl.create({
+            content: "Preparing for payment"
+        });
+
+        loading.present();
+
+        let sub = Observable.combineLatest(
+            this.store.select(selectors.getAccountUpdatedAt),
+            this.store.select(selectors.getAccountLoggedIn))
+            .skip(1)
+            .subscribe(([updatedAt, loggedIn]) => {
+                console.log("on store updated", updatedAt, loggedIn);
+                if (loggedIn == false) {
+                    // verification failed, user was logged out
+
+                    sub.unsubscribe();
+                    loading.dismiss().then(() => {
+                        this.alertCtrl.create({
+                            message: "Verification Failed. You where logged out."
+                        })
+                    });
+                } else if (updatedAt != null) {
+                    sub.unsubscribe();
+                    // updateAt field changed, means that profile and auth-token were updated if necessary
+                    loading.dismiss().then(() => {
+                        this.askHowToPay();
+                    });
+                }
+            });
+
+        // to check if user has valid auth token to purchase tickets
+        // we need to update user profile, it will automatically relogin user if auth token is outdated 
+        // of will logout user if credentials are invalid.
+        this.store.dispatch(new actionsAccount.VerifyAuthAction());
     }
 
     askToLogin() {

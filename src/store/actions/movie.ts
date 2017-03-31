@@ -14,24 +14,32 @@ export const ActionTypes = {
 export class LoadAction implements Action {
     readonly type = ActionTypes.LOAD;
 
-    constructor() { }
+    constructor(public payload: { cinemaId: string }) { }
 }
 
 export class LoadSuccessAction implements Action {
     readonly type = ActionTypes.LOAD_SUCCESS;
 
-    constructor(public payload: Movie[]) { }
+    constructor(public payload: {
+        cinemaId: string,
+        released: Movie[],
+        other: Movie[],
+    }) { }
 }
 
 export class LoadFailAction implements Action {
     readonly type = ActionTypes.LOAD_FAIL;
 
-    constructor(public payload: any) { }
+    constructor(public payload: { cinemaId: string }) { }
 }
 
 export class SelectAction implements Action {
     readonly type = ActionTypes.SELECT;
 
+    /**
+     * 
+     * @param payload movie id
+     */
     constructor(public payload: string) { }
 }
 

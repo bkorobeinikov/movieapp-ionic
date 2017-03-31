@@ -11,19 +11,18 @@ import * as selectors from './../../store/selectors';
 
 import { CinemasPage } from './../cinemas/cinemas';
 
+import { Observable } from "rxjs/Observable";
+
 @Component({
     selector: 'page-account',
     templateUrl: 'account.html'
 })
 export class AccountPage implements OnDestroy {
 
+    public loading$: Observable<boolean>;
+
     public account: Account;
     public cinema: Cinema;
-
-    public creds: {
-        username?: string,
-        password?: string,
-    };
 
     private subscription: Subscription = new Subscription();
 
@@ -31,11 +30,12 @@ export class AccountPage implements OnDestroy {
         private navCtrl: NavController,
         private store: Store<State>
     ) {
-        this.creds = {};
+        this.loading$ = this.store.select(selectors.getAccountUpdating);
 
         let s = this.store.select(selectors.getAccount)
             .withLatestFrom(this.store.select(selectors.getCinemaEntities))
-            .subscribe(([account, cinemas]) => this.onAccountChange(account, cinemas));
+            .withLatestFrom(this.store.select(selectors.getCinemaCurrentId))
+            .subscribe(([[account, cinemas], cinemaCurrentId]) => this.onAccountChange(account, cinemas[cinemaCurrentId]));
 
         this.subscription.add(s);
     }
@@ -44,7 +44,7 @@ export class AccountPage implements OnDestroy {
         this.subscription.unsubscribe();
     }
 
-    onAccountChange(account, cinemas) {
+    onAccountChange(account, cinema) {
         if (!account) {
             this.account = null;
             this.cinema = null;
@@ -52,8 +52,7 @@ export class AccountPage implements OnDestroy {
         }
 
         this.account = account;
-        if (cinemas != null)
-            this.cinema = cinemas[account.cinemaId];
+        this.cinema = cinema;
     }
 
     onNotifUpdates(checked: boolean) {

@@ -1,14 +1,14 @@
 export interface Account {
     id: string;
     name: string;
+    firstName: string;
+    lastName: string;
     email: string;
     phone: string;
 
     cardId: string;
 
     bonuses: number;
-
-    cinemaId: string;
 
     notifications: {
         tickets: boolean,

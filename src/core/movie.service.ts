@@ -8,43 +8,60 @@ import { Movie, } from './../store/models';
 import moment from 'moment';
 import { BaseService } from "./base.service";
 
+import { PlanetaKinoV2Service } from "./planetakino-api/planetakino-api.service";
+import { PlanetaKinoV2Movie } from "./planetakino-api/models";
+
+import * as _ from 'lodash';
+
 @Injectable()
 export class MovieService extends BaseService {
 
-    private moviesUrl = "http://planetakino.ua/api/movies";
-
-    constructor(http: Http) {
+    constructor(http: Http, private planetaKinoService: PlanetaKinoV2Service) {
         super(http);
     }
 
-    getMovies(): Observable<Movie[]> {
-        return this.getData<any>(this.moviesUrl)
-            .map(res => {
-                var movies: any[] = res.inTheaters.movie;
-                var current = movies.map(m => this.parseMovie(m));
-                movies = res.soon.movie;
-                var future = movies.map(m => this.parseMovie(m, true));
-
-                return current.concat(future);
-            });
+    getMoviesByCity(cityId: string): Observable<{ released: Movie[], other: Movie[] }> {
+        return this.planetaKinoService.getMovies({ cityId: cityId })
+            .map(res => ({
+                released: res.inTheaters.map(m => this.mapToMovie(m)),
+                other: res.soon.map(m => this.mapToMovie(m)),
+            }));
     }
 
-    private parseMovie(movieObj: any, soon: boolean = false): Movie {
-        var result: Movie = {
+    private mapToMovie(movieObj: PlanetaKinoV2Movie): Movie {
+
+        let technologies = [];
+        if (_.isString(movieObj.technologyId)) {
+            technologies.push({
+                id: movieObj.technologyId,
+                name: movieObj.technologies
+            });
+        } else if (_.isArray(movieObj.technologyId)) {
+            let techs = movieObj.technologies.split(",");
+            movieObj.technologyId.map((id, index) => {
+                technologies.push({
+                    id: id,
+                    name: techs[index],
+                });
+            });
+        }
+
+        return {
             id: movieObj.id,
+            uid: movieObj.uid,
             name: movieObj.name,
             originalName: movieObj.nameOriginal,
 
             picture: movieObj.mainPosterUrl,
             poster: movieObj.posterUrl,
+            bigPoster: movieObj.altPosterUrl,
             description: movieObj.description,
 
             duration: parseInt(movieObj.length),
 
-            countries: (<string>movieObj.country).split(","),
-            genres: (<string>movieObj.genre).split(","),
+            countries: movieObj.country.split(","),
+            genres: movieObj.genre.split(","),
 
-            soon: soon,
             sinceDate: moment(movieObj.sinceDate),
             endDate: moment(movieObj.endDate),
 
@@ -54,16 +71,21 @@ export class MovieService extends BaseService {
             showtimes: movieObj["has-showtimes"] !== undefined,
 
             director: movieObj.director,
-            cast: (<string>movieObj.stars).split(","),
+            cast: movieObj.stars.split(","),
+
+            technologies: technologies,
+
+            trailers: [{ youtubeId: movieObj["youtube-id"], previewUrl: movieObj.trailerPreviewUrl }],
+
+            movieUrl: movieObj.movieLink,
+            movieShortUrl: movieObj.movieShortLink,
 
             ratings: {
                 imdb: {
                     rating: "8.9",
                 },
             },
+
         };
-
-        return result;
     }
-
 }

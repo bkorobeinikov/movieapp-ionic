@@ -6,34 +6,64 @@ import { Account } from './../models';
 export interface State {
     account: Account;
 
+    auth: {
+        method: actionsAccount.LoginMethod;
+
+        email: string;
+        password: string;
+
+        token: string;
+    }
+
     loggedIn: boolean;
     loggingIn: boolean;
 
     updating: boolean;
+    updatedAt: Date;
 }
 
 export const initialState: State = {
     account: null,
 
+    auth: {
+        method: actionsAccount.LoginMethod.None,
+        email: null,
+        password: null,
+        token: null,
+    },
+
     loggedIn: false,
     loggingIn: false,
     
     updating: false,
+    updatedAt: null,
 };
 
 export function reducer(state: State, actionRaw: actionsAccount.Actions | actionsCinema.ChangeCurrentAction) {
     switch (actionRaw.type) {
         case actionsAccount.ActionTypes.LOGIN: {
+            let action = <actionsAccount.LoginAction>actionRaw;
+            let method = action.payload.loginMethod;
+            let email = action.payload.email;
+            let password = action.payload.password;
+
             return Object.assign({}, state, {
+                auth: {
+                    method: method,
+                    email: email,
+                    password: password,
+                },
                 loggingIn: true,
             });
         }
         case actionsAccount.ActionTypes.LOGIN_SUCCESS: {
             let action = <actionsAccount.LoginSuccessAction>actionRaw;
-            let account = action.payload;
+            let authToken = action.payload.authToken;
 
             return Object.assign({}, state, {
-                account: account,
+                auth: Object.assign({}, state.auth, {
+                    token: authToken
+                }),
                 loggingIn: false,
                 loggedIn: true,
                 updating: false,
@@ -41,37 +71,47 @@ export function reducer(state: State, actionRaw: actionsAccount.Actions | action
         }
         case actionsAccount.ActionTypes.LOGIN_FAIL: {
             return Object.assign({}, state, {
+                account: null,
+                auth: {},
                 loggingIn: false,
+                loggedIn: false,
+                updating: false,
+                updatedAt: null,
             });
         }
         case actionsAccount.ActionTypes.LOGOUT: {
             return Object.assign({}, state, {
                 account: null,
-                logggingIn: false,
+                auth: {},
+                loggingIn: false,
                 loggedIn: false,
                 updating: false,
+                updatedAt: null,
             });
         }
         case actionsAccount.ActionTypes.UPDATE: {
             return Object.assign({}, state, {
-                updating: true
+                updating: true,
             });
         }
         case actionsAccount.ActionTypes.UPDATE_SUCCESS: {
             let action = <actionsAccount.UpdateSuccessAction>actionRaw;
-            let account = action.payload;
+            let account = action.payload.account;
 
             return Object.assign({}, state, {
-                account: account,
+                account: Object.assign({}, account),
                 updating: false,
+                updatedAt: new Date,
             });
         }
         case actionsAccount.ActionTypes.UPDATE_FAIL: {
 
             return Object.assign({}, state, {
                 account: null,
+                loggedIn: false,
                 updating: false,
-            })
+                updatedAt: null,
+            });
         }
         case actionsAccount.ActionTypes.CHANGE_NOTIFICATIONS: {
             let action = <actionsAccount.ChangeNotificationsAction>actionRaw;
@@ -101,3 +141,5 @@ export const getAccount = (state: State) => state.account;
 export const getLoggingIn = (state: State) => state.loggingIn;
 export const getLoggedIn = (state: State) => state.loggedIn;
 export const getUpdating = (state: State) => state.updating;
+export const getUpdatedAt = (state: State) => state.updatedAt;
+export const getAuth = (state: State) => state.auth;

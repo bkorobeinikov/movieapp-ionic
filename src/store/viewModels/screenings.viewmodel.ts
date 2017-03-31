@@ -1,14 +1,8 @@
-import { CinemaMovie, Showtime } from "./../models/";
+import { Showtime } from "./../models/";
 
 export interface ScreeningsViewModel {
-    movies: CinemaMovie[],
-    showtimes: { [showtimeId: string]: Showtime },
 
-    /**
-     * Map showtimes to a movie
-     * { [movieId]: showtimeIds[] }
-     */
-    map: { [movieId: string]: string[] },
+    showtimes: { [showtimeId: string]: Showtime },
 
     loading: boolean,
     loaded: boolean,

@@ -16,20 +16,20 @@
             <div class="movie-content">
                 <div class="movie-summary">
                     <div class="poster">
-                        <div class="content">
-                            <img src="{{movies[ticket.movieId]?.poster}}">
+                        <div class="content"> 
+                            <img src="{{movies[ticket.movieUid]?.poster}}">
                         </div>
                     </div>
                     <div class="item-content">
-                        <span class="title">{{movies[ticket.movieId]?.name}}</span>
+                        <span class="title">{{movies[ticket.movieUid]?.name}}</span>
                         <div class="tech-content keyvalue-row">
                             <div class="keyvalue">
                                 <div>TECHNOLOGY</div>
-                                <div>{{ticket.techId}}</div>
+                                <div>{{cinemas[ticket.cinemaId]?.technologies[ticket.techId]?.name}}</div>
                             </div>
                             <div class="keyvalue">
                                 <div>duration</div>
-                                <div>{{duration(movies[ticket.movieId]?.duration)}}</div>
+                                <div>{{duration(movies[ticket.movieUid]?.duration)}}</div>
                             </div>
                         </div>
                         <div class="cinema">
