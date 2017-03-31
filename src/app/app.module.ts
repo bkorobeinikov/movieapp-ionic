@@ -5,8 +5,6 @@ import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 
 import { MyApp } from './app.component';
 
-import { CoreModule } from './../core/core.module';
-
 import { MoviesPage } from '../pages/movies/movies';
 import { MoviePage } from '../pages/movie/movie';
 import { BookingPage } from '../pages/booking/booking';
@@ -25,6 +23,7 @@ import { NewsPage } from './../pages/news/news';
 import { JoinPipe } from './../shared/join.pipe';
 import { MomentPipe } from './../shared/moment.pipe';
 import { TelPipe } from './../shared/tel.pipe';
+import { SafePipe } from './../shared/safe.pipe';
 
 import { HallComponent } from './../pages/booking/hall/hall.component';
 import { DatePicker } from './../pages/booking/datepicker/datepicker.component';
@@ -38,10 +37,9 @@ import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
-import { reducer, initialState } from './../store';
+import { reducer } from './../store';
 import { MovieEffects, CinemaEffects, BookingEffects, AccountEffects } from './../store/effects';
 
-import { MovieService } from './../core/movie.service';
 import { CinemaService } from "./../core/cinema.service";
 import { AccountService } from "./../core/account.service";
 import { PlanetaKinoV2Service } from './../core/planetakino-api/planetakino-api.service';
@@ -65,6 +63,7 @@ import { PlanetaKinoV2Service } from './../core/planetakino-api/planetakino-api.
     JoinPipe,
     MomentPipe,
     TelPipe,
+    SafePipe,
 
     MyApp,
 
@@ -113,7 +112,7 @@ import { PlanetaKinoV2Service } from './../core/planetakino-api/planetakino-api.
   ],
   providers: [
     { provide: ErrorHandler, useClass: IonicErrorHandler },
-    MovieService, CinemaService, AccountService, PlanetaKinoV2Service
+    CinemaService, AccountService, PlanetaKinoV2Service
   ]
 })
 export class AppModule { }

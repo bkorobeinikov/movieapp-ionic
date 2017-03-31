@@ -8,8 +8,11 @@ export const ActionTypes = {
     LOGIN_SUCCESS: type("[Account] Login Success"),
     LOGIN_FAIL: type("[Account] Login Fail"),
     LOGOUT: type("[Account] Logout"),
+    LOGOUT_SUCCESS: type("[Account] Logout Success"),
 
     VERIFY_AUTH: type("[Account] Verify Auth"),
+    VERIFY_AUTH_LOGIN_SUCCESS: type("[Account] Verify Auth Login Success"),
+    VERIFY_AUTH_UPDATE_SUCCESS: type("[Account] Verify Auth Update Success"),
     VERIFY_AUTH_FINISH: type("[Account] Verify Auth Finish"),
 
     UPDATE: type("[Account] Update"),
@@ -54,10 +57,28 @@ export class LogoutAction implements Action {
     constructor() { }
 }
 
+export class LogoutSuccess implements Action {
+    readonly type = ActionTypes.LOGOUT_SUCCESS;
+
+    constructor() { }
+}
+
 export class VerifyAuthAction implements Action {
     readonly type = ActionTypes.VERIFY_AUTH;
 
     constructor() { }
+}
+
+export class VerifyAuthLoginSuccessAction implements Action {
+    readonly type = ActionTypes.VERIFY_AUTH_LOGIN_SUCCESS;
+
+    constructor(public payload: LoginSuccessAction) { }
+}
+
+export class VerifyAuthUpdateSuccessAction implements Action {
+    readonly type = ActionTypes.VERIFY_AUTH_UPDATE_SUCCESS;
+
+    constructor(public payload: UpdateSuccessAction) { }
 }
 
 export class VerifyAuthFinishAction implements Action {
@@ -100,11 +121,14 @@ export type Actions
     | LoginSuccessAction
     | LoginFailAction
     | LogoutAction
+    | LogoutSuccess
     | UpdateAction
     | UpdateSuccessAction
     | UpdateFailAction
     | ChangeNotificationsAction
     | VerifyAuthAction
+    | VerifyAuthLoginSuccessAction
+    | VerifyAuthUpdateSuccessAction
     | VerifyAuthFinishAction;
 
 

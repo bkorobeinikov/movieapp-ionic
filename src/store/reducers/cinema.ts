@@ -1,7 +1,7 @@
 import { createSelector } from 'reselect';
 
 import * as cinema from './../actions/cinema';
-import { Showtime, Cinema } from './../models';
+import { Cinema } from './../models';
 import { ScreeningsViewModel } from './../viewModels';
 
 import * as _ from 'lodash';

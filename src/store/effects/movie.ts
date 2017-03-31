@@ -1,7 +1,6 @@
 import { Injectable } from "@angular/core";
 
 import { Observable } from "rxjs/Observable";
-import { empty } from 'rxjs/observable/empty';
 import { of } from 'rxjs/observable/of';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
@@ -11,9 +10,9 @@ import 'rxjs/add/operator/skip';
 import 'rxjs/add/operator/takeUntil';
 
 import { Action, Store } from "@ngrx/store";
-import { Effect, Actions, toPayload } from '@ngrx/effects';
+import { Effect, Actions } from '@ngrx/effects';
 
-import { MovieService } from './../../core/movie.service';
+import { CinemaService } from './../../core/cinema.service';
 
 import * as actionsMovie from './../actions/movie';
 import * as actionsAccount from './../actions/account';
@@ -68,6 +67,7 @@ export class MovieEffects {
                 return false;
 
             return true;
+        // tslint:disable-next-line:no-unused-variable
         }).map(([actionRaw, mapMovieToCinema]) => {
             let action = <actionsMovie.LoadCheckCacheAction>actionRaw;
             let cinemaId = action.payload.cinemaId;
@@ -82,8 +82,8 @@ export class MovieEffects {
             let action = <actionsMovie.LoadAction>actionRaw;
             let cinema = cinemas[action.payload.cinemaId];
 
-            let next$ = this.actions$.ofType(actionsMovie.ActionTypes.LOAD)
-                .filter((action: actionsMovie.LoadAction) => action.payload.cinemaId == cinema.id).skip(1);
+            // let next$ = this.actions$.ofType(actionsMovie.ActionTypes.LOAD)
+            //     .filter((action: actionsMovie.LoadAction) => action.payload.cinemaId == cinema.id).skip(1);
 
             return this.movieService.getMoviesByCity(cinema.city.id)
                 //.takeUntil(next$)
@@ -98,6 +98,6 @@ export class MovieEffects {
         });
 
     constructor(private actions$: Actions,
-        private movieService: MovieService,
+        private movieService: CinemaService,
         private store: Store<State>) { }
 }

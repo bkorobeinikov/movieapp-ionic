@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 
 import { Observable } from "rxjs/Observable";
+import { empty } from 'rxjs/observable/empty';
 import { of } from 'rxjs/observable/of';
 import 'rxjs/add/observable/from';
 import 'rxjs/add/observable/merge';
@@ -17,6 +18,7 @@ import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/first';
 
 import { Action, Store } from "@ngrx/store";
 import { Effect, Actions } from '@ngrx/effects';
@@ -62,6 +64,14 @@ export class AccountEffects {
                 });
         });
 
+    @Effect()
+    logout$ = this.actions$
+        .ofType(actionsAccount.ActionTypes.LOGOUT)
+        .switchMap(() => {
+            return this.accountService.logout()
+                .map(() => new actionsAccount.LogoutSuccess())
+                .catch(() => of(new actionsAccount.LogoutSuccess()));
+        });
 
     @Effect()
     onUpdateFail$ = this.actions$
@@ -87,11 +97,9 @@ export class AccountEffects {
     @Effect()
     verifyAuth$ = this.actions$
         .ofType(actionsAccount.ActionTypes.VERIFY_AUTH)
-        .do(() => console.log("verifyAuth run"))
         .withLatestFrom(this.store.select(selectors.getAccountLoggedIn))
         // tslint:disable-next-line:no-unused-variable
         .filter(([actionRaw, loggedIn]) => loggedIn == true)
-        //.takeUntil(this.actions$.ofType(actionsAccount.ActionTypes.LOGOUT))
         .switchMap(() => {
             return this.accountService.getProfile()
                 .mergeMap((res: any) => ([
@@ -124,24 +132,21 @@ export class AccountEffects {
                 return this.accountService.login(payload.email, payload.password);
             }
             case actionsAccount.LoginMethod.Facebook: {
-                return this.accountService.loginFacebook()
-                    .map(res => {
-                        throw new Error("Not Implemented");
-                    });
+                Observable.throw(new Error("Not Implemented"));
             }
         }
     }
 
     private doReloginFlow() {
-        return this.store.select(selectors.getAccountAuth)
+        return this.store.select(selectors.getAccountAuth).first()
             .switchMap(auth => {
                 if (auth.method != actionsAccount.LoginMethod.Email) {
                     return Observable.throw(new Error("Unsupported auth method " + actionsAccount.LoginMethod[auth.method]));
                 }
 
                 let failed$ = Observable.from([
+                    new actionsAccount.VerifyAuthFinishAction({ status: AsyncStatus.Failed }),
                     new actionsAccount.LogoutAction(),
-                    new actionsAccount.VerifyAuthFinishAction({ status: AsyncStatus.Failed })
                 ]);
 
                 return this.doLogin(
@@ -150,15 +155,17 @@ export class AccountEffects {
                         email: auth.email,
                         password: auth.password
                     }))
-                    .switchMap((loginRes) => {
+                    .do((res) => {
+                        this.store.dispatch(new actionsAccount.VerifyAuthLoginSuccessAction(
+                            new actionsAccount.LoginSuccessAction({ authToken: res.data.authToken })))
+                    }).switchMap(() => {
                         return this.accountService.getProfile()
                             .mergeMap(res => ([
-                                new actionsAccount.LoginSuccessAction({ authToken: loginRes.data.authToken }),
-                                new actionsAccount.UpdateSuccessAction({ account: res.data.account, tickets: res.data.tickets, }),
+                                new actionsAccount.VerifyAuthUpdateSuccessAction(
+                                    new actionsAccount.UpdateSuccessAction({ account: res.data.account, tickets: res.data.tickets, })),
                                 new actionsAccount.VerifyAuthFinishAction({ status: AsyncStatus.Success }),
                             ]))
                             .catch(() => failed$);
-
                     }).catch(() => failed$);
             })
     }

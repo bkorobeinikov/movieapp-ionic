@@ -2,13 +2,13 @@ import { Action } from '@ngrx/store';
 import { type } from './../util';
 
 import { Showtime, Cinema } from './../models';
-import { CinemaMovie } from "../models/cinema-movie.model";
 
 export const ActionTypes = {
     LOAD: type("[Cinema] Load"),
     LOAD_SUCCESS: type("[Cinema] Load Success"),
     LOAD_FAIL: type("[Cinema] Load Fail"),
 
+    UPDATE_TRY: type("[Cinema] Update Try"),
     UPDATE: type("[Cinema] Update"),
     UPDATE_SUCCESS: type("[Cinema] Update Success"),
     UPDATE_FAIL: type("[Cinema] Update Fail"),
@@ -39,31 +39,28 @@ export class LoadFailAction implements Action {
     constructor(public payload: any) { }
 }
 
+export class UpdateTryAction implements Action {
+    readonly type = ActionTypes.UPDATE_TRY;
+
+    constructor(public payload: { cinemaId: string }) { }
+}
+
 export class UpdateAction implements Action {
     readonly type = ActionTypes.UPDATE;
 
-    constructor(public payload: {
-        cinemaId: string
-    }) {
-    }
+    constructor(public payload: { cinemaId: string }) { }
 }
 
 export class UpdateSuccessAction implements Action {
     readonly type = ActionTypes.UPDATE_SUCCESS;
 
-    constructor(public payload: {
-        cinemas: Cinema[]
-    }) {
-    }
+    constructor(public payload: { cinemas: Cinema[] }) { }
 }
 
 export class UpdateFailAction implements Action {
     readonly type = ActionTypes.UPDATE_FAIL;
 
-    constructor(public payload: {
-        cinemaId: string,
-    }) {
-    }
+    constructor(public payload: { cinemaId: string, }) { }
 }
 
 export class ChangeCurrentAction implements Action {

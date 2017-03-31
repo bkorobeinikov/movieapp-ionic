@@ -1,5 +1,5 @@
 import { Component, OnDestroy } from '@angular/core';
-import { NavController } from "ionic-angular";
+import { NavController, AlertController } from "ionic-angular";
 
 import { Account, Cinema } from './../../store/models';
 
@@ -28,7 +28,8 @@ export class AccountPage implements OnDestroy {
 
     constructor(
         private navCtrl: NavController,
-        private store: Store<State>
+        private store: Store<State>,
+        private alertCtrl: AlertController,
     ) {
         this.loading$ = this.store.select(selectors.getAccountUpdating);
 
@@ -72,8 +73,22 @@ export class AccountPage implements OnDestroy {
     }
 
     logout() {
-        this.subscription.unsubscribe();
-        this.store.dispatch(new actionsAccount.LogoutAction());
+        this.alertCtrl.create({
+            message: "Do you really want to Log out?",
+            buttons: [
+                {
+                    text: 'No',
+                    handler: () => { }
+                },
+                {
+                    text: 'Yes',
+                    handler: () => {
+                        this.subscription.unsubscribe();
+                        this.store.dispatch(new actionsAccount.LogoutAction());
+                    }
+                }
+            ]
+        }).present();
     }
 
 }
