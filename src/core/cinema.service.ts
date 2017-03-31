@@ -24,9 +24,9 @@ export class CinemaService extends BaseService {
 
     constructor(
         http: Http,
-        store: Store<State>,
+        private store: Store<State>,
         private planetaKinoService: PlanetaKinoV2Service, ) {
-        super(http, store);
+        super(http);
     }
 
     getCinemas(): Observable<Cinema[]> {
@@ -69,7 +69,7 @@ export class CinemaService extends BaseService {
                     return _.flatten(res1).map(s => Mapper.mapToShowtime(cinemaId, movieId, s));
                 });
             });
-        }).delay(2000);
+        });
     }
 
     getHall(cityId: string, showtime: Showtime): Observable<CinemaHall> {

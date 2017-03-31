@@ -1,62 +1,31 @@
-import { Http, Headers, Response, RequestOptionsArgs } from '@angular/http';
+import { Http, Response, RequestOptionsArgs } from '@angular/http';
 
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/delay';
 
 import X2JS from 'x2js';
 
-import * as _ from 'lodash';
-
-import { Store } from "@ngrx/store";
-import { State } from "./../store/";
-import * as selectors from './../store/selectors';
-
 export class BaseService {
-    constructor(
-        private http: Http,
-        protected store?: Store<State>) {
-    }
-
-    private makeOptions(options?: RequestOptionsArgs) {
-        options = options || {};
-        options.headers = options.headers || new Headers();
-
-        return options;
+    constructor(private http: Http) {
     }
 
     protected postData<T>(url: string, body: any, options?: RequestOptionsArgs): Observable<T> {
-        options = this.makeOptions(options);
-
-        return this.store.select(selectors.getAccountAuthToken)
-            .first().switchMap(authToken => {
-                if (authToken)
-                    options.headers.append("Auth-Token", authToken);
-
-                return this.http.post(url, body, options)
-                    .map(res => this.parseResponse(res))
-                    .catch(this.handleError)
-            });
+        return this.http.post(url, body, options)
+            .map(res => this.parseResponse(res))
+            .catch(this.handleError);
     }
 
     protected getData<T>(url: string, options?: RequestOptionsArgs): Observable<T> {
-        options = this.makeOptions(options);
-
-        return this.store.select(selectors.getAccountAuthToken)
-            .first().switchMap(authToken => {
-                if (authToken)
-                    options.headers.append("Auth-Token", authToken);
-
-                return this.http.get(url, options)
-                    .map(res => this.parseResponse(res))
-                    .catch(this.handleError)
-            });
+        return this.http.get(url, options)
+            .map(res => this.parseResponse(res))
+            .catch(this.handleError)
     }
 
     private parseResponse(res: Response) {
         console.log("response", res);
+
         let contentType = res.headers.get("Content-Type");
         if (contentType.indexOf("application/json") > -1) {
             return res.json();
@@ -76,6 +45,7 @@ export class BaseService {
 
     private handleError(error: Response | any) {
         console.error(error);
+
         // In a real world app, you might use a remote logging infrastructure
         let errMsg: string;
         if (error instanceof Response) {

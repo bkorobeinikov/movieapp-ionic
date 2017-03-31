@@ -17,6 +17,7 @@ import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/withLatestFrom';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/first';
 
 import { Action, Store } from "@ngrx/store";
 import { Effect, Actions } from '@ngrx/effects';
@@ -130,7 +131,7 @@ export class AccountEffects {
     }
 
     private doReloginFlow() {
-        return this.store.select(selectors.getAccountAuth)
+        return this.store.select(selectors.getAccountAuth).first()
             .switchMap(auth => {
                 if (auth.method != actionsAccount.LoginMethod.Email) {
                     return Observable.throw(new Error("Unsupported auth method " + actionsAccount.LoginMethod[auth.method]));

@@ -22,8 +22,8 @@ export class AccountService extends BaseService {
     constructor(
         http: Http,
         private planetaKinoService: PlanetaKinoV2Service,
-        store: Store<State>) {
-        super(http, store);
+        private store: Store<State>) {
+        super(http);
     }
 
     login(login: string, password: string): Observable<ServiceResponse<{ authToken: string }>> {
@@ -37,11 +37,11 @@ export class AccountService extends BaseService {
                 data: Mapper.mapToLogin(res.data),
             };
         }).catch((err: PlanetaKinoV2JsonResponse<any>) => {
-            throw {
+            return Observable.throw({
                 code: err.code,
                 message: err.message,
                 data: undefined
-            };
+            });
         });
     }
 
@@ -57,11 +57,11 @@ export class AccountService extends BaseService {
                     },
                 };
             }).catch((err: PlanetaKinoV2JsonResponse<any>) => {
-                throw {
+                return Observable.throw({
                     code: err.code,
                     message: err.message,
                     data: undefined
-                };
+                });
             });;
     }
 }
