@@ -1,7 +1,6 @@
 import { Injectable } from "@angular/core";
 
 import { Observable } from "rxjs/Observable";
-import { empty } from 'rxjs/observable/empty';
 import { of } from 'rxjs/observable/of';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
@@ -11,9 +10,9 @@ import 'rxjs/add/operator/skip';
 import 'rxjs/add/operator/takeUntil';
 
 import { Action, Store } from "@ngrx/store";
-import { Effect, Actions, toPayload } from '@ngrx/effects';
+import { Effect, Actions } from '@ngrx/effects';
 
-import { MovieService } from './../../core/movie.service';
+import { CinemaService } from './../../core/cinema.service';
 
 import * as actionsMovie from './../actions/movie';
 import * as actionsAccount from './../actions/account';
@@ -98,6 +97,6 @@ export class MovieEffects {
         });
 
     constructor(private actions$: Actions,
-        private movieService: MovieService,
+        private movieService: CinemaService,
         private store: Store<State>) { }
 }

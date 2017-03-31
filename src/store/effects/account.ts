@@ -124,10 +124,7 @@ export class AccountEffects {
                 return this.accountService.login(payload.email, payload.password);
             }
             case actionsAccount.LoginMethod.Facebook: {
-                return this.accountService.loginFacebook()
-                    .map(res => {
-                        throw new Error("Not Implemented");
-                    });
+                Observable.throw(new Error("Not Implemented"));
             }
         }
     }

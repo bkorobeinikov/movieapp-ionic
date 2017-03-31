@@ -2,7 +2,6 @@ import { Action } from '@ngrx/store';
 import { type } from './../util';
 
 import { Showtime, Cinema } from './../models';
-import { CinemaMovie } from "../models/cinema-movie.model";
 
 export const ActionTypes = {
     LOAD: type("[Cinema] Load"),

@@ -165,7 +165,7 @@ export class CheckoutPage {
                     loading.dismiss().then(() => {
                         this.alertCtrl.create({
                             message: "Verification Failed. You where logged out."
-                        })
+                        }).present();
                     });
                 } else {
                     loading.dismiss().then(() => {
