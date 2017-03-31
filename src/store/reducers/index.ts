@@ -37,7 +37,7 @@ const reducers = {
     account: fromAccount.reducer,
 };
 
-const withLocalStorage = localStorageSync(["movie", "ui", "cinema", "booking", "ticket", "account"], true);
+const withLocalStorage = localStorageSync(["movie", { ui: [] }, "cinema", "booking", "ticket", "account"], true);
 const devReducer: ActionReducer<State> = compose(withLocalStorage, storeFreeze, combineReducers)(reducers);
 const prodReducer: ActionReducer<State> = compose(withLocalStorage, combineReducers)(reducers);
 

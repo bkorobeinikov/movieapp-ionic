@@ -48,6 +48,8 @@ export const getCinemaCurrentMovies = createSelector(getUiMoviesCategory, getMov
             return [];
 
         let map = movieMapToCinema[cinemaId];
+        if (map == null)
+            return [];
 
         if (category == "future")
             return map.otherIds.map(id => allMovies[id]);

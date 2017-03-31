@@ -17,13 +17,22 @@ import { MovieService } from './../../core/movie.service';
 
 import * as actionsMovie from './../actions/movie';
 import * as actionsAccount from './../actions/account';
+import * as actionsCinema from './../actions/cinema';
 import { State } from "./../../store";
 import * as selectors from './../selectors';
 
 import * as _ from 'lodash';
+import moment from 'moment';
 
 @Injectable()
 export class MovieEffects {
+
+    @Effect()
+    cinemaChange$ = this.actions$
+        .ofType(actionsCinema.ActionTypes.CHANGE_CURRENT, actionsCinema.ActionTypes.LOAD_SUCCESS)
+        .withLatestFrom(this.store.select(selectors.getCinemaCurrentId))
+        // tslint:disable-next-line:no-unused-variable
+        .map(([action, cinemaId]) => new actionsMovie.LoadCheckCacheAction({ cinemaId: cinemaId }));
 
     @Effect()
     onAccountUpdated$ = this.actions$
@@ -39,20 +48,45 @@ export class MovieEffects {
         })
         .filter(cinemaIds => cinemaIds.length > 0)
         .mergeMap(cinemaIds => {
-            return cinemaIds.map(id => new actionsMovie.LoadAction({ cinemaId: id }));
+            return cinemaIds.map(id => new actionsMovie.LoadCheckCacheAction({ cinemaId: id }));
+        });
+
+    @Effect()
+    loadCheckCache$: Observable<Action> = this.actions$
+        .ofType(actionsMovie.ActionTypes.LOAD_CHECK_CACHE)
+        .withLatestFrom(this.store.select(selectors.getMovieMapToCinema))
+        .filter(([actionRaw, mapMovieToCinema]) => {
+            let action = <actionsMovie.LoadCheckCacheAction>actionRaw;
+            let cinemaId = action.payload.cinemaId;
+            let cinemaMap = mapMovieToCinema[cinemaId];
+
+            if (cinemaMap == null || cinemaMap.loadedAt == null)
+                return true;
+
+            // 5 minutes cache
+            if (moment(cinemaMap.loadedAt).isAfter(moment().subtract(1, "minutes")))
+                return false;
+
+            return true;
+        }).map(([actionRaw, mapMovieToCinema]) => {
+            let action = <actionsMovie.LoadCheckCacheAction>actionRaw;
+            let cinemaId = action.payload.cinemaId;
+            return new actionsMovie.LoadAction({ cinemaId: cinemaId });
         });
 
     @Effect()
     load$: Observable<Action> = this.actions$
         .ofType(actionsMovie.ActionTypes.LOAD)
         .withLatestFrom(this.store.select(selectors.getCinemaEntities))
-        .switchMap(([actionRaw, cinemas]) => {
+        .mergeMap(([actionRaw, cinemas]) => {
             let action = <actionsMovie.LoadAction>actionRaw;
             let cinema = cinemas[action.payload.cinemaId];
 
-            let next$ = this.actions$.ofType(actionsMovie.ActionTypes.LOAD);
+            let next$ = this.actions$.ofType(actionsMovie.ActionTypes.LOAD)
+                .filter((action: actionsMovie.LoadAction) => action.payload.cinemaId == cinema.id).skip(1);
 
             return this.movieService.getMoviesByCity(cinema.city.id)
+                //.takeUntil(next$)
                 .map(res => new actionsMovie.LoadSuccessAction({
                     cinemaId: cinema.id,
                     released: res.released,

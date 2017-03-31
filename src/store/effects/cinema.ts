@@ -23,7 +23,6 @@ import { State } from './../reducers';
 import * as actionsCinema from './../actions/cinema';
 import * as actionsMovie from './../actions/movie';
 import * as selectors from './../selectors';
-import { Cinema } from './../models';
 
 import { CinemaService } from "../../core/cinema.service";
 
@@ -51,7 +50,6 @@ export class CinemaEffects {
         // tslint:disable-next-line:no-unused-variable
         .mergeMap(([action, cinemaId]) => ([
             new actionsCinema.UpdateAction({ cinemaId: cinemaId }),
-            new actionsMovie.LoadAction({ cinemaId: cinemaId }),
             new actionsCinema.ShowtimeCheckAndLoadAction(cinemaId),
         ]));
 
@@ -93,23 +91,6 @@ export class CinemaEffects {
                 movieId: movieId
             });
         });
-
-
-    // @Effect()
-    // checkAndLoad$: Observable<Action> = this.actions$
-    //     .ofType(actionsCinema.ActionTypes.SHOWTIME_CHECK_AND_LOAD)
-    //     .map(toPayload)
-    //     .withLatestFrom(this.store.select(selectors.getCinema))
-    //     .switchMap(([cinemaId, screenings]) => {
-    //         var cinemanScreenings = screenings[cinemaId];
-
-    //         if (cinemanScreenings == null ||
-    //             moment(cinemanScreenings.loadedAt).isBefore(moment().subtract(5, "minutes"))) {
-    //             return of(new actionsCinema.ShowtimeLoadAction(cinemaId));
-    //         }
-
-    //         return empty();
-    //     });
 
     @Effect()
     loadShowtimes$: Observable<Action> = this.actions$
