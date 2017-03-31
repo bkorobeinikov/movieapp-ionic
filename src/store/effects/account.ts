@@ -88,11 +88,9 @@ export class AccountEffects {
     @Effect()
     verifyAuth$ = this.actions$
         .ofType(actionsAccount.ActionTypes.VERIFY_AUTH)
-        .do(() => console.log("verifyAuth run"))
         .withLatestFrom(this.store.select(selectors.getAccountLoggedIn))
         // tslint:disable-next-line:no-unused-variable
         .filter(([actionRaw, loggedIn]) => loggedIn == true)
-        //.takeUntil(this.actions$.ofType(actionsAccount.ActionTypes.LOGOUT))
         .switchMap(() => {
             return this.accountService.getProfile()
                 .mergeMap((res: any) => ([
@@ -138,8 +136,8 @@ export class AccountEffects {
                 }
 
                 let failed$ = Observable.from([
+                    new actionsAccount.VerifyAuthFinishAction({ status: AsyncStatus.Failed }),
                     new actionsAccount.LogoutAction(),
-                    new actionsAccount.VerifyAuthFinishAction({ status: AsyncStatus.Failed })
                 ]);
 
                 return this.doLogin(
@@ -148,15 +146,17 @@ export class AccountEffects {
                         email: auth.email,
                         password: auth.password
                     }))
-                    .switchMap((loginRes) => {
+                    .do((res) => {
+                        this.store.dispatch(new actionsAccount.VerifyAuthLoginSuccessAction(
+                            new actionsAccount.LoginSuccessAction({ authToken: res.data.authToken })))
+                    }).switchMap(() => {
                         return this.accountService.getProfile()
                             .mergeMap(res => ([
-                                new actionsAccount.LoginSuccessAction({ authToken: loginRes.data.authToken }),
-                                new actionsAccount.UpdateSuccessAction({ account: res.data.account, tickets: res.data.tickets, }),
+                                new actionsAccount.VerifyAuthUpdateSuccessAction(
+                                    new actionsAccount.UpdateSuccessAction({ account: res.data.account, tickets: res.data.tickets, })),
                                 new actionsAccount.VerifyAuthFinishAction({ status: AsyncStatus.Success }),
                             ]))
                             .catch(() => failed$);
-
                     }).catch(() => failed$);
             })
     }

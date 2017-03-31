@@ -66,7 +66,11 @@ export function reducer(state: State = initialState, actionRaw: actionsAccount.A
                 loggingIn: true,
             });
         }
+        case actionsAccount.ActionTypes.VERIFY_AUTH_LOGIN_SUCCESS:
         case actionsAccount.ActionTypes.LOGIN_SUCCESS: {
+            if (actionRaw.type == actionsAccount.ActionTypes.VERIFY_AUTH_LOGIN_SUCCESS)
+                actionRaw = (<actionsAccount.VerifyAuthLoginSuccessAction>actionRaw).payload;
+
             let action = <actionsAccount.LoginSuccessAction>actionRaw;
             let authToken = action.payload.authToken;
 
@@ -108,7 +112,11 @@ export function reducer(state: State = initialState, actionRaw: actionsAccount.A
                 updating: true,
             });
         }
+        case actionsAccount.ActionTypes.VERIFY_AUTH_UPDATE_SUCCESS:
         case actionsAccount.ActionTypes.UPDATE_SUCCESS: {
+            if (actionRaw.type == actionsAccount.ActionTypes.VERIFY_AUTH_UPDATE_SUCCESS)
+                actionRaw = (<actionsAccount.VerifyAuthUpdateSuccessAction>actionRaw).payload;
+                
             let action = <actionsAccount.UpdateSuccessAction>actionRaw;
             let account = action.payload.account;
 
