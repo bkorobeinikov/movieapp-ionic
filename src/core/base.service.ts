@@ -15,29 +15,14 @@ import { State } from "./../store/";
 import * as selectors from './../store/selectors';
 
 export class BaseService {
-    private headers: Headers;
-
     constructor(
         private http: Http,
         protected store?: Store<State>) {
-
-        this.headers = new Headers();
-        this.headers.append('Content-Type', 'text/xml');
-        this.headers.append('Access-Control-Allow-Origin', '*');
-        console.log("base:service", store);
     }
 
     private makeOptions(options?: RequestOptionsArgs) {
-        options = options != null ? _.clone<RequestOptionsArgs>(options) : {};
-        if (options.headers) {
-            this.headers.forEach((values, name) => {
-                values.forEach(value => {
-                    options.headers.append(name, value);
-                });
-            });
-        } else {
-            options.headers = this.headers;
-        }
+        options = options || {};
+        options.headers = options.headers || new Headers();
 
         return options;
     }
