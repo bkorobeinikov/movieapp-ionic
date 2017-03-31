@@ -56,8 +56,9 @@ export class SignUpPage implements OnDestroy {
     }
 
     facebook() {
-        this.store.dispatch(new actionsAccount.LoginAction({
-            loginMethod: actionsAccount.LoginMethod.Facebook,
-        }));
+        this.alertCtrl.create({
+            message: "Signing in via Facebook is not supported by PlanetaKino",
+            buttons: ["Dismiss"],
+        }).present();
     }
 }
