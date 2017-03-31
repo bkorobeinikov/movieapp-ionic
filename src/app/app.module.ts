@@ -54,7 +54,7 @@ import { PlanetaKinoV2Service } from './../core/planetakino-api/planetakino-api.
     //CoreModule,
     HttpModule,
 
-    StoreModule.provideStore(reducer, initialState),
+    StoreModule.provideStore(reducer),
     StoreDevtoolsModule.instrumentOnlyWithExtension(),
     EffectsModule.run(MovieEffects),
     EffectsModule.run(CinemaEffects),

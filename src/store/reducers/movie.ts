@@ -31,7 +31,7 @@ export const initialState: State = {
     selectedId: null,
 };
 
-export function reducer(state = initialState, actionRaw: movie.Actions): State {
+export function reducer(state: State = initialState, actionRaw: movie.Actions): State {
     switch (actionRaw.type) {
         case movie.ActionTypes.LOAD: {
             return Object.assign({}, state, {

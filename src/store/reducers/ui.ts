@@ -13,8 +13,8 @@ export const initialState: State = {
     moviesCategory: "current",
 };
 
-export function reducer(state = initialState, actionRaw: ui.Actions): State {
-    switch(actionRaw.type) {
+export function reducer(state: State = initialState, actionRaw: ui.Actions): State {
+    switch (actionRaw.type) {
         case ui.ActionTypes.ROOT_CHANGE_TAB: {
             let action = <ui.RootChangeTabAction>actionRaw;
             let newIndex = action.payload;

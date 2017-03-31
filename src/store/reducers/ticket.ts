@@ -24,7 +24,7 @@ export const initialState: State = {
     selectedTicketId: null,
 };
 
-export function reducer(state: State, actionRaw: actionsTicket.Actions | actionsAccount.UpdateSuccessAction) {
+export function reducer(state: State = initialState, actionRaw: actionsTicket.Actions | actionsAccount.UpdateSuccessAction) {
     switch (actionRaw.type) {
         case actionsTicket.ActionTypes.LOAD: {
             return Object.assign({}, state, {
