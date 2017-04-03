@@ -3,9 +3,12 @@ import { NavController, AlertController } from "ionic-angular";
 import { Store } from "@ngrx/store";
 import { State } from "./../../store";
 import * as selectors from './../../store/selectors';
+import * as actionsAccount from './../../store/actions/account';
 
 import * as _ from 'lodash';
 import { Subscription } from "rxjs/Subscription";
+
+import { SignUpConfirmPage } from "../signup-confirm/signup-confirm";
 
 @Component({
     selector: "page-signup",
@@ -39,9 +42,22 @@ export class SignUpPage implements OnDestroy {
     }
 
     signup() {
-        this.alertCtrl.create({
-            message: "Sign Up is not Implemented",
-        });
+        this.store.select(selectors.getAccountSignupStage1Op).skip(1)
+            .filter(op => !op.pending).first()
+            .subscribe((stage1Op) => {
+                if (!stage1Op.success) {
+                    this.alertCtrl.create({
+                        title: "Failed",
+                        message: stage1Op.message
+                    }).present()
+                } else {
+                    this.navCtrl.push(SignUpConfirmPage, {
+                        creds: this.creds
+                    });
+                }
+            });
+
+        this.store.dispatch(new actionsAccount.SignUpStage1Action({ phone: this.creds.tel }));
     }
 
     signin() {

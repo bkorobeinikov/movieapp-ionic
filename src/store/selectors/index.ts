@@ -142,9 +142,12 @@ export const getAccountLoggedIn = createSelector(getAccountLoginOp, (loginOp) =>
     if (loginOp == null)
         return false;
 
-    loginOp.status == AsyncStatus.Success
+    return loginOp.status == AsyncStatus.Success
 });
 export const getAccountUpdateOp = createSelector(getAccountState, fromAccount.getUpdateOp);
 export const getAccountVerifyOp = createSelector(getAccountState, fromAccount.getVerifyOp);
 export const getAccountAuth = createSelector(getAccountState, fromAccount.getAuth);
 export const getAccountAuthToken = createSelector(getAccountAuth, auth => auth.token);
+
+export const getAccountSignupStage1Op = createSelector(getAccountState, fromAccount.getSignupStage1Op);
+export const getAccountSignupStage2Op = createSelector(getAccountState, fromAccount.getSignupStage2Op);

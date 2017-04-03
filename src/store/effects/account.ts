@@ -68,8 +68,8 @@ export class AccountEffects {
         .ofType(actionsAccount.ActionTypes.LOGOUT)
         .switchMap(() => {
             return this.accountService.logout()
-                .map(() => new actionsAccount.LogoutSuccess())
-                .catch(() => of(new actionsAccount.LogoutSuccess()));
+                .map(() => new actionsAccount.LogoutSuccessAction())
+                .catch(() => of(new actionsAccount.LogoutSuccessAction()));
         });
 
     @Effect()
@@ -115,6 +115,28 @@ export class AccountEffects {
                         new actionsAccount.VerifyAuthFinishAction({ status: AsyncStatus.Fail, message: res.message })
                     ]);
                 });
+        });
+
+
+    @Effect()
+    signupStage1$ = this.actions$
+        .ofType(actionsAccount.ActionTypes.SIGNUP_STAGE1)
+        .switchMap(actionRaw => {
+            let action = <actionsAccount.SignUpStage1Action>actionRaw;
+            return this.accountService.sendActivationSms(action.payload.phone)
+                .map(() => new actionsAccount.SignUpStage1SuccessAction())
+                .catch((res: ServiceResponse<any>) => of(new actionsAccount.SignUpStage1FailAction({ message: res.message })));
+        });
+
+    @Effect()
+    signupStage2$ = this.actions$
+        .ofType(actionsAccount.ActionTypes.SIGNUP_STAGE2)
+        .switchMap(actionRaw => {
+            let action = <actionsAccount.SignUpStage2Action>actionRaw;
+            let data = action.payload;
+            return this.accountService.register(data.email, data.password, data.smsCode, data.phone)
+                .map(() => new actionsAccount.SignUpStage2SuccessAction())
+                .catch((res: ServiceResponse<any>) => of(new actionsAccount.SignUpStage2FailAction({ message: res.message })));
         });
 
     constructor(

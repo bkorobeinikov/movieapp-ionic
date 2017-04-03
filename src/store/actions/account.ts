@@ -11,6 +11,13 @@ export const ActionTypes = {
     LOGOUT: type("[Account] Logout"),
     LOGOUT_SUCCESS: type("[Account] Logout Success"),
 
+    SIGNUP_STAGE1: type("[Account] SignUp Stage 1"),
+    SIGNUP_STAGE1_SUCCESS: type("[Account] SignUp Stage 1 Success"),
+    SIGNUP_STAGE1_FAIL: type("[Account] SignUp Stage 1 Fail"),
+    SIGNUP_STAGE2: type("[Account] SignUp Stage 2"),
+    SIGNUP_STAGE2_SUCCESS: type("[Account] SignUp Stage 2 Success"),
+    SIGNUP_STAGE2_FAIL: type("[Account] SignUp Stage 2 Fail"),
+
     VERIFY_AUTH: type("[Account] Verify Auth"),
     VERIFY_AUTH_LOGIN_SUCCESS: type("[Account] Verify Auth Login Success"),
     VERIFY_AUTH_UPDATE_SUCCESS: type("[Account] Verify Auth Update Success"),
@@ -60,10 +67,46 @@ export class LogoutAction implements Action {
     constructor() { }
 }
 
-export class LogoutSuccess implements Action {
+export class LogoutSuccessAction implements Action {
     readonly type = ActionTypes.LOGOUT_SUCCESS;
 
     constructor() { }
+}
+
+export class SignUpStage1Action implements Action {
+    readonly type = ActionTypes.SIGNUP_STAGE1;
+
+    constructor(public payload: { phone: string }) { }
+}
+
+export class SignUpStage1SuccessAction implements Action {
+    readonly type = ActionTypes.SIGNUP_STAGE1_SUCCESS;
+
+    constructor() { }
+}
+
+export class SignUpStage1FailAction implements Action {
+    readonly type = ActionTypes.SIGNUP_STAGE1_FAIL;
+
+    constructor(public payload: { message: string }) { }
+}
+
+export class SignUpStage2Action implements Action {
+    readonly type = ActionTypes.SIGNUP_STAGE2;
+
+    constructor(public payload: { email: string, password: string, smsCode: string, phone: string }) { }
+}
+
+export class SignUpStage2SuccessAction implements Action {
+    readonly type = ActionTypes.SIGNUP_STAGE2_SUCCESS;
+
+    constructor() { }
+}
+
+export class SignUpStage2FailAction implements Action {
+    readonly type = ActionTypes.SIGNUP_STAGE2_FAIL;
+
+    constructor(public payload: { message: string }) { }
 }
 
 export class VerifyAuthAction implements Action {
@@ -125,11 +168,20 @@ export type Actions
     | LoginSuccessAction
     | LoginFailAction
     | LogoutAction
-    | LogoutSuccess
+    | LogoutSuccessAction
+
+    | SignUpStage1Action
+    | SignUpStage1SuccessAction
+    | SignUpStage1FailAction
+    | SignUpStage2Action
+    | SignUpStage2SuccessAction
+    | SignUpStage2FailAction
+
     | UpdateAction
     | UpdateSuccessAction
     | UpdateFailAction
     | ChangeNotificationsAction
+
     | VerifyAuthAction
     | VerifyAuthLoginSuccessAction
     | VerifyAuthUpdateSuccessAction
