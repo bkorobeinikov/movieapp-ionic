@@ -63,7 +63,8 @@ export class LoginPage implements OnDestroy {
             return;
 
         this.alertCtrl.create({
-            message: "Signing in via Facebook is not supported by PlanetaKino",
+            title: "Not Supported",
+            message: "Signing in via Facebook is not supported",
             buttons: ["Dismiss"],
         }).present();
     }

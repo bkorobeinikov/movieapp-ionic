@@ -17,6 +17,7 @@ import { TicketPage } from './../pages/ticket/ticket';
 import { LoginPage } from './../pages/login/login';
 import { LoginNavPage } from './../pages/login/login-nav';
 import { SignUpPage } from './../pages/signup/signup';
+import { SignUpConfirmPage } from './../pages/signup-confirm/signup-confirm';
 import { CinemasPage } from './../pages/cinemas/cinemas';
 import { NewsPage } from './../pages/news/news';
 
@@ -79,6 +80,7 @@ import { PlanetaKinoV2Service } from './../core/planetakino-api/planetakino-api.
     LoginPage,
     LoginNavPage,
     SignUpPage,
+    SignUpConfirmPage,
     CinemasPage,
     NewsPage,
 
@@ -105,6 +107,7 @@ import { PlanetaKinoV2Service } from './../core/planetakino-api/planetakino-api.
     LoginPage,
     LoginNavPage,
     SignUpPage,
+    SignUpConfirmPage,
     CinemasPage,
     NewsPage,
 
