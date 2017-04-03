@@ -1,0 +1,6 @@
+<ion-tabs #tabs>
+  <ion-tab [root]="movies" tabIcon="list-box" tabTitle="Movies" (ionSelect)="onSelect(0)" tabsHideOnSubPages="true" ></ion-tab>
+  <ion-tab [root]="tickets" tabIcon="paper" tabTitle="Tickets" tabBadgeStyle="primary" [tabBadge]="ticketsCount" (ionSelect)="onSelect(1)" tabsHideOnSubPages="true"></ion-tab>
+  <ion-tab [root]="news" tabIcon="globe" tabTitle="News" tabBadgeStyle="danger" [tabBadge]="unreadNewsCount" (ionSelect)="onSelect(2)" tabsHideOnSubPages="true"></ion-tab>
+  <ion-tab [root]="account" tabIcon="person" tabTitle="Profile" (ionSelect)="onSelect(3)" tabsHideOnSubPages="true"></ion-tab>
+</ion-tabs>

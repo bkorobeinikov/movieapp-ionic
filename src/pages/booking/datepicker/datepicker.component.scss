@@ -1,0 +1,118 @@
+datepicker {
+    position: relative;
+    padding: 0 1em;
+
+    &.no-swiper {
+        .slides-swiper {
+            display: none;
+        }
+    }
+
+    .slides-swiper {
+
+        width: .5em;
+        height: .5em;
+
+        border-width: 0 .2em .2em 0;
+        border-style: solid;
+        border-color: #1EA1DC;
+
+        background: transparent;
+        
+        overflow: visible;
+
+        position: absolute;
+        top: 50%;
+        margin-top: -.25em;
+        z-index: 10;
+        cursor: pointer;
+
+        &.slides-swiper-prev {
+            transform: rotate(135deg); 
+            left: 0;
+        }
+
+        &.slides-swiper-next {
+            transform: rotate(315deg);
+            right: 0;
+        }
+
+        &.swiper-button-disabled {
+            opacity: .5;
+
+            cursor: auto;
+            pointer-events: none;
+        }
+    }
+
+    .slides {
+        .item {
+            padding: 0;
+
+            .item-inner {
+                padding: 0;
+
+                border: none;
+
+                .input-wrapper {
+                    overflow: visible;
+                }
+            }
+
+            .label {
+                margin: 0;
+
+                text-align: center;
+            }
+
+            &.item-radio-checked {
+            }
+
+            .radio {
+                margin: 0;
+                .radio-icon {
+                    display: none;
+                }
+            }
+        }
+    }
+
+    .slides {
+
+        margin-bottom: 1em;
+
+        .item {
+            .dayOfWeek {
+                color: #aaa;
+                
+                text-align: center;
+
+                span {
+                    font-size: .5em;
+                    text-transform: uppercase;
+                }
+            }
+
+            .day {
+                margin: 0 auto;
+
+                width: 2em;
+                height: 2em;
+                line-height: 2em;
+
+                color: #222;
+
+                text-align: center;
+            }
+
+            &.item-radio-checked {
+                .day {
+                    border-radius: 50%;
+                    background-color: #1EA1DC;
+                    color: white;
+                    text-shadow: 0 0 1px white;
+                }
+            }
+        }
+    }
+}

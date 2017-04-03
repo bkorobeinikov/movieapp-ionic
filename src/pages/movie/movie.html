@@ -1,0 +1,47 @@
+<ion-header no-border>
+    <ion-navbar>
+    </ion-navbar>
+</ion-header>
+
+<ion-content fullscreen="true">
+
+    <div class="movie-header">
+        <img [style.background-image]="'url(' + movie?.picture + ')' | safe: 'style'"> 
+    </div>
+    <div class="movie-content" padding *ngIf="movie != null">
+        <div class="movie-summary">
+            <div class="poster">
+                <div class="content">
+                    <img src="{{movie.poster}}">
+                </div>
+            </div>
+            <div class="item-content">
+                <span class="title">{{movie.name}}</span>
+                <span class="country">{{movie.countries | join: ", "}}</span>
+                <span class="genre ">{{movie.genres | join:" | "}}</span>
+                <span class="line"> 
+                    <span class="date">{{movie.sinceDate | date:"yMMMd"}}</span>
+                <span class="time">{{duration(movie.duration)}}</span>
+                </span>
+                <!-- services rating -->
+                <div class="ratings" *ngIf="movie.ratings != null">
+                    <div class="imdb" *ngIf="movie.ratings.imdb != null">
+                        <span>imdb <span class="nb">{{movie.ratings.imdb.rating}}</span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="movie-more">
+            <span><span class="key">Director: </span>{{movie.director}}</span>
+            <span><span class="key">Cast: </span>{{movie.cast | join:", "}}</span>
+            <span class="description">{{movie.description}}</span>
+        </div>
+    </div>
+
+</ion-content>
+
+<ion-footer *ngIf="movie?.showtimes == true">
+    <ion-toolbar>
+        <button ion-button color="primary" (click)="goToBooking()">Buy Ticket</button>
+    </ion-toolbar>
+</ion-footer>

@@ -1,0 +1,25 @@
+<ion-header>
+    <ion-navbar>
+        <ion-title>Confirm Phone #</ion-title>
+    </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+
+    <div class="content">
+        <ion-note>
+            Wait for an SMS code and enter it in the field below
+        </ion-note>
+        <div class="singup-form">
+            <ion-list>
+                <ion-item>
+                    <ion-input type="tel" placeholder="Activation Code" [(ngModel)]="code" clearInput></ion-input>
+                </ion-item>
+            </ion-list>
+            <button ion-button block color="primary" [disabled]="canConfirm() == false" (click)="confirm()">
+                <span>Confirm</span>
+            </button>
+        </div>
+    </div>
+
+</ion-content>

@@ -1,0 +1,60 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>{{account == null ? "Login" : "Me"}}</ion-title>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content >
+  <ion-spinner *ngIf="(updateOp$ | async).pending"></ion-spinner>
+  <div class="account" *ngIf="account != null">
+    <div class="barcode-container">
+      <barcode [data]="account.cardId" format="EAN13" width="2"></barcode>
+    </div>
+    <div class="profile">
+      <div class="name">
+        <span>{{account.name}}</span>
+      </div>
+      <div class="email">
+        <span>{{account.email}}</span>
+      </div>
+    </div>
+    <ion-list>
+      <ion-item>
+        <ion-icon name="call" item-left></ion-icon>
+        <ion-label>Phone</ion-label>
+        <ion-note item-right>{{account.phone | tel}}</ion-note>
+      </ion-item>
+      <ion-item>
+        <ion-icon name="happy" item-left outline></ion-icon>
+        <ion-label>Bonuses</ion-label>
+        <ion-note item-right>{{account.bonuses}}</ion-note>
+      </ion-item>
+    </ion-list>
+    <ion-list>
+      <button ion-item (tap)="onCinemaChange()">
+        <ion-label>Cinema</ion-label>
+        <ion-note item-right>
+          {{cinema?.nameShort}}
+        </ion-note>
+      </button>
+    </ion-list>
+    <ion-list>
+      <ion-list-header>Notification</ion-list-header>
+      <ion-item>
+        <ion-label>Purchased Ticket</ion-label>
+        <ion-toggle [ngModel]="account.notifications.tickets" (ionChange)="onNotifTickets($event.checked)" [disabled]="true"></ion-toggle>
+      </ion-item>
+      <ion-item>
+        <ion-label>Schedule Updates</ion-label>
+        <ion-toggle [ngModel]="account.notifications.updates" (ionChange)="onNotifUpdates($event.checked)" [disabled]="true"></ion-toggle>
+      </ion-item>
+    </ion-list>
+    <div class="buttons" padding>
+      <button ion-button color="danger" outline icon-left (click)="logout()">
+        <ion-icon name="log-out"></ion-icon>
+        Log out
+      </button>
+    </div>
+  </div>
+</ion-content>

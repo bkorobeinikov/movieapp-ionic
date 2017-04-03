@@ -1,0 +1,228 @@
+@mixin aspect-ratio($width, $height) {
+  position: relative;
+  &:before {
+    display: block;
+    content: "";
+    width: 100%;
+    padding-top: ($height / $width) * 100%;
+  }
+  > .content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+}
+
+page-checkout {
+
+    font-size: 16px;
+
+    .keyvalue-row {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    .keyvalue {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+
+        >:first-child {
+            color: #555;
+            font-size: .6em;
+            text-transform: uppercase;
+        }
+
+        >:last-child {
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+    }
+
+    .content {
+
+        .movie-content {
+            margin-bottom: 1em;
+            .title {
+                text-align: center;
+
+                span {
+                    font-size: 2em;
+                }
+            }
+        }
+
+        .time-content {
+            margin-bottom: 2em;
+            justify-content: space-around;
+
+            .keyvalue {
+                font-size: 18px;
+                align-items: center;
+            }
+
+            .date {
+                .value {
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+
+                    >:first-child {
+                        margin-right: .5em;
+                        span {
+                            font-size: 2em;
+                        }
+                    }
+                    >:last-child {
+                        display: flex;
+                        flex-direction: column;
+                        >:last-child {
+                            font-size: .8em;
+                        }
+                    }
+
+                }
+            }
+
+            .time {
+                .value {
+                    span {
+                        font-size: 2em;
+                    }
+                }
+            }
+        }
+
+        .location-content {
+            margin-bottom: 1em;
+
+            .keyvalue {
+                >:last-child {
+                    font-size: 1em;
+                    font-weight: normal;
+                }
+            }
+        }
+
+        .grid {
+            padding: 0;
+            .row {
+                .col {
+                    padding: 0;
+                }
+            }
+        }
+
+        .hall-content {
+            .hall {
+                margin-bottom: .5em;
+            }
+        }
+
+        .seats-content {
+
+            .seat-container {
+                margin-bottom: .4em;
+                justify-content: flex-end;
+
+                .keyvalue {
+                    font-size: 18px;
+
+                    margin-left: .4em;
+                    min-width: 2.5em;
+
+                    align-items: center;
+                    justify-content: center;
+                }
+                
+                .row {
+                    background-color: gray;
+                    border-radius: 2px;
+                    padding: .4em;
+
+                    >:first-child {
+                        color: lightgray;
+                    }
+                    >:last-child {
+                        color: white;
+                    }
+                }
+                .seat {
+                    background-color: orange;
+                    border-radius: 2px;
+                    padding: .4em;
+
+                    >:first-child {
+                        color: brown;
+                    }
+                    >:last-child {
+                        color: white;
+                    }
+                }
+                .price {
+                    background-color: #f8f8f8;
+                    border-radius: 2px;
+                    padding: .4em;
+                }
+            }
+        }
+
+    }
+
+
+    ion-footer {
+        ion-toolbar.toolbar {
+            overflow: visible;
+            contain: none;
+
+            .toolbar-content {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+            }
+
+            .total {
+                align-self: center;
+
+                display: flex;
+                flex-direction: column;
+
+                .label {
+                    margin-bottom: .2em;
+
+                    font-size: 1.1em;
+                    font-weight: bold;
+
+                    color: #666;
+                }
+
+                .sum {
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+
+                    .cash {
+                        margin-right: .2em;
+                        font-size: 1.1em;
+                        font-weight: bold;
+                    }
+                    .bonus {
+                        font-size: .9em;
+                        color: gray;
+                    }
+                }
+            }
+
+            .pay {
+                align-self: flex-end;
+
+                //margin-top: -2.6em;
+                //margin-bottom: .6em;
+            }
+        }
+    }
+
+}

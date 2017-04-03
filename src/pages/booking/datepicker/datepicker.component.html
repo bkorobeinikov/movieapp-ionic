@@ -1,0 +1,17 @@
+<ion-slides #datepicker slidesPerView="7" radio-group [ngModel]="selected?.valueOf()" (ionChange)="onDateChange($event)">
+    <ng-container *ngFor="let date of dates">
+        <ion-slide>
+            <ion-item>
+                <ion-label>
+                    <div class="dayOfWeek"><span>{{date | moment: "ddd"}}</span></div>
+                    <div class="day"><span>{{date | moment: "D"}}</span></div>
+                </ion-label>
+                <ion-radio [value]="date.valueOf()" [disabled]="date.inactive"></ion-radio>
+            </ion-item>
+        </ion-slide>
+    </ng-container>
+</ion-slides>
+<div #dateSwiperPrev class="slides-swiper slides-swiper-prev"> 
+</div>
+<div #dateSwiperNext class="slides-swiper slides-swiper-next">
+</div>

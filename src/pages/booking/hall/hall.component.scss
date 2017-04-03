@@ -1,0 +1,70 @@
+hall {
+    width: 100%;
+    flex: 1;
+    display: flex;
+
+    .hall-content { 
+        width: 100%;
+
+        touch-action: none;
+
+        .g-screen {
+            overflow: visible;
+
+            .screen {
+                height: 10px;
+
+                fill: #ddd; 
+            }
+
+            .text {
+                font-size: 14px;
+
+                fill: #aaa;
+            }
+        }
+
+        .g-seats {
+
+            .seat {
+                fill: #ddd;
+
+                &.available {
+                    fill: #1aa3e0;
+                }
+
+                &.vip.available {
+                    fill: #DD4459;
+                }
+
+                &.selected {
+                    fill: orange;
+                }
+            }
+
+            text {
+                font-size: 10px;
+
+                text-anchor: middle;
+                alignment-baseline: central;
+                
+                fill: darken(#ddd, 10%);
+
+                pointer-events: none;
+
+                &.available {
+                    fill: lighten(#1aa3e0, 20%);
+                }
+
+                &.vip.available {
+                    fill: lighten(#DD4459, 30%);
+                }
+
+                &.selected {
+                    font-size: 12px;
+                    fill: white;
+                }
+            }
+        }
+    }
+}

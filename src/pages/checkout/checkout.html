@@ -1,0 +1,94 @@
+<ion-header>
+    <ion-navbar>
+        <ion-title>
+            Order
+        </ion-title>
+    </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+    <div class="content">
+        <div class="movie-content">
+            <div class="title"><span>{{order.movie.name}}</span></div>
+        </div>
+        <div class="time-content keyvalue-row">
+            <div class="date keyvalue">
+                <div class="label">DATE</div>
+                <div class="value">
+                    <div><span>{{showtime.time | moment:"D"}}</span></div>
+                    <div>
+                        <span>{{showtime.time | moment:"MMMM"}}</span>
+                        <span>{{showtime.time | moment:"dddd"}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="time keyvalue">
+                <div class="label">TIME</div>
+                <div class="value">
+                    <span>{{showtime.time | moment:"HH:mm"}}</span>
+                </div>
+            </div>
+        </div>
+        <div class="location-content">
+            <div class="keyvalue">
+                <div>CINEMA</div>
+                <div class="cinema">
+                    <div class="name">{{cinema.name}}</div>
+                    <address>{{cinema.address}}</address>
+                </div>
+            </div>
+        </div>
+        <ion-grid>
+            <ion-row>
+                <ion-col>
+                    <div class="hall-content">
+                        <div class="hall keyvalue">
+                            <div class="label">HALL</div>
+                            <div class="value">{{order.hall.name}}</div>
+                        </div>
+                        <div class="tech keyvalue">
+                            <div class="label">TECHNOLOGY</div>
+                            <div class="value">{{showtime.techId}}</div>
+                        </div>
+                    </div>
+                </ion-col>
+                <ion-col>
+                    <div class="seats-content">
+                        <div *ngFor="let seat of order.seats" class="seat-container keyvalue-row">
+                            <div class="row keyvalue">
+                                <span>ROW</span>
+                                <span>{{seat.row}}</span>
+                            </div>
+                            <div class="seat keyvalue">
+                                <span>SEAT</span>
+                                <span>{{seat.seat}}</span>
+                            </div>
+                            <div class="price keyvalue">
+                                <span>Price</span>
+                                <span>₴{{seat.price}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </ion-col>
+            </ion-row>
+        </ion-grid>
+    </div>
+</ion-content>
+
+<ion-footer>
+    <ion-toolbar padding-left padding-right>
+        <div class="total">
+            <div class="label">
+                Total
+            </div>
+            <div class="sum">
+                <div class="cash">₴{{getTotalPrice()}}</div>
+                <div class="bonus">or {{getTotalBonus()}} bonuses</div>
+            </div>
+        </div>
+        <button class="pay" ion-button color="secondary" (click)="pay()" icon-left large [disabled]="canPay == false">
+            <ion-icon name="card"></ion-icon>
+            Buy
+        </button>
+    </ion-toolbar>
+</ion-footer>

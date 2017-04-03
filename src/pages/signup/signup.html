@@ -1,0 +1,52 @@
+<ion-header>
+    <ion-navbar>
+        <ion-title>Registration</ion-title>
+    </ion-navbar>
+</ion-header>
+
+<ion-content padding no-bounce>
+    <div class="content">
+        <div class="logo">
+            <span>[LOGO]</span>
+        </div>
+        <div class="company">
+            <div class="name"><span>[CINEMA NAME]</span></div>
+            <div class="link"><a href="http://cinema-website.com" target="_blank">[http://cinema-website.com]</a></div>
+        </div>
+        <div class="singup-form">
+            <ion-list>
+                <ion-item>
+                    <ion-input type="tel" placeholder="Phone" [(ngModel)]="creds.tel" clearInput></ion-input>
+                </ion-item>
+                <ion-item>
+                    <ion-input type="email" placeholder="Email" [(ngModel)]="creds.email" clearInput></ion-input>
+                </ion-item>
+                <ion-item>
+                    <ion-input type="password" placeholder="Password" [(ngModel)]="creds.password" clearInput></ion-input>
+                </ion-item>
+            </ion-list>
+            <button ion-button block color="primary" [disabled]="canSignUp() == false" (click)="signup()">
+                <span>Sign Up</span>
+            </button>
+        </div>
+        <div class="signup-separator">
+            <div></div>
+            <div class="text">OR</div>
+            <div></div>
+        </div>
+        <div class="singup-social">
+            <button ion-button clear color="primary" (click)="facebook()" icon-left>
+                <ion-icon name="logo-facebook"></ion-icon>
+                <span>Log In With Facebook</span>
+            </button>
+        </div>
+        <ion-spinner *ngIf="loggingIn"></ion-spinner>
+    </div>
+</ion-content>
+
+<ion-footer no-border>
+    <div class="signup-login">
+        <span class="text">Already have an account?</span>
+        <button ion-button clear color="primary" (click)="signin()">Sign In</button>
+    </div>
+</ion-footer>

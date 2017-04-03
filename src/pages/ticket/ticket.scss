@@ -1,0 +1,193 @@
+page-ticket {
+
+    .ticket-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .movie-summary {
+        overflow: visible;
+        
+        margin-bottom: 1em;
+        padding: 0;
+
+        align-items: flex-start;
+
+        display: flex;
+        flex-direction: row;
+
+        .poster {
+            margin-right: 1em;
+
+            @include aspect-ratio(1, 1.5);
+
+            flex: 2;
+            min-width: auto;
+            min-height: auto;
+
+            padding: 0;
+
+            img {
+                width: auto;
+                height: auto;
+
+                //box-shadow: 0 0 10px black;
+                //box-shadow: 0 -2px 10px #555;
+                border-radius: 2px;
+            }
+        }
+
+        .item-content {
+            overflow: hidden;
+
+            flex: 4;
+
+            display: flex;
+            flex-direction: column;
+
+            padding: 0;
+        }
+
+        .title {
+            margin-bottom: .5em;
+
+            font-size: 1.2em;
+            font-weight: bold;
+
+            color: $color-title;
+        }
+
+        .country {
+            margin-bottom: .2em;
+
+            font-size: .8em;
+
+            color: $color-subtitle;
+        }
+
+        .genre {
+            margin-bottom: .5em;
+
+            font-size: .8em;
+
+            color: $color-subsubtitle;
+        }
+
+        .line {
+            margin-bottom: .5em;
+
+            display: flex;
+            flex-direction: row;
+
+            >* {
+                margin: 0 .4em 0 0;
+            }
+        }           
+
+        .date {
+                font-size: .8em;
+
+                color: $color-subtitle;
+        }
+
+        .time {
+                font-size: .8em;
+                font-weight: bold;
+
+                color: $color-subtitle;
+        }
+
+        .tech {
+            padding: .5em;
+            border-radius: 2px;
+
+            background-color: #1aa3e0;
+            color: white;
+            text-shadow: 0 0 1px white;
+            align-self: flex-start;
+        }
+    }
+
+    .location-content {
+        display: flex;
+        flex-direction: row;
+
+        margin-bottom: 1em;
+
+        .icon {
+            color: #1aa3e0;
+            font-size: 3em;
+
+            margin-right: .5em;
+        }
+
+        .cinema {
+            display: flex;
+            flex-direction: column;
+        }
+    }
+
+    .seats-content {
+        display: flex;
+        flex-direction: column;
+
+        .slides {
+            .swiper-slide {
+                margin-bottom: 30px;
+            }
+        }
+
+        .seat-info {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            flex-wrap: wrap;
+
+            > div {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+
+                flex: 2;
+
+                &:last-child {
+                    flex: 1;
+                }
+
+                span:first-child {
+                    color: #555;
+                    font-size: .6em;
+                    text-transform: uppercase;
+                }
+
+                span:last-child {
+                    font-size: 1.1em;
+                    font-weight: bold;
+                }
+            }
+
+            &.seat-info-main {
+                margin-bottom: .5em;
+                padding-top: .5em;
+                border-top: 1px dashed #999;
+            }
+
+            &.seat-info-other {
+                padding-bottom: .5em;
+                border-bottom: 1px dashed #999;
+                
+                > div {
+                    span:last-child {
+                        font-size: .9em;
+                    }
+                }
+            }
+        }
+
+        .seat-barcode {
+
+        }
+    }
+
+}

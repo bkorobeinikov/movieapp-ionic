@@ -1,0 +1,273 @@
+@mixin aspect-ratio($width, $height) {
+  position: relative;
+  &:before {
+    display: block;
+    content: "";
+    width: 100%;
+    padding-top: ($height / $width) * 100%;
+  }
+  > .content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+}
+
+page-booking {
+
+    font-size: 16px;
+
+    .spinner {
+        position: absolute; 
+        top: 50%;
+        left: 50%;
+        margin-top: -20px;
+        margin-left: -20px;
+    }
+
+    .content {
+
+        .scroll-content {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .movie-summary {
+            text-align: center;
+
+            .movie-title {
+                font-size: 1.2em;
+                font-weight: bold;
+            }
+        }
+
+        .booking-time {
+
+            padding-bottom: .1em;
+            margin-bottom: .3em;
+            border-bottom: 1px dashed #d8d8d8;
+
+            .item {
+                width: auto;
+                min-height: auto;
+
+                padding: 0;
+
+                .item-inner {
+                    padding: 0;
+
+                    border: none;
+
+                    .input-wrapper {
+                        overflow: visible;
+                    }
+                }
+
+                .label {
+                    margin: 0;
+                }
+                &.item-radio-checked {
+                }
+
+                .radio {
+                    margin: 0;
+                    .radio-icon {
+                        display: none;
+                    }
+                }
+            }
+
+            display: flex;
+            flex-direction: row;
+            align-items: stretch;
+
+            .tech {
+                width: 7.4em;
+                max-width: 7.4em;
+                margin-right: 1em;
+
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start;
+
+                border-right: 1px solid #1EA1DC;
+
+                &.center {
+                    justify-content: center;
+                }
+
+                .item {
+                    text-align: right;
+                    
+                    .label {
+                        padding: .2em .5em .2em .2em;
+
+                        position: relative;
+
+                        font-size: .8em;
+                        text-transform: uppercase;
+                    }
+
+                    &.item-radio-checked {
+                        .label {
+                            background-color: #1aa3e0;
+                            color: white;
+                            border-radius: 2px;                           
+                        }
+                    }
+
+                    .radio-ios .radio-icon {
+                        display: block;
+                        visibility: hidden;
+                        width: 16px;
+                        height: 16px; 
+
+                        &.radio-checked {
+                            visibility: visible;
+                        }
+
+                        .radio-inner {
+                            width: 12px;
+                            height: 12px;
+
+                            left: 11px;
+
+                            background-color: #1EA1DC;
+                            border-color: #1EA1DC;
+                        }
+                    }
+
+                    .radio-md .radio-icon {
+                        display: block;
+                        visibility: hidden;
+                        width: 16px;
+                        height: 16px; 
+
+                        border: none;
+
+                        &.radio-checked {
+                            visibility: visible;
+                        }
+
+                        .radio-inner {
+                            width: 12px;
+                            height: 12px;
+
+                            left: 11px;
+
+                            background-color: #1EA1DC;
+                            border-color: #1EA1DC;
+                        }
+                    }
+                }
+            }
+
+            .time {
+                margin-bottom: -.4em;
+                padding: .3em 0;
+
+                flex: 1;
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: space-between;
+
+                &.center {
+                    align-items: center;
+
+                    .item {
+                        height: 2.3em;
+                    }
+                }
+
+                .item {
+                    min-height: auto;
+                    max-height: 2.3em;
+
+                    margin-right: .4em;
+                    margin-bottom: .4em;
+                    padding: .2em .4em;
+
+                    border-radius: 2px;
+
+                    background-color: white;
+                    border: 1px solid #1aa3e0;
+                    color: #1aa3e0;
+
+                    text-align: center;
+
+                    &.item-radio-disabled {
+                        background-color: white;
+                        border: 1px solid #e1e1e1;
+                        color: #e1e1e1;
+
+                        .label {
+                            opacity: 1;
+                        }
+                    }
+
+                    &.item-radio-checked {
+                        border-color: #1aa3e0;
+                        background-color: #1aa3e0;
+                        color: white;
+
+                        .label {
+                            color: white;
+                        }
+                    }
+
+
+                }
+            }
+        }
+
+        .seats-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+
+            margin: 0 -12px;
+
+            .spinner {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                margin-top: -14px;
+                margin-left: -14px;
+            }
+
+            .info {
+                position: absolute;
+                top: 50%;
+                left: 0;
+                right: 0;
+
+                text-align: center;
+
+                font-size: .8em;
+                color: #222;
+            }
+        }
+    }
+
+    ion-footer {
+        ion-toolbar.toolbar {
+            overflow: visible;
+            contain: none;
+
+            .toolbar-content {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+            
+            .checkout {
+                align-self: center;
+            }
+        }
+    }
+
+}

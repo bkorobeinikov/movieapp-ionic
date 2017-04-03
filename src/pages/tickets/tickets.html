@@ -1,0 +1,56 @@
+<ion-header>
+    <ion-navbar>
+        <ion-title>Tickets</ion-title>
+    </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+
+    <div class="ticket-list">
+        <div *ngIf="tickets?.length === 0">
+            <ion-note>
+                Application doesn't allow you to buy actual tickets. But it is possible to simulate purchase.<br/> 
+                Just go through the normal buying flow <b>Movie -> Seats -> Checkout -> Complete</b>
+            </ion-note>
+        </div>
+        <div class="ticket-item" *ngFor="let ticket of tickets" tappable (tap)="onSelect(ticket)">
+            <div class="movie-content">
+                <div class="movie-summary">
+                    <div class="poster">
+                        <div class="content"> 
+                            <img src="{{movies[ticket.movieUid]?.poster}}">
+                        </div>
+                    </div>
+                    <div class="item-content">
+                        <span class="title">{{movies[ticket.movieUid]?.name}}</span>
+                        <div class="tech-content keyvalue-row">
+                            <div class="keyvalue">
+                                <div>TECHNOLOGY</div>
+                                <div>{{cinemas[ticket.cinemaId]?.technologies[ticket.techId]?.name}}</div>
+                            </div>
+                            <div class="keyvalue">
+                                <div>duration</div>
+                                <div>{{duration(movies[ticket.movieUid]?.duration)}}</div>
+                            </div>
+                        </div>
+                        <div class="cinema">
+                            <ion-icon name="pin"></ion-icon>
+                            <address>{{cinemas[ticket.cinemaId]?.nameShort}}</address>
+                        </div>
+                        <div class="time-content keyvalue-row">
+                            <div class="keyvalue">
+                                <div>DATE</div>
+                                <div>{{ticket.time | moment:"D/MM/YYYY"}}</div>
+                            </div>
+                            <div class="keyvalue">
+                                <div>TIME</div>
+                                <div>{{ticket.time | moment:"HH:mm"}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</ion-content>

@@ -1,0 +1,39 @@
+<svg class="hall-content" panZoom [originalWidth]="width" [originalHeight]="height">
+    <svg class="g-screen" width="100%">
+        <rect class="screen" width="100%" y="30"></rect>
+        <text class="text" x="50%" text-anchor="middle" alignment-baseline="central" y="16">Screen</text>
+    </svg> 
+    <svg class="g-seats" y="50"> 
+        <rect *ngFor="let seat of seats; trackBy:trackByFn" 
+        [attr.width]="seat.width" [attr.height]="seat.height" 
+        [attr.x]="seat.x" [attr.y]="seat.y"
+        rx="6" ry="6"
+        
+        class="seat"
+        [ngClass]="{'available': seat.available == true, 'vip': seat.vip == true}"
+        tappable
+        (tap)="onSeatToggle(seat)" />
+        
+        <text *ngFor="let seat of seats; trackBy: trackByFn" class="text"
+        [ngClass]="{'available': seat.available == true, 'vip': seat.vip == true}"
+        [attr.width]="seat.width" [attr.height]="seat.height" 
+        [attr.x]="seat.x + seat.width/2" [attr.y]="seat.y + seat.height/2">
+            {{seat.seat}}
+        </text>
+
+        <rect *ngFor="let seat of selection; trackBy:trackByFn" 
+        [attr.width]="seat.width" [attr.height]="seat.height" 
+        [attr.x]="seat.x" [attr.y]="seat.y"
+        rx="6" ry="6" 
+
+        class="seat available selected"
+        tappable
+        (tap)="onSeatToggle(seat)" />
+
+        <text *ngFor="let seat of selection; trackBy: trackByFn" class="text selected"
+        [attr.width]="seat.width" [attr.height]="seat.height" 
+        [attr.x]="seat.x + seat.width/2" [attr.y]="seat.y + seat.height/2">
+            {{seat.seat}}
+        </text>
+    </svg>
+</svg>

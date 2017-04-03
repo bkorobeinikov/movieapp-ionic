@@ -1,0 +1,70 @@
+<ion-header>
+    <ion-navbar>
+        <ion-title>
+            {{(movie$ | async).name}}
+        </ion-title>
+    </ion-navbar>
+</ion-header>
+
+
+<ion-content padding-left padding-right padding-bottom>
+
+    <ion-spinner *ngIf="loading$ | async"></ion-spinner>
+
+    <ng-container *ngIf="(loading$ | async) == false">
+        <datepicker [dates]="dates" [selected]="selectedDate" (change)="onDateChange($event)"></datepicker>
+
+        <div class="booking-time">
+            <div class="tech" [ngClass]="{'center': technologies?.length == 1}" radio-group [ngModel]="selectedTechId" (ionChange)="onTechChange($event)">
+                <ng-container *ngFor="let tech of technologies">
+                    <ion-item>
+                        <ion-label>
+                            {{tech}}
+                        </ion-label>
+                        <ion-radio [value]="tech"></ion-radio>
+                    </ion-item>
+                </ng-container>
+            </div>
+            <div class="time" [ngClass]="{'center': filteredShowtimes?.length <= 3}" radio-group [ngModel]="selectedShowtime?.id" (ionChange)="onTimeChange($event)">
+                <ng-container *ngFor="let showtime of filteredShowtimes">
+                    <ion-item>
+                        <ion-label>
+                            {{showtime.time | moment:"HH:mm"}}
+                        </ion-label>
+                        <ion-radio [value]="showtime.id" [disabled]="!isAfterNow(showtime.time)"></ion-radio>
+                    </ion-item>
+                </ng-container>
+                <div *ngIf="filteredShowtimes?.length % 3 == 2">
+                    <ion-item style="visibility: hidden">
+                        <ion-label>
+                            00:00
+                        </ion-label>
+                    </ion-item>
+                </div>
+            </div>
+        </div>
+
+        <div class="seats-container">
+            <div class="info" *ngIf="selectedShowtime == null">
+                Please select time to be able to select seats
+            </div>
+            <ng-container [ngSwitch]="hallLoading$ | async">
+                <ion-spinner *ngSwitchCase="true"></ion-spinner>
+                <ng-container *ngSwitchCase="false">
+                    <hall *ngIf="hall$ | async" [hall]="hall$ | async" [selection]="seats$ | async" (toggle)="onSeatToggle($event)"></hall>
+                </ng-container>
+            </ng-container>
+        </div>
+    </ng-container>
+
+</ion-content>
+
+<ion-footer>
+    <ion-toolbar padding-left padding-right>
+        <booking-cart [seats]="seats$ | async"></booking-cart>
+        <button class="checkout" ion-button color="secondary" (click)="checkout()" icon-left [disabled]="canCheckout == false" end>
+            <ion-icon name="cart"></ion-icon>
+            Checkout
+        </button>
+    </ion-toolbar>
+</ion-footer>

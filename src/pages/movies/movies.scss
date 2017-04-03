@@ -1,0 +1,283 @@
+@mixin aspect-ratio($width, $height) {
+  position: relative;
+  &:before {
+    display: block;
+    content: "";
+    width: 100%;
+    padding-top: ($height / $width) * 100%;
+  }
+  > .content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+}
+
+$color-title: black;
+$color-subtitle: lighten($color-title, 40);
+$color-subsubtitle: lighten($color-subtitle, 20);
+$bg-color: #F9F9F9;
+$bg-color-loading: darken($bg-color, 3);
+
+.loading {
+    .scroll-content {
+        overflow: hidden;
+    }
+}
+
+page-movies {
+
+    font-size: 16px;
+
+    ion-toolbar {
+        .cinemas-popover {
+        }
+    }
+
+    .spinner {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+    }
+
+    .movies {
+        display: flex;
+        &.current {
+            flex-direction: column;
+        }
+        &.future {
+            flex-direction: row;
+            flex-wrap: wrap;
+
+            justify-content: space-between;
+        }
+
+        .movie-icon {
+            width: 30%;
+
+            display: flex;
+            flex-direction: column;
+
+            margin-top: .5em;
+
+            .poster {
+                @include aspect-ratio(1, 1.5);
+
+                flex: 1;
+                min-width: auto;
+                min-height: auto;
+
+                margin: 0;
+                padding: 0;
+
+                img {
+                    width: auto;
+                    height: auto;
+
+                    //box-shadow: 0 0 2px black;
+                    border-radius: 2px; 
+                }
+            }
+
+            .title {
+                display: block;
+
+                // doesn't work for some reason
+                // display: -webkit-box;
+                // -webkit-line-clamp: 2;
+                // -webkit-box-orient: vertical; // this one deleted in the output
+
+                line-height: 1.2em;
+                height: 2.4em;
+
+                font-size: .8em;
+
+                color: $color-title;
+
+                overflow: hidden;
+                text-overflow: ellipsis;
+                text-align: center;
+            }
+        }
+        
+        .movie-detail {
+            overflow: visible;
+            
+            margin-bottom: 1em;
+            padding: 0;
+
+            align-items: flex-start;
+
+            display: flex;
+            flex-direction: row;
+
+            .poster {
+                @include aspect-ratio(1, 1.5);
+
+                flex: 1;
+                min-width: auto;
+                min-height: auto;
+
+                margin: 0;
+                padding: 0;
+                margin-right: 10px;
+
+                img {
+                    width: auto;
+                    height: auto;
+
+                    //box-shadow: 0 0 4px black;
+                    border-radius: 2px;
+                }
+            }
+
+            &.loading {
+                .poster {
+                    .content {
+                        background: $bg-color-loading;
+                    }
+                }
+
+                .title {
+                    margin-top: .4em;
+
+                    width: 100%;
+                    line-height: 80%;
+                    background-color: $bg-color-loading;
+                }
+
+                .country {
+                    width: 60%;
+                    line-height: 80%;
+                    background-color: $bg-color-loading;
+                }
+
+                .genre {
+                    width: 80%;
+                    line-height: 80%;
+                    background-color: $bg-color-loading;
+                }
+            }
+
+            .item-content {
+                overflow: hidden;
+
+                flex: 2;
+
+                display: flex;
+                flex-direction: column;
+
+                padding: 0;
+            }
+
+            &.future {
+                .item-content {
+                    flex: 3;
+                }
+            }
+
+            .title {
+                margin-bottom: .5em;
+
+                font-size: 1em;
+                font-weight: bold;
+
+                color: $color-title;
+            }
+
+            .country {
+                margin-bottom: .2em;
+
+                font-size: .8em;
+
+                color: $color-subtitle;
+            }
+
+            .genre {
+                margin-bottom: .5em;
+
+                font-size: .8em;
+
+                color: $color-subsubtitle;
+            }
+
+            .ratings {
+                margin-bottom: .5em;
+
+                display: flex;
+                flex-direction: row;
+                
+                font-size: .8em;
+                
+                .imdb {
+                    margin-right: 4px;
+                    padding: 4px 6px;
+                    border-radius: 2px;
+
+                    background-color:#FFB10A;
+                    color: black;
+
+                    font-weight: bold;
+
+                    .nb {
+                        color: white;
+                    }
+                }
+            }
+
+            .screening {
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+
+                font-size: .9em;
+
+                .time {
+                    margin: 0 4px 4px 0;
+                    width: 3.5em;
+                    padding: .2em 0;
+                    border-radius: 2px;
+
+                    background-color: white;
+                    border: 1px solid #e1e1e1;
+                    color: #e1e1e1;
+
+                    text-align: center;
+
+                    &.active {
+                        border-color: #1aa3e0;
+                        background-color: #1aa3e0;
+                        color: white;
+                    }
+                }
+            }
+
+            .line {
+                margin-bottom: .5em;
+
+                display: flex;
+                flex-direction: row;
+
+                >* {
+                    margin: 0 .4em 0 0;
+                }
+            }           
+
+            .date {
+                 font-size: .8em;
+
+                 color: $color-subtitle;
+            }
+
+            .time {
+                 font-size: .8em;
+                 font-weight: bold;
+
+                 color: $color-subtitle;
+            }
+        }
+    }
+
+}

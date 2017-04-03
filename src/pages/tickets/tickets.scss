@@ -1,0 +1,137 @@
+page-tickets {
+
+    .scroll-content {
+        margin-top: 64px;
+        margin-bottom: 41px;
+    }
+
+    .keyvalue-row {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+
+        .keyvalue {
+            flex: 2
+        }
+        
+        .keyvalue:first-child {
+            flex: 3;
+        }
+    }
+
+    .keyvalue {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+
+        >:first-child {
+            color: #555;
+            font-size: .6em;
+            text-transform: uppercase;
+        }
+
+        >:last-child {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #444;
+        }
+    }
+
+    .ticket-list {
+        .ticket-item {
+            padding-bottom: 1em;
+            margin-bottom: 1em;
+
+            border-bottom: 1px solid #eee;
+        }
+    }
+
+    .movie-summary {
+        overflow: visible;
+        
+        padding: 0;
+
+        align-items: stretch;
+
+        display: flex;
+        flex-direction: row;
+
+        .poster {
+            margin-right: 1em;
+
+            @include aspect-ratio(1, 1.5);
+
+            flex: 2;
+            min-width: auto;
+            min-height: auto;
+
+            padding: 0;
+
+            img {
+                width: auto;
+                height: auto;
+
+                border-radius: 2px;
+            }
+        }
+
+        .item-content {
+            overflow: hidden;
+
+            flex: 4;
+
+            display: flex;
+            flex-direction: column;
+
+            padding: 0;
+        }
+
+        .title {
+            margin-bottom: .5em;
+
+            font-size: 1.2em;
+            font-weight: bold;
+
+            color: #333;
+        }
+
+        .time-content {
+            font-size: 18px;
+            margin-bottom: .1em;
+            //flex: 1;
+            //align-items: flex-end;
+
+            .keyvalue {
+                >:last-child {
+                    color: #333;
+                }
+            }
+        }
+
+        .tech-content {
+            margin-bottom: .5em;
+            .keyvalue {
+                >:last-child {
+                    font-size: 1em;
+                    font-weight: normal;
+                }
+            }
+        }
+
+        .cinema {
+            font-size: .9em;
+            margin-bottom: 1em;
+
+            color: #555;
+
+            .icon {
+                font-size: 1em;
+            }
+
+            address {
+                font-style: normal;
+                display: inline-block;
+            }
+        }
+    }
+}
