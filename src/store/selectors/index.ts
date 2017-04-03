@@ -11,6 +11,8 @@ import * as fromAccount from './../reducers/account';
 
 import * as _ from 'lodash';
 
+import { AsyncStatus, defaultAsyncOp } from "../viewModels";
+
 // movie state
 const getMovieState = (state: State) => state.movie;
 
@@ -19,7 +21,6 @@ export const getMovieEntitiesUidKey = createSelector(getMovieEntities, (entities
     return _.keyBy(_.values(entities), m => m.uid);
 });
 export const getMovieMapToCinema = createSelector(getMovieState, fromMovie.getMapToCinema);
-const getMovieLoading = createSelector(getMovieState, fromMovie.getLoading);
 
 export const getMovieSelectedId = createSelector(getMovieState, fromMovie.getSelectedId);
 export const getMovieSelected = createSelector(getMovieState, fromMovie.getSelected);
@@ -42,25 +43,30 @@ export const getCinemaCurrent = createSelector(getCinemaState, fromCinema.getCur
 export const getCinemaAllScreeningsEntities = createSelector(getCinemaState, fromCinema.getAllScreeningEntities);
 const getCinemaCurrentScreenings = createSelector(getCinemaState, fromCinema.getCurrentCinemaShowtimes);
 
-export const getCinemaCurrentMovies = createSelector(getUiMoviesCategory, getMovieEntities, getCinemaCurrentId, getMovieMapToCinema,
-    (category, allMovies, cinemaId, movieMapToCinema) => {
-        if (_.isEmpty(allMovies) || _.isEmpty(movieMapToCinema[cinemaId]))
-            return [];
+const getCinemaCurrentMovieMap = createSelector(getCinemaCurrentId, getMovieMapToCinema, (cinemaId, map) => {
+    if (_.isEmpty(map) || _.isEmpty(map[cinemaId]))
+        return null;
 
-        let map = movieMapToCinema[cinemaId];
-        if (map == null)
+    return map[cinemaId];
+});
+export const getCinemaCurrentMovies = createSelector(getUiMoviesCategory, getMovieEntities, getCinemaCurrentMovieMap,
+    (category, allMovies, map) => {
+        if (_.isEmpty(allMovies) || map == null)
             return [];
 
         if (category == "future")
             return map.otherIds.map(id => allMovies[id]);
         else if (category == "current")
             return map.releasedIds.map(id => allMovies[id]);
-        else
-            return [];
+
+        return [];
     });
 
-export const getCinemaCurrentLoading = createSelector(getMovieLoading, (loading) => {
-    return loading;
+export const getCinemaCurrentLoadingOp = createSelector(getCinemaCurrentMovieMap, (map) => {
+    if (map == null)
+        return defaultAsyncOp();
+
+    return map.loadingOp;
 });
 
 export const getCinemaUpdates = createSelector(getCinemaState, fromCinema.getUpdates);
@@ -73,7 +79,10 @@ export const getBookingLoading = createSelector(getMovieSelectedId, getCinemaCur
         return false;
     }
 
-    return screenings[movieId].loading;
+    if (screenings[movieId].loadingOp == null)
+        return false;
+
+    return screenings[movieId].loadingOp.pending;
 })
 
 export const getBookingAvailableShowtimes = createSelector(getMovieSelectedId, getCinemaCurrentScreenings, (movieId, screenings) => {
@@ -128,10 +137,14 @@ export const getTicketSelected = createSelector(getTicketState, fromTicket.getSe
 
 const getAccountState = (state: State) => state.account;
 export const getAccount = createSelector(getAccountState, fromAccount.getAccount);
-export const getAccountLoggingIn = createSelector(getAccountState, fromAccount.getLoggingIn);
-export const getAccountLoggedIn = createSelector(getAccountState, fromAccount.getLoggedIn);
-export const getAccountUpdating = createSelector(getAccountState, fromAccount.getUpdating);
-export const getAccountUpdatedAt = createSelector(getAccountState, fromAccount.getUpdatedAt);
+export const getAccountLoginOp = createSelector(getAccountState, fromAccount.getLoginOp);
+export const getAccountLoggedIn = createSelector(getAccountLoginOp, (loginOp) => {
+    if (loginOp == null)
+        return false;
+
+    loginOp.status == AsyncStatus.Success
+});
+export const getAccountUpdateOp = createSelector(getAccountState, fromAccount.getUpdateOp);
+export const getAccountVerifyOp = createSelector(getAccountState, fromAccount.getVerifyOp);
 export const getAccountAuth = createSelector(getAccountState, fromAccount.getAuth);
 export const getAccountAuthToken = createSelector(getAccountAuth, auth => auth.token);
-export const getAccountVerifyAuth = createSelector(getAccountState, fromAccount.getVerifyAuth);

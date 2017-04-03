@@ -38,7 +38,7 @@ export class CinemaEffects {
         .switchMap(payload => {
             return this.cinemaService.getCinemas()
                 .map(cinemas => new actionsCinema.LoadSuccessAction(cinemas))
-                .catch(() => of(new actionsCinema.LoadFailAction([])));
+                .catch(() => of(new actionsCinema.LoadFailAction({ errorMessage: "Couldn't load cinema list" })));
         });
 
     @Effect()
@@ -63,8 +63,8 @@ export class CinemaEffects {
             let cinemaId = action.payload.cinemaId;
 
             let isOutdated = updates[cinemaId] == null
-                || updates[cinemaId].updatedAt == null
-                || moment(updates[cinemaId].updatedAt).isBefore(moment().subtract(1, "minutes"));
+                || updates[cinemaId].completedAt == null
+                || moment(updates[cinemaId].completedAt).isBefore(moment().subtract(1, "minutes"));
 
             return isOutdated;
             // tslint:disable-next-line:no-unused-variable
@@ -89,7 +89,7 @@ export class CinemaEffects {
                     let result = res.map(cinemaNew => _.merge({}, cinemas[cinemaNew.id], cinemaNew));
                     return new actionsCinema.UpdateSuccessAction({ cinemas: result })
                 })
-                .catch(() => of(new actionsCinema.UpdateFailAction({ cinemaId: cinemaId })));
+                .catch(() => of(new actionsCinema.UpdateFailAction({ cinemaId: cinemaId, errorMessage: "Couldn't load cinema data" })));
         });
 
     @Effect()
@@ -121,7 +121,11 @@ export class CinemaEffects {
                         showtimes: res,
                     });
                 })
-                .catch(() => of(new actionsCinema.ShowtimeLoadFailAction({ cinemaId: cinemaId, movieId: movieId })))
+                .catch(() => of(new actionsCinema.ShowtimeLoadFailAction({
+                    cinemaId: cinemaId,
+                    movieId: movieId,
+                    errorMessage: "Couldn't load movie showtimes"
+                })))
         });
 
     constructor(

@@ -40,7 +40,7 @@ export class HallLoadSuccessAction implements Action {
 export class HallLoadFailAction implements Action {
     readonly type = ActionTypes.HALL_LOAD_FAIL;
 
-    constructor(public payload: any) { }
+    constructor(public payload: { message: string }) { }
 }
 
 export class SeatToggleAction implements Action {

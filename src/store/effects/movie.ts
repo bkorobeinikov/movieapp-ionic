@@ -59,11 +59,11 @@ export class MovieEffects {
             let cinemaId = action.payload.cinemaId;
             let cinemaMap = mapMovieToCinema[cinemaId];
 
-            if (cinemaMap == null || cinemaMap.loadedAt == null)
+            if (cinemaMap == null || cinemaMap.loadingOp == null)
                 return true;
 
             // 5 minutes cache
-            if (moment(cinemaMap.loadedAt).isAfter(moment().subtract(1, "minutes")))
+            if (moment(cinemaMap.loadingOp.completedAt).isAfter(moment().subtract(1, "minutes")))
                 return false;
 
             return true;
@@ -93,7 +93,8 @@ export class MovieEffects {
                     other: res.other
                 }))
                 .catch(() => of(new actionsMovie.LoadFailAction({
-                    cinemaId: cinema.id
+                    cinemaId: cinema.id,
+                    errorMessage: "Couldn't load cinema movies",
                 })));
         });
 

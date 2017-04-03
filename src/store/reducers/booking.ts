@@ -5,10 +5,12 @@ import * as _ from 'lodash';
 
 import { CinemaHall } from './../models';
 
+import { AsyncOperation, AsyncStatus, defaultAsyncOp, makeAsyncOp } from "../viewModels";
+
 export interface State {
     showtimeId: string;
 
-    hallLoading: boolean;
+    hallLoadingOp: AsyncOperation;
     hall: CinemaHall;
 
     selectedSeatIds: string[];
@@ -17,8 +19,8 @@ export interface State {
 export const initialState: State = {
     showtimeId: null,
 
-    hallLoading: false,
     hall: null,
+    hallLoadingOp: defaultAsyncOp(),
 
     selectedSeatIds: [],
 };
@@ -36,16 +38,16 @@ export function reducer(state = initialState, actionRaw: booking.Actions): State
             return Object.assign({}, state, {
                 showtimeId: showtimeId,
 
-                hallLoading: false,
                 hall: null,
+                hallLoadingOp: makeAsyncOp(AsyncStatus.None),
                 selectedSeatIds: [],
             });
         }
         case booking.ActionTypes.HALL_LOAD: {
 
             return Object.assign({}, state, {
-                hallLoading: true,
                 hall: null,
+                hallLoadingOp: makeAsyncOp(AsyncStatus.Pending),
                 selectedSeatIds: [],
             });
         }
@@ -55,14 +57,18 @@ export function reducer(state = initialState, actionRaw: booking.Actions): State
             let hall = action.payload;
 
             return Object.assign({}, state, {
-                hallLoading: false,
                 hall: hall,
+                hallLoadingOp: makeAsyncOp(AsyncStatus.Success),
                 selectedSeatIds: [],
             })
         }
         case booking.ActionTypes.HALL_LOAD_FAIL: {
+            let action = <booking.HallLoadFailAction>actionRaw;
+
             return Object.assign({}, state, {
-                hallLoading: false,
+                hall: null,
+                hallLoadingOp: makeAsyncOp(AsyncStatus.Fail, action.payload.message),
+                selectedSeatIds: [],
             });
         }
         case booking.ActionTypes.SEAT_TOGGLE: {
@@ -97,7 +103,7 @@ export function reducer(state = initialState, actionRaw: booking.Actions): State
 }
 
 export const getShowtimeId = (state: State) => state.showtimeId;
-export const getHallLoading = (state: State) => state.hallLoading;
+export const getHallLoading = (state: State) => state.hallLoadingOp.pending;
 export const getHall = (state: State) => state.hall;
 
 const getSelectedSeatIds = (state: State) => state.selectedSeatIds;

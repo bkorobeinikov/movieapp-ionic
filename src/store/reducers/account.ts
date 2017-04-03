@@ -1,7 +1,8 @@
 import * as actionsAccount from './../actions/account';
 import * as actionsCinema from './../actions/cinema';
 
-import { Account, AsyncStatus } from './../models';
+import { Account } from './../models';
+import { AsyncOperation, AsyncStatus, makeAsyncOp, defaultAsyncOp } from "./../viewModels";
 
 export interface State {
     account: Account;
@@ -15,16 +16,9 @@ export interface State {
         token: string;
     };
 
-    verifyAuth: {
-        status: AsyncStatus;
-        completedAt: Date;
-    };
-
-    loggedIn: boolean;
-    loggingIn: boolean;
-
-    updating: boolean;
-    updatedAt: Date;
+    loginOp: AsyncOperation;
+    verifyOp: AsyncOperation;
+    updateOp: AsyncOperation;
 }
 
 export const initialState: State = {
@@ -37,16 +31,9 @@ export const initialState: State = {
         token: null,
     },
 
-    verifyAuth: {
-        status: AsyncStatus.None,
-        completedAt: null,
-    },
-
-    loggedIn: false,
-    loggingIn: false,
-
-    updating: false,
-    updatedAt: null,
+    loginOp: defaultAsyncOp(),
+    verifyOp: defaultAsyncOp(),
+    updateOp: defaultAsyncOp(),
 };
 
 export function reducer(state: State = initialState, actionRaw: actionsAccount.Actions | actionsCinema.ChangeCurrentAction) {
@@ -63,7 +50,7 @@ export function reducer(state: State = initialState, actionRaw: actionsAccount.A
                     email: email,
                     password: password,
                 },
-                loggingIn: true,
+                loginOp: makeAsyncOp(AsyncStatus.Pending),
             });
         }
         case actionsAccount.ActionTypes.VERIFY_AUTH_LOGIN_SUCCESS:
@@ -78,38 +65,30 @@ export function reducer(state: State = initialState, actionRaw: actionsAccount.A
                 auth: Object.assign({}, state.auth, {
                     token: authToken
                 }),
-                loggingIn: false,
-                loggedIn: true,
-                updating: false,
+                loginOp: makeAsyncOp(AsyncStatus.Success),
             });
         }
         case actionsAccount.ActionTypes.LOGIN_FAIL: {
+            let action = <actionsAccount.LoginFailAction>actionRaw;
+
             return Object.assign({}, state, {
                 account: null,
                 auth: {},
-                loggingIn: false,
-                loggedIn: false,
-                updating: false,
-                updatedAt: null,
+                loginOp: makeAsyncOp(AsyncStatus.Fail, action.payload.errorMessage),
             });
         }
         case actionsAccount.ActionTypes.LOGOUT_SUCCESS: {
             return Object.assign({}, state, {
                 account: null,
                 auth: {},
-                verifyAuth: {
-                    status: AsyncStatus.None,
-                    completedAt: null
-                },
-                loggingIn: false,
-                loggedIn: false,
-                updating: false,
-                updatedAt: null,
+                loginOp: defaultAsyncOp(),
+                verifyOp: defaultAsyncOp(),
+                updateOp: defaultAsyncOp(),
             });
         }
         case actionsAccount.ActionTypes.UPDATE: {
             return Object.assign({}, state, {
-                updating: true,
+                updateOp: makeAsyncOp(AsyncStatus.Pending),
             });
         }
         case actionsAccount.ActionTypes.VERIFY_AUTH_UPDATE_SUCCESS:
@@ -122,17 +101,14 @@ export function reducer(state: State = initialState, actionRaw: actionsAccount.A
 
             return Object.assign({}, state, {
                 account: Object.assign({}, account),
-                updating: false,
-                updatedAt: new Date,
+                updateOp: makeAsyncOp(AsyncStatus.Success),
             });
         }
         case actionsAccount.ActionTypes.UPDATE_FAIL: {
+            let action = <actionsAccount.UpdateFailAction>actionRaw;
 
             return Object.assign({}, state, {
-                account: null,
-                loggedIn: false,
-                updating: false,
-                updatedAt: null,
+                updateOp: makeAsyncOp(AsyncStatus.Fail, action.payload.errorMessage),
             });
         }
         case actionsAccount.ActionTypes.CHANGE_NOTIFICATIONS: {
@@ -144,32 +120,16 @@ export function reducer(state: State = initialState, actionRaw: actionsAccount.A
                 }),
             });
         }
-        case actionsCinema.ActionTypes.CHANGE_CURRENT: {
-            let action = <actionsCinema.ChangeCurrentAction>actionRaw;
-
-            return Object.assign({}, state, {
-                account: Object.assign({}, state.account, {
-                    cinemaId: action.payload,
-                }),
-            });
-        }
         case actionsAccount.ActionTypes.VERIFY_AUTH: {
             return Object.assign({}, state, {
-                verifyAuth: {
-                    status: AsyncStatus.InProgress,
-                    completedAt: null,
-                },
+                verifyOp: makeAsyncOp(AsyncStatus.Pending),
             });
         }
         case actionsAccount.ActionTypes.VERIFY_AUTH_FINISH: {
             let action = <actionsAccount.VerifyAuthFinishAction>actionRaw;
-            let status = action.payload.status;
 
             return Object.assign({}, state, {
-                verifyAuth: {
-                    status: status,
-                    completedAt: new Date()
-                },
+                verifyOp: makeAsyncOp(action.payload.status, action.payload.message),
             });
         }
         default: {
@@ -179,9 +139,7 @@ export function reducer(state: State = initialState, actionRaw: actionsAccount.A
 }
 
 export const getAccount = (state: State) => state.account;
-export const getLoggingIn = (state: State) => state.loggingIn;
-export const getLoggedIn = (state: State) => state.loggedIn;
-export const getUpdating = (state: State) => state.updating;
-export const getUpdatedAt = (state: State) => state.updatedAt;
 export const getAuth = (state: State) => state.auth;
-export const getVerifyAuth = (state: State) => state.verifyAuth;
+export const getLoginOp = (state: State) => state.loginOp;
+export const getUpdateOp = (state: State) => state.updateOp;
+export const getVerifyOp = (state: State) => state.verifyOp;

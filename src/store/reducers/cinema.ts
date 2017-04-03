@@ -3,15 +3,17 @@ import { createSelector } from 'reselect';
 import * as cinema from './../actions/cinema';
 import { Cinema } from './../models';
 import { ScreeningsViewModel } from './../viewModels';
+import { AsyncOperation, AsyncStatus, defaultAsyncOp, makeAsyncOp } from './../viewModels';
 
 import * as _ from 'lodash';
 
+
 export interface State {
     cinemas: { [id: string]: Cinema };
-    currentCinemaId: string,
+    currentCinemaId: string;
 
-    loading: boolean,
-    updates: { [cinemaId: string]: { updating: boolean, updatedAt: Date } },
+    loadingOp: AsyncOperation;
+    updates: { [cinemaId: string]: AsyncOperation },
 
     screenings: { [cinemaId: string]: { [movieId: string]: ScreeningsViewModel } },
 }
@@ -20,7 +22,7 @@ export const initialState: State = {
     cinemas: {},
     currentCinemaId: null,
 
-    loading: false,
+    loadingOp: defaultAsyncOp(),
     updates: {},
 
     screenings: {},
@@ -31,7 +33,7 @@ export function reducer(state: State = initialState, actionRaw: cinema.Actions):
         case cinema.ActionTypes.LOAD: {
 
             return Object.assign({}, state, {
-                loading: true
+                loadingOp: makeAsyncOp(AsyncStatus.Pending),
             });
         }
         case cinema.ActionTypes.LOAD_SUCCESS: {
@@ -49,26 +51,23 @@ export function reducer(state: State = initialState, actionRaw: cinema.Actions):
             return Object.assign({}, state, {
                 cinemas: cinemas,
                 currentCinemaId: currentCinemaId,
-                loading: false,
+                loadingOp: makeAsyncOp(AsyncStatus.Success),
             });
         }
         case cinema.ActionTypes.LOAD_FAIL: {
+            let action = <cinema.LoadFailAction>actionRaw;
 
             return Object.assign({}, state, {
-                loading: false,
+                loadingOp: makeAsyncOp(AsyncStatus.Fail, action.payload.errorMessage)
             });
         }
         case cinema.ActionTypes.UPDATE: {
             let action = <cinema.UpdateAction>actionRaw;
-
             let cinemaId = action.payload.cinemaId;
-            let updates = Object.assign({}, state.updates[cinemaId], {
-                updating: true,
-            });
 
             return Object.assign({}, state, {
                 updates: Object.assign({}, state.updates, {
-                    [action.payload.cinemaId]: updates
+                    [cinemaId]: makeAsyncOp(AsyncStatus.Pending),
                 }),
             });
         }
@@ -79,10 +78,7 @@ export function reducer(state: State = initialState, actionRaw: cinema.Actions):
 
             let updatesState = cinemas.reduce((updates, cinema) => {
                 return Object.assign({}, updates, {
-                    [cinema.id]: Object.assign({}, updates[cinema.id], {
-                        updating: false,
-                        updatedAt: new Date(),
-                    }),
+                    [cinema.id]: makeAsyncOp(AsyncStatus.Success),
                 });
             }, state.updates);
 
@@ -99,15 +95,11 @@ export function reducer(state: State = initialState, actionRaw: cinema.Actions):
         }
         case cinema.ActionTypes.UPDATE_FAIL: {
             let action = <cinema.UpdateFailAction>actionRaw;
-
             let cinemaId = action.payload.cinemaId;
-            let updates = Object.assign({}, state.updates[cinemaId], {
-                updating: false,
-            });
 
             return Object.assign({}, state, {
                 updates: Object.assign({}, state.updates, {
-                    [action.payload.cinemaId]: updates
+                    [cinemaId]: makeAsyncOp(AsyncStatus.Fail, action.payload.errorMessage),
                 }),
             });
         }
@@ -135,7 +127,7 @@ export function reducer(state: State = initialState, actionRaw: cinema.Actions):
                 screenings: Object.assign({}, state.screenings, {
                     [cinemaId]: Object.assign({}, state.screenings[cinemaId], {
                         [movieId]: <ScreeningsViewModel>{
-                            loading: true,
+                            loadingOp: makeAsyncOp(AsyncStatus.Pending),
                         },
                     }),
                 }),
@@ -148,9 +140,7 @@ export function reducer(state: State = initialState, actionRaw: cinema.Actions):
 
             let screenings: ScreeningsViewModel = {
                 showtimes: _.keyBy(action.payload.showtimes, s => s.id),
-                loading: false,
-                loaded: true,
-                loadedAt: new Date(),
+                loadingOp: makeAsyncOp(AsyncStatus.Success),
             };
 
             return Object.assign({}, state, {
@@ -170,8 +160,7 @@ export function reducer(state: State = initialState, actionRaw: cinema.Actions):
                 screenings: Object.assign({}, state.screenings, {
                     [cinemaId]: Object.assign({}, state, state.screenings[cinemaId], {
                         [movieId]: {
-                            loading: false,
-                            loaded: false,
+                            loadingOp: makeAsyncOp(AsyncStatus.Fail, action.payload.errorMessage),
                         },
                     }),
                 })

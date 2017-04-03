@@ -19,8 +19,6 @@ export class SignUpPage implements OnDestroy {
         password?: string,
     };
 
-    public loggingIn: boolean = false;
-
     private subscription: Subscription = new Subscription();
 
     constructor(
@@ -29,10 +27,6 @@ export class SignUpPage implements OnDestroy {
         private navCtrl: NavController
     ) {
         this.creds = {};
-
-        this.subscription.add(this.store.select(selectors.getAccountLoggingIn).subscribe(loggingIn => {
-            this.loggingIn = loggingIn;
-        }));
     }
 
     ngOnDestroy() {
@@ -56,7 +50,8 @@ export class SignUpPage implements OnDestroy {
 
     facebook() {
         this.alertCtrl.create({
-            message: "Signing in via Facebook is not supported by PlanetaKino",
+            title: "Not Supported",
+            message: "Signing in via Facebook is not supported",
             buttons: ["Dismiss"],
         }).present();
     }
