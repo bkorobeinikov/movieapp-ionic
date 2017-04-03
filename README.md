@@ -24,10 +24,10 @@ This app was made just to see Ionic 2 in action with real page flows and real da
 * Profit
 
 ### Why not React Native?
-At first I wanted to write this movieapp with React Native. For one week I was researching it, but eventually it just appeared to me very complicated for a POC-like project with support of several platforms out-of-the box.
+At first, I wanted to write this movieapp with React Native. For one week I was researching it, but eventually, I realized that it is very complicated for a POC-like project. And to support multiple platforms it requires much more work.
 
 ### Why not NativeScript?
 NativeScript I skipped, I think, because it is brand new. But probably, porting this codebase to NativeScript would be very easy, in best case scenario 
 
 ### Why did I use Ionic? 
-For me it was a winner in every category. The team is working hard on the framework. They even got some investments. It is an actual business and not a another open-source project which might be abandoned in a year. And the biggest win is that development tools are awesome. 
+For me, it was a winner in every category. The team is working hard on the framework. They even got some investments. It is an actual business and not an another open-source project which might be abandoned in a year. And the biggest win is that development tools are awesome. 
