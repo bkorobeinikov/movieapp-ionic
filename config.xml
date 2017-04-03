@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <widget id="com.ionicframework.movieapp1348800" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-  <name>movieapp1</name>
-  <description>An awesome Ionic/Cordova app.</description>
-  <author email="hi@ionicframework" href="http://ionicframework.com/">Ionic Framework Team</author>
+  <name>movieapp</name>
+  <description>An example of a movie theater app written with Ionic 2 using real api of the Ukrainian movie theater chain</description>
+  <author email="korobeinikov@outlook.com" href="https://github.com/bkorobeinikov">Borys Korobeinikov</author>
   <content src="index.html"/>
   <access origin="*"/>
   <allow-navigation href="http://ionic.local/*"/>
