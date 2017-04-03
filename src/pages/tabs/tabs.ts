@@ -14,7 +14,7 @@ import * as ui from './../../store/actions/ui';
 import { Observable } from "rxjs/Observable";
 import { Subscription } from "rxjs/Subscription";
 
-import { Tabs, NavController } from "ionic-angular";
+import { Tabs, NavController, AlertController, Platform } from "ionic-angular";
 
 @Component({
     selector: 'page-tabs',
@@ -38,7 +38,9 @@ export class TabsPage implements OnInit, OnDestroy {
 
     constructor(
         private store: Store<State>,
+        private alertCtrl: AlertController,
         private navCtrl: NavController,
+        private platform: Platform,
     ) {
         this.index$ = store.select(selectors.getUiRootTabIndex);
     }
@@ -59,6 +61,14 @@ export class TabsPage implements OnInit, OnDestroy {
         this.store.select(selectors.getAccountLoggedIn).first().subscribe(loggedIn => {
             this.onLoggedInChange(loggedIn);
         });
+
+        this.subscription.add(this.store.select(selectors.getCinemaLoadingOp).subscribe(loadingOp => {
+            if (loadingOp.fail) {
+                if (this.platform.is("core") || this.platform.is("mobileweb")) {
+                    this.showCrossOriginIssueAlert();
+                }
+            }
+        }));
     }
 
     onLoggedInChange(loggedIn) {
@@ -84,5 +94,25 @@ export class TabsPage implements OnInit, OnDestroy {
 
     onSelect(index) {
         this.store.dispatch(new ui.RootChangeTabAction(index));
+    }
+
+    showCrossOriginIssueAlert() {
+        this.alertCtrl.create({
+            title: 'Error! Cross-Origin issue',
+            message: "Please install \"Allow-Control-Allow-Origin: *\" Chrome plugin to be able download data from real api",
+            buttons: [{
+                text: "Dismiss",
+            }, {
+                text: "Install Plugin",
+                handler: () => {
+                    try {
+                        const pluginUrl = "https://chrome.google.com/webstore/detail/allow-control-allow-origi/nlfbmbojpeacfghkpbjhddihlkkiljbi";
+                        window.open(pluginUrl, '_system');
+                    } catch (err) {
+                        console.log(err);
+                    }
+                }
+            }],
+        }).present();
     }
 }

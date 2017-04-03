@@ -7,7 +7,6 @@ import * as actionsAccount from './../../store/actions/account';
 
 import * as _ from 'lodash';
 import { Subscription } from "rxjs/Subscription";
-import { LoginPage } from "../login/login";
 
 @Component({
     selector: "page-signup-confirm",

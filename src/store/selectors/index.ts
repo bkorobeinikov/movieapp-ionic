@@ -34,6 +34,8 @@ export const getUiMoviesCategory = createSelector(getUiState, fromUi.getMoviesCa
 // cinema state
 export const getCinemaState = (state: State) => state.cinema;
 
+export const getCinemaLoadingOp = createSelector(getCinemaState, fromCinema.getLoadingOp);
+
 export const getCinemaEntities = createSelector(getCinemaState, fromCinema.getCinemas);
 export const getCinemas = createSelector(getCinemaEntities, (cinemas) => {
     return Object.keys(cinemas).map(key => cinemas[key]);

@@ -185,3 +185,5 @@ export const getAllScreeningEntities = (state: State) => state.screenings;
 export const getCurrentCinemaShowtimes = createSelector(getCurrentCinemaId, getAllScreeningEntities, (cinemaId, screenings) => {
     return screenings[cinemaId];
 });
+
+export const getLoadingOp = (state: State) => state.loadingOp;
