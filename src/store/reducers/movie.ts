@@ -5,31 +5,26 @@ import { Movie } from './../models';
 
 import * as _ from 'lodash';
 
+import { AsyncOperation, AsyncStatus, makeAsyncOp } from "../viewModels";
+
 export interface State {
     entities: { [movieId: string]: Movie };
-    //mapUidToId: { [uid: string]: string };
 
     mapMovieToCinema: {
         [cinemaId: string]: {
             releasedIds: string[]
             otherIds: string[],
 
-            loading: true,
-            loadedAt: Date,
+            loadingOp: AsyncOperation,
         }
     };
-
-    loading: boolean;
 
     selectedId: string;
 }
 
 export const initialState: State = {
     entities: {},
-    //mapUidToId: {},
     mapMovieToCinema: {},
-
-    loading: false,
 
     selectedId: null,
 };
@@ -45,10 +40,9 @@ export function reducer(state: State = initialState, actionRaw: movie.Actions): 
                     [cinemaId]: Object.assign({}, state.mapMovieToCinema[cinemaId], {
                         releasedIds: [],
                         otherIds: [],
-                        loading: true,
+                        loadingOp: makeAsyncOp(AsyncStatus.Pending),
                     }),
                 }),
-                loading: true,
             });
         }
         case movie.ActionTypes.LOAD_SUCCESS: {
@@ -64,8 +58,7 @@ export function reducer(state: State = initialState, actionRaw: movie.Actions): 
             let map = {
                 releasedIds: action.payload.released.map(m => m.id),
                 otherIds: action.payload.other.map(m => m.id),
-                loading: false,
-                loadedAt: new Date(),
+                loadingOp: makeAsyncOp(AsyncStatus.Success),
             };
 
             return Object.assign({}, state, {
@@ -73,7 +66,6 @@ export function reducer(state: State = initialState, actionRaw: movie.Actions): 
                 mapMovieToCinema: Object.assign({}, state.mapMovieToCinema, {
                     [action.payload.cinemaId]: map
                 }),
-                loading: false,
             });
         }
         case movie.ActionTypes.LOAD_FAIL: {
@@ -83,10 +75,9 @@ export function reducer(state: State = initialState, actionRaw: movie.Actions): 
             return Object.assign({}, state, {
                 mapMovieToCinema: Object.assign({}, state.mapMovieToCinema, {
                     [cinemaId]: Object.assign({}, state.mapMovieToCinema[cinemaId], {
-                        loading: false,
+                        loadingOp: makeAsyncOp(AsyncStatus.Fail, action.payload.errorMessage),
                     }),
                 }),
-                loading: false,
             });
         }
         case movie.ActionTypes.SELECT: {
@@ -103,7 +94,6 @@ export function reducer(state: State = initialState, actionRaw: movie.Actions): 
 
 export const getEntities = (state: State) => state.entities;
 export const getMapToCinema = (state: State) => state.mapMovieToCinema;
-export const getLoading = (state: State) => state.loading;
 export const getSelectedId = (state: State) => state.selectedId;
 
 export const getSelected = createSelector(getEntities, getSelectedId, (entities, id) => {

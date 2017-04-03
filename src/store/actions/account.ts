@@ -1,7 +1,8 @@
 import { Action } from '@ngrx/store';
 import { type } from './../util';
 
-import { Account, Ticket, AsyncStatus } from './../models';
+import { Account, Ticket } from './../models';
+import { AsyncStatus } from './../viewModels';
 
 export const ActionTypes = {
     LOGIN: type("[Account] Login"),
@@ -48,7 +49,9 @@ export class LoginSuccessAction implements Action {
 export class LoginFailAction implements Action {
     readonly type = ActionTypes.LOGIN_FAIL;
 
-    constructor(public payload: any) { }
+    constructor(public payload: {
+        errorMessage: string,
+    }) { }
 }
 
 export class LogoutAction implements Action {
@@ -84,7 +87,7 @@ export class VerifyAuthUpdateSuccessAction implements Action {
 export class VerifyAuthFinishAction implements Action {
     readonly type = ActionTypes.VERIFY_AUTH_FINISH;
 
-    constructor(public payload: { status: AsyncStatus }) { }
+    constructor(public payload: { status: AsyncStatus, message?: string }) { }
 }
 
 export class UpdateAction implements Action {
@@ -103,7 +106,8 @@ export class UpdateFailAction implements Action {
     readonly type = ActionTypes.UPDATE_FAIL;
 
     constructor(public payload: {
-        requireLogin: boolean
+        requireLogin: boolean,
+        errorMessage: string,
     }) { }
 }
 

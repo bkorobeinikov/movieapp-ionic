@@ -1,4 +1,4 @@
-﻿import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+﻿import { Component, ViewChild, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { NavController, Content, PopoverController } from 'ionic-angular';
 
 import { Observable } from "rxjs/Observable";
@@ -14,16 +14,20 @@ import * as actionsMovie from './../../store/actions/movie';
 
 import { Store } from "@ngrx/store";
 
-import { CinemasPopoverComponent } from './cinemas-popover/cinemas-popover.component'
+import { CinemasPopoverComponent } from './cinemas-popover/cinemas-popover.component';
+
+import { Subscription } from "rxjs/Subscription";
+
+import { AsyncOperation } from "../../store/viewModels";
 
 @Component({
     selector: 'page-movies',
     templateUrl: 'movies.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MoviesPage {
+export class MoviesPage implements OnDestroy {
 
-    public loading$: Observable<boolean>;
+    public loadingOp$: Observable<AsyncOperation>;
 
     public category$: Observable<string>;
 
@@ -31,6 +35,8 @@ export class MoviesPage {
     public movies$: Observable<Movie[]>
 
     @ViewChild(Content) content: Content;
+
+    private subscription: Subscription = new Subscription();
 
     constructor(
         private navCtrl: NavController,
@@ -40,7 +46,12 @@ export class MoviesPage {
         this.category$ = store.select(selectors.getUiMoviesCategory);
         this.cinema$ = store.select(selectors.getCinemaCurrent);
         this.movies$ = store.select(selectors.getCinemaCurrentMovies);
-        this.loading$ = store.select(selectors.getCinemaCurrentLoading);
+
+        this.loadingOp$ = store.select(selectors.getCinemaCurrentLoadingOp);
+    }
+
+    ngOnDestroy() {
+        this.subscription.unsubscribe();
     }
 
     ionViewDidEnter() {

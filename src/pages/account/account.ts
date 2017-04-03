@@ -12,6 +12,7 @@ import * as selectors from './../../store/selectors';
 import { CinemasPage } from './../cinemas/cinemas';
 
 import { Observable } from "rxjs/Observable";
+import { AsyncOperation } from "../../store/viewModels";
 
 @Component({
     selector: 'page-account',
@@ -19,7 +20,7 @@ import { Observable } from "rxjs/Observable";
 })
 export class AccountPage implements OnDestroy {
 
-    public loading$: Observable<boolean>;
+    public updateOp$: Observable<AsyncOperation>;
 
     public account: Account;
     public cinema: Cinema;
@@ -31,7 +32,7 @@ export class AccountPage implements OnDestroy {
         private store: Store<State>,
         private alertCtrl: AlertController,
     ) {
-        this.loading$ = this.store.select(selectors.getAccountUpdating);
+        this.updateOp$ = this.store.select(selectors.getAccountUpdateOp);
 
         let s = this.store.select(selectors.getAccount)
             .withLatestFrom(this.store.select(selectors.getCinemaEntities))

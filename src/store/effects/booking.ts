@@ -51,7 +51,7 @@ export class BookingEffects {
             return this.cinemaService.getHall(cinema.city.id, action.payload)
                 .takeUntil(next$)
                 .map(hall => new actionsBooking.HallLoadSuccessAction(hall))
-                .catch(() => of(new actionsBooking.HallLoadFailAction([])));
+                .catch(() => of(new actionsBooking.HallLoadFailAction({ message: "Couldn't load hall schema" })));
         });
 
     constructor(

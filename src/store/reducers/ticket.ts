@@ -6,11 +6,12 @@ import * as _ from 'lodash';
 
 import { Ticket } from './../models';
 
+import { AsyncOperation, AsyncStatus, defaultAsyncOp, makeAsyncOp } from "../viewModels";
+
 export interface State {
     tickets: { [ticketId: string]: Ticket };
 
-    loading: boolean;
-    loaded: boolean;
+    loadingOp: AsyncOperation;
 
     selectedTicketId: string;
 }
@@ -18,8 +19,7 @@ export interface State {
 export const initialState: State = {
     tickets: {},
 
-    loading: false,
-    loaded: false,
+    loadingOp: defaultAsyncOp(),
 
     selectedTicketId: null,
 };
@@ -28,8 +28,7 @@ export function reducer(state: State = initialState, actionRaw: actionsTicket.Ac
     switch (actionRaw.type) {
         case actionsTicket.ActionTypes.LOAD: {
             return Object.assign({}, state, {
-                loading: true,
-                loaded: false,
+                loadingOp: makeAsyncOp(AsyncStatus.Pending),
             });
         }
         case actionsTicket.ActionTypes.LOAD_SUCCESS: {
@@ -39,15 +38,14 @@ export function reducer(state: State = initialState, actionRaw: actionsTicket.Ac
 
             return Object.assign({}, state, {
                 tickets: Object.assign({}, state.tickets, newTickets),
-                loading: false,
-                loaded: true,
+                loadingOp: makeAsyncOp(AsyncStatus.Success),
             });
         }
         case actionsTicket.ActionTypes.LOAD_FAIL: {
+            let action = <actionsTicket.LoadFailAction>actionRaw;
 
             return Object.assign({}, state, {
-                loading: false,
-                loaded: false,
+                loadingOp: makeAsyncOp(AsyncStatus.Fail, action.payload.errorMessage),
             });
         }
         case actionsTicket.ActionTypes.SELECT: {
@@ -74,9 +72,9 @@ export function reducer(state: State = initialState, actionRaw: actionsTicket.Ac
 const getTicketsEntities = (state: State) => state.tickets;
 export const getTickets = createSelector(getTicketsEntities, (entities) => {
     return _.values(entities);
-})
-export const getLoading = (state: State) => state.loading;
-export const getLoaded = (state: State) => state.loaded;
+});
+
+export const getLoadingOp = (state: State) => state.loadingOp;
 const getSelectedTicketId = (state: State) => state.selectedTicketId;
 
 export const getSelectedTicket = createSelector(getTicketsEntities, getSelectedTicketId, (entities, selectedId) => {

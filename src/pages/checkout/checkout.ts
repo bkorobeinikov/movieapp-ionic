@@ -15,7 +15,8 @@ import * as actionsAccount from './../../store/actions/account';
 import { PaymentPage } from "../payment/payment";
 import { LoginNavPage } from "./../login/login-nav";
 
-import { Cinema, CinemaHall, CinemaHallSeat, Movie, Showtime, AsyncStatus } from "../../store/models";
+import { Cinema, CinemaHall, CinemaHallSeat, Movie, Showtime } from "../../store/models";
+import { AsyncStatus } from './../../store/viewModels';
 
 import * as _ from 'lodash';
 
@@ -158,8 +159,8 @@ export class CheckoutPage {
         });
         loading.present();
 
-        this.store.select(selectors.getAccountVerifyAuth).skip(1)
-            .filter(verifyAuth => verifyAuth.status != AsyncStatus.InProgress)
+        this.store.select(selectors.getAccountVerifyOp).skip(1)
+            .filter(verifyAuth => verifyAuth.status != AsyncStatus.Pending)
             .first().subscribe(verifyAuth => {
                 if (verifyAuth.status != AsyncStatus.Success) {
                     loading.dismiss().then(() => {

@@ -11,6 +11,8 @@ import { SignUpPage } from './../signup/signup';
 import * as _ from "lodash";
 import { Subscription } from "rxjs/Subscription";
 
+import { AsyncOperation } from "../../store/viewModels";
+
 @Component({
     selector: "page-login",
     templateUrl: "login.html"
@@ -22,7 +24,8 @@ export class LoginPage implements OnDestroy {
         password?: string,
     };
 
-    public loggingIn: boolean = false;
+    public loginOp: AsyncOperation;
+
     private isModal: boolean = false;
 
     private subscription: Subscription = new Subscription;
@@ -37,9 +40,8 @@ export class LoginPage implements OnDestroy {
         this.isModal = navParams.get('modal');
         this.creds = {};
 
-        this.subscription.add(this.store.select(selectors.getAccountLoggingIn).subscribe(loggingIn => {
-            this.loggingIn = loggingIn;
-        }));
+        this.subscription.add(this.store.select(selectors.getAccountLoginOp)
+            .subscribe(loginOp => this.loginOp = loginOp));
     }
 
     ngOnDestroy() {
@@ -57,7 +59,7 @@ export class LoginPage implements OnDestroy {
     }
 
     facebook() {
-        if (this.loggingIn)
+        if (this.loginOp.pending)
             return;
 
         this.alertCtrl.create({
@@ -71,8 +73,17 @@ export class LoginPage implements OnDestroy {
     }
 
     login() {
-        if (this.loggingIn)
+        if (this.loginOp.pending)
             return;
+
+        this.store.select(selectors.getAccountLoginOp).skip(1).filter(op => op.fail).first()
+            .subscribe(loginOp => {
+                this.alertCtrl.create({
+                    title: "Login Failed",
+                    message: loginOp.message,
+                    buttons: ["Dismiss"],
+                }).present();
+            });
 
         this.store.dispatch(new actionsAccount.LoginAction({
             loginMethod: actionsAccount.LoginMethod.Email,

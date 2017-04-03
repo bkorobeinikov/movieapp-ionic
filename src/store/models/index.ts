@@ -7,4 +7,3 @@ export { CinemaHallSeat } from './cinema-hall-seat.model';
 export { Booking } from './booking.model';
 export * from './ticket.model';
 export * from './account.model';
-export * from './async-status.model'

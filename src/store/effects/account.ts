@@ -1,7 +1,6 @@
 import { Injectable } from "@angular/core";
 
 import { Observable } from "rxjs/Observable";
-import { empty } from 'rxjs/observable/empty';
 import { of } from 'rxjs/observable/of';
 import 'rxjs/add/observable/from';
 import 'rxjs/add/observable/merge';
@@ -29,7 +28,7 @@ import { State } from './../reducers';
 import * as actionsAccount from './../actions/account';
 import * as selectors from './../selectors';
 
-import { AsyncStatus } from './../models';
+import { AsyncStatus } from './../viewModels';
 import { ServiceResponse } from "../../core/service-response.model";
 
 @Injectable()
@@ -41,7 +40,7 @@ export class AccountEffects {
         .switchMap(action => {
             return this.doLogin(action)
                 .map(res => new actionsAccount.LoginSuccessAction({ authToken: res.data.authToken }))
-                .catch((res) => of(new actionsAccount.LoginFailAction(res)));
+                .catch((res: ServiceResponse<any>) => of(new actionsAccount.LoginFailAction({ errorMessage: res.message })));
         });
 
     @Effect()
@@ -57,9 +56,9 @@ export class AccountEffects {
                 .map(res => new actionsAccount.UpdateSuccessAction({ account: res.data.account, tickets: res.data.tickets }))
                 .catch((res: ServiceResponse<any>) => {
                     if (res.code == "-100") {
-                        return of(new actionsAccount.UpdateFailAction({ requireLogin: true }));
+                        return of(new actionsAccount.UpdateFailAction({ requireLogin: true, errorMessage: res.message }));
                     } else {
-                        return of(new actionsAccount.UpdateFailAction({ requireLogin: false }));
+                        return of(new actionsAccount.UpdateFailAction({ requireLogin: false, errorMessage: res.message }));
                     }
                 });
         });
@@ -113,7 +112,7 @@ export class AccountEffects {
 
                     return Observable.from([
                         new actionsAccount.LogoutAction(),
-                        new actionsAccount.VerifyAuthFinishAction({ status: AsyncStatus.Failed })
+                        new actionsAccount.VerifyAuthFinishAction({ status: AsyncStatus.Fail, message: res.message })
                     ]);
                 });
         });
@@ -144,10 +143,12 @@ export class AccountEffects {
                     return Observable.throw(new Error("Unsupported auth method " + actionsAccount.LoginMethod[auth.method]));
                 }
 
-                let failed$ = Observable.from([
-                    new actionsAccount.VerifyAuthFinishAction({ status: AsyncStatus.Failed }),
-                    new actionsAccount.LogoutAction(),
-                ]);
+                let onFail$ = (res: ServiceResponse<any>) => {
+                    return Observable.from([
+                        new actionsAccount.VerifyAuthFinishAction({ status: AsyncStatus.Fail, message: res.message }),
+                        new actionsAccount.LogoutAction(),
+                    ]);
+                };
 
                 return this.doLogin(
                     new actionsAccount.LoginAction({
@@ -165,8 +166,8 @@ export class AccountEffects {
                                     new actionsAccount.UpdateSuccessAction({ account: res.data.account, tickets: res.data.tickets, })),
                                 new actionsAccount.VerifyAuthFinishAction({ status: AsyncStatus.Success }),
                             ]))
-                            .catch(() => failed$);
-                    }).catch(() => failed$);
+                            .catch(onFail$);
+                    }).catch(onFail$);
             })
     }
 }

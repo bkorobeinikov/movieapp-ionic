@@ -1,6 +1,6 @@
 export enum AsyncStatus {
     None,
-    InProgress,
+    Pending,
     Success,
-    Failed,
+    Fail,
 }

@@ -36,7 +36,7 @@ export class LoadSuccessAction implements Action {
 export class LoadFailAction implements Action {
     readonly type = ActionTypes.LOAD_FAIL;
 
-    constructor(public payload: any) { }
+    constructor(public payload: { errorMessage: string }) { }
 }
 
 export class UpdateTryAction implements Action {
@@ -60,7 +60,7 @@ export class UpdateSuccessAction implements Action {
 export class UpdateFailAction implements Action {
     readonly type = ActionTypes.UPDATE_FAIL;
 
-    constructor(public payload: { cinemaId: string, }) { }
+    constructor(public payload: { cinemaId: string, errorMessage: string }) { }
 }
 
 export class ChangeCurrentAction implements Action {
@@ -101,7 +101,7 @@ export class ShowtimeLoadSuccessAction implements Action {
 export class ShowtimeLoadFailAction implements Action {
     readonly type = ActionTypes.SHOWTIME_LOAD_FAIL;
 
-    constructor(public payload: { cinemaId: string, movieId: string }) { }
+    constructor(public payload: { cinemaId: string, movieId: string, errorMessage: string }) { }
 }
 
 export type Actions

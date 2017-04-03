@@ -6,7 +6,7 @@
 
 
 <ion-content >
-  <ion-spinner *ngIf="loading$ | async"></ion-spinner>
+  <ion-spinner *ngIf="(updateOp$ | async).pending"></ion-spinner>
   <div class="account" *ngIf="account != null">
     <div class="barcode-container">
       <barcode [data]="account.cardId" format="EAN13" width="2"></barcode>
