@@ -194,7 +194,9 @@ export class CheckoutPage {
                 this.toastCtrl.create({
                     message: "Successfully logged in",
                     duration: 2000,
-                    position: "top",
+                    position: "bottom",
+                    showCloseButton: true,
+                    closeButtonText: "OK",
                     dismissOnPageChange: true,
                 }).present();
             }

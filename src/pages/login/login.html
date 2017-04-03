@@ -32,6 +32,9 @@
             <button ion-button block color="primary" [disabled]="canLogin() == false" (click)="login()">
                 <span>Login</span>
             </button>
+            <button ion-button block color="dark" (click)="fakeLogin()">
+                <span>Fake Login</span>
+            </button>
         </div>
         <div class="login-separator">
             <div></div>

@@ -43,6 +43,8 @@ export class LoginAction implements Action {
         loginMethod: LoginMethod,
         email?: string,
         password?: string,
+
+        fake?: boolean,
     }) {
     }
 }
@@ -50,7 +52,7 @@ export class LoginAction implements Action {
 export class LoginSuccessAction implements Action {
     readonly type = ActionTypes.LOGIN_SUCCESS;
 
-    constructor(public payload: { authToken: string }) { }
+    constructor(public payload: { authToken: string, fake?: boolean }) { }
 }
 
 export class LoginFailAction implements Action {

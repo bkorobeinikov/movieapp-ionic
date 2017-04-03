@@ -14,4 +14,6 @@ export interface Account {
         tickets: boolean,
         updates: boolean,
     };
+
+    fake?: boolean;
 }

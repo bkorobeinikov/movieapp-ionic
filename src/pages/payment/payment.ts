@@ -126,7 +126,7 @@ export class PaymentPage {
             this.toastCtrl.create({
                 message: "Congrats! You have purchased tickets.",
                 duration: 3000,
-                position: "top",
+                position: "bottom",
                 dismissOnPageChange: true,
                 showCloseButton: true,
                 closeButtonText: "OK",

@@ -9,10 +9,11 @@
     <div class="ticket-list">
         <div *ngIf="tickets?.length === 0">
             <ion-note>
-                Buy some tickets dude!
+                Application doesn't allow you to buy actual tickets. But it is possible to simulate purchase.<br/> 
+                Just go through the normal buying flow <b>Movie -> Seats -> Checkout -> Complete</b>
             </ion-note>
         </div>
-        <div class="ticket-item" *ngFor="let ticket of tickets" (tap)="onSelect(ticket)">
+        <div class="ticket-item" *ngFor="let ticket of tickets" tappable (tap)="onSelect(ticket)">
             <div class="movie-content">
                 <div class="movie-summary">
                     <div class="poster">

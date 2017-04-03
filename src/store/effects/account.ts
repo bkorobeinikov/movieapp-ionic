@@ -27,6 +27,7 @@ import { AccountService } from "../../core/account.service";
 import { State } from './../reducers';
 import * as actionsAccount from './../actions/account';
 import * as selectors from './../selectors';
+import { Account } from './../models';
 
 import { AsyncStatus } from './../viewModels';
 import { ServiceResponse } from "../../core/service-response.model";
@@ -37,6 +38,7 @@ export class AccountEffects {
     @Effect()
     login$: Observable<Action> = this.actions$
         .ofType(actionsAccount.ActionTypes.LOGIN)
+        .filter(actionRaw => !(<actionsAccount.LoginAction>actionRaw).payload.fake) // filter fake login
         .switchMap(action => {
             return this.doLogin(action)
                 .map(res => new actionsAccount.LoginSuccessAction({ authToken: res.data.authToken }))
@@ -46,7 +48,36 @@ export class AccountEffects {
     @Effect()
     onLoginSuccess$: Observable<Action> = this.actions$
         .ofType(actionsAccount.ActionTypes.LOGIN_SUCCESS)
+        .filter(actionRaw => !(<actionsAccount.LoginSuccessAction>actionRaw).payload.fake) // filter fake login        
         .map(() => new actionsAccount.UpdateAction());
+
+    @Effect()
+    loginFake$: Observable<Action> = this.actions$
+        .ofType(actionsAccount.ActionTypes.LOGIN)
+        .filter(actionRaw => (<actionsAccount.LoginAction>actionRaw).payload.fake) // filter fake login
+        .mergeMap(action => {
+
+            let fakeAccount: Account = {
+                id: Math.round(Math.random() * 1000000000).toString(),
+                name: "John Doe",
+                firstName: "John",
+                lastName: "Doe",
+                bonuses: Math.round(Math.random() * 10000),
+                cardId: "9000001682121",
+                email: "john.doe@example.com",
+                notifications: {
+                    tickets: true,
+                    updates: false,
+                },
+                phone: "+1234567890",
+                fake: true,
+            };
+
+            return [
+                new actionsAccount.LoginSuccessAction({ authToken: "fake_auth_token", fake: true }),
+                new actionsAccount.UpdateSuccessAction({ account: fakeAccount, tickets: [] })
+            ];
+        });
 
     @Effect()
     update$: Observable<Action> = this.actions$
@@ -97,8 +128,9 @@ export class AccountEffects {
     verifyAuth$ = this.actions$
         .ofType(actionsAccount.ActionTypes.VERIFY_AUTH)
         .withLatestFrom(this.store.select(selectors.getAccountLoggedIn))
+        .withLatestFrom(this.store.select(selectors.getAccount))
         // tslint:disable-next-line:no-unused-variable
-        .filter(([actionRaw, loggedIn]) => loggedIn == true)
+        .filter(([[actionRaw, loggedIn], account]) => loggedIn == true && !account.fake)
         .switchMap(() => {
             return this.accountService.getProfile()
                 .mergeMap((res: any) => ([
@@ -115,6 +147,17 @@ export class AccountEffects {
                         new actionsAccount.VerifyAuthFinishAction({ status: AsyncStatus.Fail, message: res.message })
                     ]);
                 });
+        });
+
+    @Effect()
+    verifyAuthFake$ = this.actions$
+        .ofType(actionsAccount.ActionTypes.VERIFY_AUTH)
+        .withLatestFrom(this.store.select(selectors.getAccountLoggedIn))
+        .withLatestFrom(this.store.select(selectors.getAccount))
+        // tslint:disable-next-line:no-unused-variable
+        .filter(([[actionRaw, loggedIn], account]) => loggedIn == true && account.fake)
+        .map(() => {
+            return new actionsAccount.VerifyAuthFinishAction({ status: AsyncStatus.Success });
         });
 
 

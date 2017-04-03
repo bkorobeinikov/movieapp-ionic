@@ -50,7 +50,13 @@ function applyDefaultState(reducer: ActionReducer<State>): ActionReducer<State> 
     };
 }
 
-const withLocalStorage = localStorageSync(["movie", "cinema", "ticket", "account"], true);
+const withLocalStorage = localStorageSync([
+    { movie: ["entities", "mapMovieToCinema"] },
+    { cinema: ["cinemas", "currentCinemaId", "screenings"] },
+    { ticket: ["tickets"] },
+    { account: ["account", "auth"] }],
+    true);
+
 const devReducer: ActionReducer<State> = compose(withLocalStorage, applyDefaultState, storeFreeze, combineReducers)(reducers);
 const prodReducer: ActionReducer<State> = compose(withLocalStorage, applyDefaultState, combineReducers)(reducers);
 

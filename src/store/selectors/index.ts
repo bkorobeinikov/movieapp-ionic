@@ -140,11 +140,8 @@ export const getTicketSelected = createSelector(getTicketState, fromTicket.getSe
 const getAccountState = (state: State) => state.account;
 export const getAccount = createSelector(getAccountState, fromAccount.getAccount);
 export const getAccountLoginOp = createSelector(getAccountState, fromAccount.getLoginOp);
-export const getAccountLoggedIn = createSelector(getAccountLoginOp, (loginOp) => {
-    if (loginOp == null)
-        return false;
-
-    return loginOp.status == AsyncStatus.Success
+export const getAccountLoggedIn = createSelector(getAccount, (account) => {
+    return account != null;
 });
 export const getAccountUpdateOp = createSelector(getAccountState, fromAccount.getUpdateOp);
 export const getAccountVerifyOp = createSelector(getAccountState, fromAccount.getVerifyOp);
