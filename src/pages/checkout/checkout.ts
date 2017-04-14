@@ -152,36 +152,35 @@ export class CheckoutPage {
 
     }
 
-    checkAuth() {
+    async checkAuth() {
 
         let loading = this.loadingCtrl.create({
             content: "Preparing for payment"
         });
-        loading.present().then(() => {
 
-            this.store.select(selectors.getAccountVerifyOp).skip(1)
-                .filter(verifyAuth => verifyAuth.status != AsyncStatus.Pending)
-                .first().subscribe(verifyAuth => {
-                    console.log('verification finished', verifyAuth);
-                    if (verifyAuth.status != AsyncStatus.Success) {
-                        loading.dismiss().then(() => {
-                            this.alertCtrl.create({
-                                message: "Verification Failed. You where logged out.",
-                                buttons: ["Dismiss"],
-                            }).present();
-                        });
-                    } else {
-                        loading.dismiss().then(() => {
-                            this.askHowToPay();
-                        });
-                    }
-                });
+        await loading.present();
 
-            // to check if user has valid auth token to purchase tickets
-            // we need to update user profile, it will automatically relogin user if auth token is outdated 
-            // of will logout user if credentials are invalid.
-            this.store.dispatch(new actionsAccount.VerifyAuthAction());
-        });
+        this.store.select(selectors.getAccountVerifyOp).skip(1)
+            .filter(verifyAuth => verifyAuth.status != AsyncStatus.Pending)
+            .first().subscribe(async verifyAuth => {
+                await loading.dismiss();
+
+                if (verifyAuth.status != AsyncStatus.Success) {
+
+                    this.alertCtrl.create({
+                        message: "Verification Failed. You where logged out.",
+                        buttons: ["Dismiss"],
+                    }).present();
+
+                } else {
+                    this.askHowToPay();
+                }
+            });
+
+        // to check if user has valid auth token to purchase tickets
+        // we need to update user profile, it will automatically relogin user if auth token is outdated 
+        // of will logout user if credentials are invalid.
+        this.store.dispatch(new actionsAccount.VerifyAuthAction());
 
     }
 

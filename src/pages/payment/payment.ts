@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { App, NavParams, ViewController, AlertController, LoadingController, NavController, Tabs, ToastController } from "ionic-angular";
+import { App, NavParams, ViewController, AlertController, LoadingController, NavController, Tabs, ToastController, Tab } from "ionic-angular";
 import { TicketPage } from "../ticket/ticket";
 
 import { Store } from "@ngrx/store";
@@ -72,42 +72,34 @@ export class PaymentPage {
         this.onPaymentFail();
     }
 
-    onPaymentSuccess() {
+    async onPaymentSuccess() {
 
         let loading = this.loadingCtrl.create({
             content: 'Please wait...'
         });
         loading.present();
 
-        this.getTabNavByIndex(0).popToRoot({ animate: false }).then(() => {
-            return new Promise((resolve, reject) => {
-                this.getTabs().ionChange.first().subscribe((tab) => {
-                    resolve(this.getTabNavByIndex(1).push(TicketPage, {}, { animate: false }));
-                });
+        await this.getTabNavByIndex(0).popToRoot({ animate: false })
+        await this.selectTab(1);
+        await this.getTabNavByIndex(1).push(TicketPage, {}, { animate: false });
 
-                this.getTabs().select(1, { animate: false });
-            });
-        }).then(() => {
-            let ticket = this.createFakeTicket();
+        let ticket = this.createFakeTicket();
+        this.store.dispatch(new actionsTicket.LoadSuccessAction([ticket]));
+        this.store.dispatch(new actionsTicket.SelectAction(ticket.id));
+        this.store.dispatch(new actionsUi.RootChangeTabAction(1));
 
-            this.store.dispatch(new actionsTicket.LoadSuccessAction([ticket]));
-            this.store.dispatch(new actionsTicket.SelectAction(ticket.id));
-            this.store.dispatch(new actionsUi.RootChangeTabAction(1));
+        await loading.dismiss();
 
-            return loading.dismiss();
-        }).then(() => {
+        this.toastCtrl.create({
+            message: "Congrats! You have purchased tickets.",
+            duration: 3000,
+            position: "bottom",
+            dismissOnPageChange: true,
+            showCloseButton: true,
+            closeButtonText: "OK",
+        }).present();
 
-            this.toastCtrl.create({
-                message: "Congrats! You have purchased tickets.",
-                duration: 3000,
-                position: "bottom",
-                dismissOnPageChange: true,
-                showCloseButton: true,
-                closeButtonText: "OK",
-            }).present();
-
-            return this.viewCtrl.dismiss();
-        });
+        this.viewCtrl.dismiss();
     }
 
     private createFakeTicket() {
@@ -147,35 +139,32 @@ export class PaymentPage {
         return ticket;
     }
 
-    onPaymentFail() {
+    async onPaymentFail() {
         let loading = this.loadingCtrl.create({
             content: 'Loading...'
         });
         loading.present();
 
-        this.getActiveTabNav().popTo(BookingPage).then(() => {
-            this.store.dispatch(new actionsBooking.HallLoadAction(this.order.showtime));
-            return loading.dismiss();
-        }).then(() => {
-            this.toastCtrl.create({
-                message: "Transaction failed. If you think it is our problem please contact us",
-                duration: 4000,
-                position: "bottom",
-                dismissOnPageChange: true,
-                showCloseButton: true,
-                closeButtonText: "OK",
-            }).present();
+        await this.getActiveTabNav().popTo(BookingPage);
+        this.store.dispatch(new actionsBooking.HallLoadAction(this.order.showtime));
 
-            return this.viewCtrl.dismiss();
-        });
+        await loading.dismiss();
+        this.toastCtrl.create({
+            message: "Transaction failed. If you think it is our problem please contact us",
+            duration: 4000,
+            position: "bottom",
+            dismissOnPageChange: true,
+            showCloseButton: true,
+            closeButtonText: "OK",
+        }).present();
+
+        this.viewCtrl.dismiss();
     }
 
-    onPaymentCancel() {
-        this.getActiveTabNav().popTo(BookingPage).then(() => {
-            this.store.dispatch(new actionsBooking.HallLoadAction(this.order.showtime))
-        }).then(() => {
-            this.viewCtrl.dismiss();
-        });
+    async onPaymentCancel() {
+        await this.getActiveTabNav().popTo(BookingPage);
+        this.store.dispatch(new actionsBooking.HallLoadAction(this.order.showtime))
+        this.viewCtrl.dismiss();
     }
 
     private getTabs(): Tabs {
@@ -190,5 +179,15 @@ export class PaymentPage {
 
     private getActiveTabNav() {
         return this.getTabs().getSelected().getActive().getNav();
+    }
+
+    private selectTab(tabOrIndex: number | Tab): Promise<Tab> {
+        return new Promise((resolve, reject) => {
+            this.getTabs().ionChange.first().subscribe((tab) => {
+                resolve(tab);
+            });
+
+            this.getTabs().select(tabOrIndex, { animate: false });
+        });
     }
 }
