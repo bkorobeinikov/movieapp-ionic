@@ -45,7 +45,7 @@ export class SignUpConfirmPage implements OnDestroy {
 
         this.store.select(selectors.getAccountSignupStage2Op).skip(1)
             .filter(op => !op.pending).first()
-            .subscribe(op => {
+            .subscribe(async op => {
                 if (!op.success) {
                     this.alertCtrl.create({
                         title: "Failed",
@@ -64,9 +64,10 @@ export class SignUpConfirmPage implements OnDestroy {
                         buttons: ["OK"],
                     });
 
-                    this.navCtrl.popTo(this.navCtrl.getByIndex(0)).then(() => successAlert.present());
+                    await this.navCtrl.popTo(this.navCtrl.getByIndex(0))
+                    successAlert.present();
                 }
-            })
+            });
 
         this.store.dispatch(new actionsAccount.SignUpStage2Action({
             email: this.creds.email,

@@ -5,7 +5,7 @@ import * as _ from 'lodash';
 
 import { CinemaHall } from './../models';
 
-import { AsyncOperation, AsyncStatus, defaultAsyncOp, makeAsyncOp } from "../viewModels";
+import { AsyncOperation, AsyncStatus, defaultAsyncOp, makeAsyncOp } from "./../utils";
 
 export interface State {
     showtimeId: string;
@@ -35,41 +35,45 @@ export function reducer(state = initialState, actionRaw: booking.Actions): State
             if (state.showtimeId == showtimeId)
                 return state;
 
-            return Object.assign({}, state, {
+            return {
+                ...state,
                 showtimeId: showtimeId,
 
                 hall: null,
                 hallLoadingOp: makeAsyncOp(AsyncStatus.None),
                 selectedSeatIds: [],
-            });
+            };
         }
         case booking.ActionTypes.HALL_LOAD: {
 
-            return Object.assign({}, state, {
+            return {
+                ...state,
                 hall: null,
                 hallLoadingOp: makeAsyncOp(AsyncStatus.Pending),
                 selectedSeatIds: [],
-            });
+            };
         }
         case booking.ActionTypes.HALL_LOAD_SUCCESS: {
             let action = <booking.HallLoadSuccessAction>actionRaw;
 
             let hall = action.payload;
 
-            return Object.assign({}, state, {
+            return {
+                ...state,
                 hall: hall,
                 hallLoadingOp: makeAsyncOp(AsyncStatus.Success),
                 selectedSeatIds: [],
-            })
+            };
         }
         case booking.ActionTypes.HALL_LOAD_FAIL: {
             let action = <booking.HallLoadFailAction>actionRaw;
 
-            return Object.assign({}, state, {
+            return {
+                ...state,
                 hall: null,
                 hallLoadingOp: makeAsyncOp(AsyncStatus.Fail, action.payload.message),
                 selectedSeatIds: [],
-            });
+            };
         }
         case booking.ActionTypes.SEAT_TOGGLE: {
             let action = <booking.SeatToggleAction>actionRaw;
@@ -83,17 +87,19 @@ export function reducer(state = initialState, actionRaw: booking.Actions): State
             else
                 newSeatIds.push(seatId);
 
-            return Object.assign({}, state, {
+            return {
+                ...state,
                 selectedSeatIds: newSeatIds,
-            });
+            };
         }
         case booking.ActionTypes.CLEAR: {
-            return Object.assign({}, state, {
+            return {
+                ...state,
                 showtimeId: null,
                 hallLoading: false,
                 hall: null,
                 selectedSeatIds: [],
-            });
+            };
         }
 
         default: {

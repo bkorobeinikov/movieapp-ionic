@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { App, NavParams, ViewController, AlertController, LoadingController, NavController, Tabs, ToastController } from "ionic-angular";
+import { App, NavParams, ViewController, AlertController, LoadingController, NavController, Tabs, ToastController, Tab } from "ionic-angular";
 import { TicketPage } from "../ticket/ticket";
 
 import { Store } from "@ngrx/store";
@@ -72,103 +72,103 @@ export class PaymentPage {
         this.onPaymentFail();
     }
 
-    onPaymentSuccess() {
+    async onPaymentSuccess() {
 
         let loading = this.loadingCtrl.create({
             content: 'Please wait...'
         });
         loading.present();
 
-        this.getTabNavByIndex(0).popToRoot({ animate: false }).then(() => {
-            this.getTabs().select(1);
-            return this.getTabNavByIndex(1).push(TicketPage, {}, { animate: false });
-        }).then(() => {
-            // load real ticket
-            let ticket: Ticket = {
-                id: Math.round(Math.random() * 100000000) + "",
-                movieUid: this.order.movie.uid,
-                cinemaId: this.order.cinema.id,
-                hallId: this.order.hall.id,
-                hallName: this.order.hall.name,
-                techId: this.order.showtime.techId,
-                time: this.order.showtime.time.toDate(),
-                seats: this.order.seats.map(s => ({
-                    id: Math.round(Math.random() * 1000000000) + "",
-                    ticketId: undefined,
-                    ticketBarcode: "9000001682121",
-                    row: s.row, seat: s.seat, price: {
-                        algorithm: "fake",
-                        amountBonuses: 0,
-                        amountCash: 149,
-                        bookingFee: 0,
-                        discount: 10,
-                        method: "fake",
-                        priceTicket: 150,
-                        priceTicketInclDiscount: 149,
-                        purchaseFee: 0,
-                        typeDiscount: "fake",
-                        valueDiscount: "1",
-                    },
-                    vatRate: undefined,
-                })),
-                showtimeId: this.order.showtime.id,
-                transactionDate: undefined,
-                transactionId: undefined,
-            };
+        await this.getTabNavByIndex(0).popToRoot({ animate: false })
+        await this.selectTab(1);
+        await this.getTabNavByIndex(1).push(TicketPage, {}, { animate: false });
 
-            this.store.dispatch(new actionsTicket.LoadSuccessAction([ticket]));
-            this.store.dispatch(new actionsTicket.SelectAction(ticket.id));
-            this.store.dispatch(new actionsUi.RootChangeTabAction(1));
+        let ticket = this.createFakeTicket();
+        this.store.dispatch(new actionsTicket.LoadSuccessAction([ticket]));
+        this.store.dispatch(new actionsTicket.SelectAction(ticket.id));
+        this.store.dispatch(new actionsUi.RootChangeTabAction(1));
 
-            return loading.dismiss();
-        }).then(() => {
+        await loading.dismiss();
 
-            this.toastCtrl.create({
-                message: "Congrats! You have purchased tickets.",
-                duration: 3000,
-                position: "bottom",
-                dismissOnPageChange: true,
-                showCloseButton: true,
-                closeButtonText: "OK",
-            }).present();
+        this.toastCtrl.create({
+            message: "Congrats! You have purchased tickets.",
+            duration: 3000,
+            position: "bottom",
+            dismissOnPageChange: true,
+            showCloseButton: true,
+            closeButtonText: "OK",
+        }).present();
 
-            return this.viewCtrl.dismiss();
-        });
+        this.viewCtrl.dismiss();
     }
 
-    onPaymentFail() {
+    private createFakeTicket() {
+        // load real ticket
+        let ticket: Ticket = {
+            id: Math.round(Math.random() * 100000000) + "",
+            movieUid: this.order.movie.uid,
+            cinemaId: this.order.cinema.id,
+            hallId: this.order.hall.id,
+            hallName: this.order.hall.name,
+            techId: this.order.showtime.techId,
+            time: this.order.showtime.time.toDate(),
+            seats: this.order.seats.map(s => ({
+                id: Math.round(Math.random() * 1000000000) + "",
+                ticketId: undefined,
+                ticketBarcode: "9000001682121",
+                row: s.row, seat: s.seat, price: {
+                    algorithm: "fake",
+                    amountBonuses: 0,
+                    amountCash: 149,
+                    bookingFee: 0,
+                    discount: 10,
+                    method: "fake",
+                    priceTicket: 150,
+                    priceTicketInclDiscount: 149,
+                    purchaseFee: 0,
+                    typeDiscount: "fake",
+                    valueDiscount: "1",
+                },
+                vatRate: undefined,
+            })),
+            showtimeId: this.order.showtime.id,
+            transactionDate: undefined,
+            transactionId: undefined,
+        };
+
+        return ticket;
+    }
+
+    async onPaymentFail() {
         let loading = this.loadingCtrl.create({
             content: 'Loading...'
         });
         loading.present();
 
-        this.getActiveTabNav().popTo(BookingPage).then(() => {
-            this.store.dispatch(new actionsBooking.HallLoadAction(this.order.showtime));
-            return loading.dismiss();
-        }).then(() => {
-            this.toastCtrl.create({
-                message: "Transaction failed. If you think it is our problem please contact us",
-                duration: 4000,
-                position: "bottom",
-                dismissOnPageChange: true,
-                showCloseButton: true,
-                closeButtonText: "OK",
-            }).present();
+        await this.getActiveTabNav().popTo(BookingPage);
+        this.store.dispatch(new actionsBooking.HallLoadAction(this.order.showtime));
 
-            return this.viewCtrl.dismiss();
-        });
+        await loading.dismiss();
+        this.toastCtrl.create({
+            message: "Transaction failed. If you think it is our problem please contact us",
+            duration: 4000,
+            position: "bottom",
+            dismissOnPageChange: true,
+            showCloseButton: true,
+            closeButtonText: "OK",
+        }).present();
+
+        this.viewCtrl.dismiss();
     }
 
-    onPaymentCancel() {
-        this.getActiveTabNav().popTo(BookingPage).then(() => {
-            this.store.dispatch(new actionsBooking.HallLoadAction(this.order.showtime))
-        }).then(() => {
-            this.viewCtrl.dismiss();
-        });
+    async onPaymentCancel() {
+        await this.getActiveTabNav().popTo(BookingPage);
+        this.store.dispatch(new actionsBooking.HallLoadAction(this.order.showtime))
+        this.viewCtrl.dismiss();
     }
 
     private getTabs(): Tabs {
-        return this.appCtrl.getRootNav().getActiveChildNav()
+        return this.appCtrl.getRootNav().getActiveChildNav();
     }
 
     private getTabNavByIndex(index) {
@@ -177,5 +177,12 @@ export class PaymentPage {
 
     private getActiveTabNav() {
         return this.getTabs().getSelected().getActive().getNav();
+    }
+
+    private selectTab(tabOrIndex: number | Tab): Promise<Tab> {
+        let onChange = this.getTabs().ionChange.first().toPromise();
+        this.getTabs().select(tabOrIndex, { animate: false });
+
+        return onChange;
     }
 }

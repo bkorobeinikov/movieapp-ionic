@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { type } from './../util';
+import { type } from './../utils';
 
 import { Ticket } from "./../models";
 

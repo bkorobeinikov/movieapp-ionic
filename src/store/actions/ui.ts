@@ -1,5 +1,5 @@
 import { Action } from '@ngrx/store';
-import { type } from './../util';
+import { type } from './../utils';
 
 export const ActionTypes = {
     ROOT_CHANGE_TAB: type("[Root] Change Tab"),

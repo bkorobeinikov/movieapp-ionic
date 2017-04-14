@@ -148,7 +148,7 @@ export class PlanetaKinoV2Service extends BaseService {
     }
 
     protected getData<T>(url: string, search?: URLSearchParams, headers?: { [name: string]: string }): Observable<T> {
-        headers = Object.assign({}, headers, {});
+        headers = { ...headers };
 
         let options: RequestOptionsArgs = {
             headers: new Headers(headers),
@@ -167,9 +167,11 @@ export class PlanetaKinoV2Service extends BaseService {
     }
 
     protected postData<T>(url: string, data: any, headers?: { [name: string]: string }): Observable<PlanetaKinoV2JsonResponse<T>> {
-        headers = Object.assign({}, headers, {
+        headers = {
+            ...headers,
             "Content-Type": "application/json"
-        });
+        };
+
         let options: RequestOptionsArgs = {
             headers: new Headers(headers),
             responseType: ResponseContentType.Json,

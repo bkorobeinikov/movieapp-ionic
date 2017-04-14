@@ -1,6 +1,6 @@
 import { Showtime } from "./../models/";
 
-import { AsyncOperation } from "./async-operation";
+import { AsyncOperation } from "./../utils";
 
 export interface ScreeningsViewModel {
     showtimes: { [showtimeId: string]: Showtime };

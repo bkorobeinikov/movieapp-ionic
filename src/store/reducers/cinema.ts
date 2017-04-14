@@ -3,7 +3,7 @@ import { createSelector } from 'reselect';
 import * as cinema from './../actions/cinema';
 import { Cinema } from './../models';
 import { ScreeningsViewModel } from './../viewModels';
-import { AsyncOperation, AsyncStatus, defaultAsyncOp, makeAsyncOp } from './../viewModels';
+import { AsyncOperation, AsyncStatus, defaultAsyncOp, makeAsyncOp } from './../utils';
 
 import * as _ from 'lodash';
 
@@ -32,44 +32,50 @@ export function reducer(state: State = initialState, actionRaw: cinema.Actions):
     switch (actionRaw.type) {
         case cinema.ActionTypes.LOAD: {
 
-            return Object.assign({}, state, {
+            return {
+                ...state,
                 loadingOp: makeAsyncOp(AsyncStatus.Pending),
-            });
+            };
         }
         case cinema.ActionTypes.LOAD_SUCCESS: {
             let action = <cinema.LoadSuccessAction>actionRaw;
             let cinemas = action.payload.reduce((entities: { [id: string]: Cinema }, cinema) => {
-                return Object.assign(entities, {
+                return {
+                    ...entities,
                     [cinema.id]: cinema
-                });
+                };
             }, {});
 
             let currentCinemaId = cinemas[state.currentCinemaId]
                 ? state.currentCinemaId
                 : cinemas[Object.keys(cinemas)[0]].id;
 
-            return Object.assign({}, state, {
+            return {
+                ...state,
                 cinemas: cinemas,
                 currentCinemaId: currentCinemaId,
                 loadingOp: makeAsyncOp(AsyncStatus.Success),
-            });
+            };
         }
         case cinema.ActionTypes.LOAD_FAIL: {
             let action = <cinema.LoadFailAction>actionRaw;
 
-            return Object.assign({}, state, {
+            return {
+                ...state,
                 loadingOp: makeAsyncOp(AsyncStatus.Fail, action.payload.errorMessage)
-            });
+            };
         }
         case cinema.ActionTypes.UPDATE: {
             let action = <cinema.UpdateAction>actionRaw;
             let cinemaId = action.payload.cinemaId;
 
-            return Object.assign({}, state, {
-                updates: Object.assign({}, state.updates, {
+            return {
+                ...state,
+                updates: {
+                    ...state.updates,
                     [cinemaId]: makeAsyncOp(AsyncStatus.Pending),
-                }),
-            });
+                },
+            };
         }
         case cinema.ActionTypes.UPDATE_SUCCESS: {
             let action = <cinema.UpdateSuccessAction>actionRaw;
@@ -77,31 +83,36 @@ export function reducer(state: State = initialState, actionRaw: cinema.Actions):
             let cinemas = action.payload.cinemas;
 
             let updatesState = cinemas.reduce((updates, cinema) => {
-                return Object.assign({}, updates, {
+                return {
+                    ...updates,
                     [cinema.id]: makeAsyncOp(AsyncStatus.Success),
-                });
+                };
             }, state.updates);
 
             let cinemasState = cinemas.reduce((cinemas, cinema) => {
-                return Object.assign({}, cinemas, {
+                return {
+                    ...cinemas,
                     [cinema.id]: cinema
-                });
+                };
             }, state.cinemas);
 
-            return Object.assign({}, state, {
+            return {
+                ...state,
                 cinemas: cinemasState,
                 updates: updatesState
-            });
+            };
         }
         case cinema.ActionTypes.UPDATE_FAIL: {
             let action = <cinema.UpdateFailAction>actionRaw;
             let cinemaId = action.payload.cinemaId;
 
-            return Object.assign({}, state, {
-                updates: Object.assign({}, state.updates, {
+            return {
+                ...state,
+                updates: {
+                    ...state.updates,
                     [cinemaId]: makeAsyncOp(AsyncStatus.Fail, action.payload.errorMessage),
-                }),
-            });
+                },
+            };
         }
         case cinema.ActionTypes.CHANGE_CURRENT: {
             let action = <cinema.ChangeCurrentAction>actionRaw;
@@ -111,9 +122,10 @@ export function reducer(state: State = initialState, actionRaw: cinema.Actions):
                 return state;
             }
 
-            return Object.assign({}, state, {
+            return {
+                ...state,
                 currentCinemaId: newCinemaId
-            });
+            };
         }
         case cinema.ActionTypes.SHOWTIME_CHECK_AND_LOAD: {
             return state;
@@ -123,15 +135,18 @@ export function reducer(state: State = initialState, actionRaw: cinema.Actions):
             let cinemaId = action.payload.cinemaId;
             let movieId = action.payload.movieId;
 
-            return Object.assign({}, state, {
-                screenings: Object.assign({}, state.screenings, {
-                    [cinemaId]: Object.assign({}, state.screenings[cinemaId], {
+            return {
+                ...state,
+                screenings: {
+                    ...state.screenings,
+                    [cinemaId]: {
+                        ...state.screenings[cinemaId],
                         [movieId]: <ScreeningsViewModel>{
                             loadingOp: makeAsyncOp(AsyncStatus.Pending),
                         },
-                    }),
-                }),
-            });
+                    },
+                },
+            };
         }
         case cinema.ActionTypes.SHOWTIME_LOAD_SUCCESS: {
             let action = <cinema.ShowtimeLoadSuccessAction>actionRaw;
@@ -143,28 +158,35 @@ export function reducer(state: State = initialState, actionRaw: cinema.Actions):
                 loadingOp: makeAsyncOp(AsyncStatus.Success),
             };
 
-            return Object.assign({}, state, {
-                screenings: Object.assign({}, state.screenings, {
-                    [cinemaId]: Object.assign({}, state.screenings[cinemaId], {
+            return {
+                ...state,
+                screenings: {
+                    ...state.screenings,
+                    [cinemaId]: {
+                        ...state.screenings[cinemaId],
                         [movieId]: screenings
-                    }),
-                }),
-            });
+                    },
+                },
+            };
         }
         case cinema.ActionTypes.SHOWTIME_LOAD_FAIL: {
             let action = <cinema.ShowtimeLoadFailAction>actionRaw;
             let cinemaId = action.payload.cinemaId;
             let movieId = action.payload.movieId;
 
-            return Object.assign({}, state, {
-                screenings: Object.assign({}, state.screenings, {
-                    [cinemaId]: Object.assign({}, state, state.screenings[cinemaId], {
+            return {
+                ...state,
+                screenings: {
+                    ...state.screenings,
+                    [cinemaId]: {
+                        ...state.screenings[cinemaId],
                         [movieId]: {
+                            ...state.screenings[cinemaId][movieId],
                             loadingOp: makeAsyncOp(AsyncStatus.Fail, action.payload.errorMessage),
                         },
-                    }),
-                })
-            });
+                    },
+                }
+            };
         }
 
         default: {
