@@ -172,8 +172,6 @@ export class PaymentPage {
     }
 
     private getTabNavByIndex(index) {
-        console.log("getTabNavByIndex()", index, this.getTabs().getByIndex(index).getActive(), this.getTabs().getByIndex(index).getActiveChildNav());
-
         return this.getTabs().getByIndex(index).getActive().getNav();
     };
 
@@ -182,12 +180,9 @@ export class PaymentPage {
     }
 
     private selectTab(tabOrIndex: number | Tab): Promise<Tab> {
-        return new Promise((resolve, reject) => {
-            this.getTabs().ionChange.first().subscribe((tab) => {
-                resolve(tab);
-            });
+        let onChange = this.getTabs().ionChange.first().toPromise();
+        this.getTabs().select(tabOrIndex, { animate: false });
 
-            this.getTabs().select(tabOrIndex, { animate: false });
-        });
+        return onChange;
     }
 }
