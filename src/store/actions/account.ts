@@ -1,8 +1,8 @@
 import { Action } from '@ngrx/store';
-import { type } from './../util';
+import { type } from './../utils';
 
 import { Account, Ticket } from './../models';
-import { AsyncStatus } from './../viewModels';
+import { AsyncStatus } from './../utils';
 
 export const ActionTypes = {
     LOGIN: type("[Account] Login"),

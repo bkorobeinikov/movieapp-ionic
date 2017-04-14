@@ -12,7 +12,7 @@ import * as selectors from './../../store/selectors';
 import { CinemasPage } from './../cinemas/cinemas';
 
 import { Observable } from "rxjs/Observable";
-import { AsyncOperation } from "../../store/viewModels";
+import { AsyncOperation } from "./../../store/utils";
 
 @Component({
     selector: 'page-account',

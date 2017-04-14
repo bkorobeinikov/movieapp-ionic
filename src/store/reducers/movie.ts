@@ -5,7 +5,7 @@ import { Movie } from './../models';
 
 import * as _ from 'lodash';
 
-import { AsyncOperation, AsyncStatus, makeAsyncOp } from "../viewModels";
+import { AsyncOperation, AsyncStatus, makeAsyncOp } from "./../utils";
 
 export interface State {
     entities: { [movieId: string]: Movie };
@@ -35,24 +35,28 @@ export function reducer(state: State = initialState, actionRaw: movie.Actions): 
             let action = <movie.LoadAction>actionRaw;
             let cinemaId = action.payload.cinemaId;
 
-            return Object.assign({}, state, {
-                mapMovieToCinema: Object.assign({}, state.mapMovieToCinema, {
-                    [cinemaId]: Object.assign({}, state.mapMovieToCinema[cinemaId], {
+            return {
+                ...state,
+                mapMovieToCinema: {
+                    ...state.mapMovieToCinema,
+                    [cinemaId]: {
+                        ...state.mapMovieToCinema[cinemaId],
                         releasedIds: [],
                         otherIds: [],
                         loadingOp: makeAsyncOp(AsyncStatus.Pending),
-                    }),
-                }),
-            });
+                    },
+                },
+            };
         }
         case movie.ActionTypes.LOAD_SUCCESS: {
             let action = <movie.LoadSuccessAction>actionRaw;
 
             let entities = _.flatten([action.payload.released, action.payload.other])
                 .reduce((entities, movie) => {
-                    return Object.assign({}, entities, {
+                    return {
+                        ...entities,
                         [movie.id]: movie,
-                    });
+                    };
                 }, state.entities);
 
             let map = {
@@ -61,30 +65,36 @@ export function reducer(state: State = initialState, actionRaw: movie.Actions): 
                 loadingOp: makeAsyncOp(AsyncStatus.Success),
             };
 
-            return Object.assign({}, state, {
+            return {
+                ...state,
                 entities: entities,
-                mapMovieToCinema: Object.assign({}, state.mapMovieToCinema, {
+                mapMovieToCinema: {
+                    ...state.mapMovieToCinema,
                     [action.payload.cinemaId]: map
-                }),
-            });
+                },
+            };
         }
         case movie.ActionTypes.LOAD_FAIL: {
             let action = <movie.LoadFailAction>actionRaw;
             let cinemaId = action.payload.cinemaId;
 
-            return Object.assign({}, state, {
-                mapMovieToCinema: Object.assign({}, state.mapMovieToCinema, {
-                    [cinemaId]: Object.assign({}, state.mapMovieToCinema[cinemaId], {
+            return {
+                ...state,
+                mapMovieToCinema: {
+                    ...state.mapMovieToCinema,
+                    [cinemaId]: {
+                        ...state.mapMovieToCinema[cinemaId],
                         loadingOp: makeAsyncOp(AsyncStatus.Fail, action.payload.errorMessage),
-                    }),
-                }),
-            });
+                    },
+                },
+            };
         }
         case movie.ActionTypes.SELECT: {
             var action = <movie.SelectAction>actionRaw;
-            return Object.assign({}, state, {
+            return {
+                ...state,
                 selectedId: action.payload,
-            });
+            };
         }
 
         default:

@@ -6,7 +6,7 @@ import * as _ from 'lodash';
 
 import { Ticket } from './../models';
 
-import { AsyncOperation, AsyncStatus, defaultAsyncOp, makeAsyncOp } from "../viewModels";
+import { AsyncOperation, AsyncStatus, defaultAsyncOp, makeAsyncOp } from "./../utils";
 
 export interface State {
     tickets: { [ticketId: string]: Ticket };
@@ -27,41 +27,46 @@ export const initialState: State = {
 export function reducer(state: State = initialState, actionRaw: actionsTicket.Actions | actionsAccount.UpdateSuccessAction) {
     switch (actionRaw.type) {
         case actionsTicket.ActionTypes.LOAD: {
-            return Object.assign({}, state, {
+            return {
+                ...state,
                 loadingOp: makeAsyncOp(AsyncStatus.Pending),
-            });
+            };
         }
         case actionsTicket.ActionTypes.LOAD_SUCCESS: {
             let action = <actionsTicket.LoadSuccessAction>actionRaw;
 
             var newTickets = _.keyBy(action.payload, t => t.id);
 
-            return Object.assign({}, state, {
-                tickets: Object.assign({}, state.tickets, newTickets),
+            return {
+                ...state,
+                tickets: { ...state.tickets, ...newTickets },
                 loadingOp: makeAsyncOp(AsyncStatus.Success),
-            });
+            };
         }
         case actionsTicket.ActionTypes.LOAD_FAIL: {
             let action = <actionsTicket.LoadFailAction>actionRaw;
 
-            return Object.assign({}, state, {
+            return {
+                ...state,
                 loadingOp: makeAsyncOp(AsyncStatus.Fail, action.payload.errorMessage),
-            });
+            };
         }
         case actionsTicket.ActionTypes.SELECT: {
             let action = <actionsTicket.SelectAction>actionRaw;
 
-            return Object.assign({}, state, {
+            return {
+                ...state,
                 selectedTicketId: action.payload,
-            });
+            };
         }
         case actionsAccount.ActionTypes.UPDATE_SUCCESS: {
             let action = <actionsAccount.UpdateSuccessAction>actionRaw;
             let tickets = _.keyBy(action.payload.tickets, t => t.id);
 
-            return Object.assign({}, state, {
+            return {
+                ...state,
                 tickets: tickets,
-            });
+            };
         }
         default: {
             return state;

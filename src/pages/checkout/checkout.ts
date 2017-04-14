@@ -16,7 +16,7 @@ import { PaymentPage } from "../payment/payment";
 import { LoginNavPage } from "./../login/login-nav";
 
 import { Cinema, CinemaHall, CinemaHallSeat, Movie, Showtime } from "../../store/models";
-import { AsyncStatus } from './../../store/viewModels';
+import { AsyncStatus } from './../../store/utils';
 
 import * as _ from 'lodash';
 
@@ -157,29 +157,32 @@ export class CheckoutPage {
         let loading = this.loadingCtrl.create({
             content: "Preparing for payment"
         });
-        loading.present();
+        loading.present().then(() => {
 
-        this.store.select(selectors.getAccountVerifyOp).skip(1)
-            .filter(verifyAuth => verifyAuth.status != AsyncStatus.Pending)
-            .first().subscribe(verifyAuth => {
-                if (verifyAuth.status != AsyncStatus.Success) {
-                    loading.dismiss().then(() => {
-                        this.alertCtrl.create({
-                            message: "Verification Failed. You where logged out.",
-                            buttons: ["Dismiss"],
-                        }).present();
-                    });
-                } else {
-                    loading.dismiss().then(() => {
-                        this.askHowToPay();
-                    });
-                }
-            });
+            this.store.select(selectors.getAccountVerifyOp).skip(1)
+                .filter(verifyAuth => verifyAuth.status != AsyncStatus.Pending)
+                .first().subscribe(verifyAuth => {
+                    console.log('verification finished', verifyAuth);
+                    if (verifyAuth.status != AsyncStatus.Success) {
+                        loading.dismiss().then(() => {
+                            this.alertCtrl.create({
+                                message: "Verification Failed. You where logged out.",
+                                buttons: ["Dismiss"],
+                            }).present();
+                        });
+                    } else {
+                        loading.dismiss().then(() => {
+                            this.askHowToPay();
+                        });
+                    }
+                });
 
-        // to check if user has valid auth token to purchase tickets
-        // we need to update user profile, it will automatically relogin user if auth token is outdated 
-        // of will logout user if credentials are invalid.
-        this.store.dispatch(new actionsAccount.VerifyAuthAction());
+            // to check if user has valid auth token to purchase tickets
+            // we need to update user profile, it will automatically relogin user if auth token is outdated 
+            // of will logout user if credentials are invalid.
+            this.store.dispatch(new actionsAccount.VerifyAuthAction());
+        });
+
     }
 
     askToLogin() {

@@ -29,7 +29,7 @@ import * as actionsAccount from './../actions/account';
 import * as selectors from './../selectors';
 import { Account } from './../models';
 
-import { AsyncStatus } from './../viewModels';
+import { AsyncStatus } from './../utils';
 import { ServiceResponse } from "../../core/service-response.model";
 
 @Injectable()

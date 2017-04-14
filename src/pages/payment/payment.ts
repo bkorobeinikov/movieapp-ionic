@@ -80,41 +80,15 @@ export class PaymentPage {
         loading.present();
 
         this.getTabNavByIndex(0).popToRoot({ animate: false }).then(() => {
-            this.getTabs().select(1);
-            return this.getTabNavByIndex(1).push(TicketPage, {}, { animate: false });
+            return new Promise((resolve, reject) => {
+                this.getTabs().ionChange.first().subscribe((tab) => {
+                    resolve(this.getTabNavByIndex(1).push(TicketPage, {}, { animate: false }));
+                });
+
+                this.getTabs().select(1, { animate: false });
+            });
         }).then(() => {
-            // load real ticket
-            let ticket: Ticket = {
-                id: Math.round(Math.random() * 100000000) + "",
-                movieUid: this.order.movie.uid,
-                cinemaId: this.order.cinema.id,
-                hallId: this.order.hall.id,
-                hallName: this.order.hall.name,
-                techId: this.order.showtime.techId,
-                time: this.order.showtime.time.toDate(),
-                seats: this.order.seats.map(s => ({
-                    id: Math.round(Math.random() * 1000000000) + "",
-                    ticketId: undefined,
-                    ticketBarcode: "9000001682121",
-                    row: s.row, seat: s.seat, price: {
-                        algorithm: "fake",
-                        amountBonuses: 0,
-                        amountCash: 149,
-                        bookingFee: 0,
-                        discount: 10,
-                        method: "fake",
-                        priceTicket: 150,
-                        priceTicketInclDiscount: 149,
-                        purchaseFee: 0,
-                        typeDiscount: "fake",
-                        valueDiscount: "1",
-                    },
-                    vatRate: undefined,
-                })),
-                showtimeId: this.order.showtime.id,
-                transactionDate: undefined,
-                transactionId: undefined,
-            };
+            let ticket = this.createFakeTicket();
 
             this.store.dispatch(new actionsTicket.LoadSuccessAction([ticket]));
             this.store.dispatch(new actionsTicket.SelectAction(ticket.id));
@@ -134,6 +108,43 @@ export class PaymentPage {
 
             return this.viewCtrl.dismiss();
         });
+    }
+
+    private createFakeTicket() {
+        // load real ticket
+        let ticket: Ticket = {
+            id: Math.round(Math.random() * 100000000) + "",
+            movieUid: this.order.movie.uid,
+            cinemaId: this.order.cinema.id,
+            hallId: this.order.hall.id,
+            hallName: this.order.hall.name,
+            techId: this.order.showtime.techId,
+            time: this.order.showtime.time.toDate(),
+            seats: this.order.seats.map(s => ({
+                id: Math.round(Math.random() * 1000000000) + "",
+                ticketId: undefined,
+                ticketBarcode: "9000001682121",
+                row: s.row, seat: s.seat, price: {
+                    algorithm: "fake",
+                    amountBonuses: 0,
+                    amountCash: 149,
+                    bookingFee: 0,
+                    discount: 10,
+                    method: "fake",
+                    priceTicket: 150,
+                    priceTicketInclDiscount: 149,
+                    purchaseFee: 0,
+                    typeDiscount: "fake",
+                    valueDiscount: "1",
+                },
+                vatRate: undefined,
+            })),
+            showtimeId: this.order.showtime.id,
+            transactionDate: undefined,
+            transactionId: undefined,
+        };
+
+        return ticket;
     }
 
     onPaymentFail() {
@@ -168,10 +179,12 @@ export class PaymentPage {
     }
 
     private getTabs(): Tabs {
-        return this.appCtrl.getRootNav().getActiveChildNav()
+        return this.appCtrl.getRootNav().getActiveChildNav();
     }
 
     private getTabNavByIndex(index) {
+        console.log("getTabNavByIndex()", index, this.getTabs().getByIndex(index).getActive(), this.getTabs().getByIndex(index).getActiveChildNav());
+
         return this.getTabs().getByIndex(index).getActive().getNav();
     };
 

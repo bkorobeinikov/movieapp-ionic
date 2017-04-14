@@ -11,7 +11,7 @@ import * as fromAccount from './../reducers/account';
 
 import * as _ from 'lodash';
 
-import { defaultAsyncOp } from "../viewModels";
+import { defaultAsyncOp } from "./../utils";
 
 // movie state
 const getMovieState = (state: State) => state.movie;

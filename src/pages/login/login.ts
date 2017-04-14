@@ -11,7 +11,7 @@ import { SignUpPage } from './../signup/signup';
 import * as _ from "lodash";
 import { Subscription } from "rxjs/Subscription";
 
-import { AsyncOperation } from "../../store/viewModels";
+import { AsyncOperation } from "./../../store/utils";
 
 @Component({
     selector: "page-login",
