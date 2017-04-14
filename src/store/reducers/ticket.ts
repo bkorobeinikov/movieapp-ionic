@@ -24,7 +24,7 @@ export const initialState: State = {
     selectedTicketId: null,
 };
 
-export function reducer(state: State = initialState, actionRaw: actionsTicket.Actions | actionsAccount.UpdateSuccessAction) {
+export function reducer(state: State = initialState, actionRaw: actionsTicket.Actions | actionsAccount.UpdateSuccessAction | actionsAccount.LogoutSuccessAction) {
     switch (actionRaw.type) {
         case actionsTicket.ActionTypes.LOAD: {
             return {
@@ -66,6 +66,12 @@ export function reducer(state: State = initialState, actionRaw: actionsTicket.Ac
             return {
                 ...state,
                 tickets: tickets,
+            };
+        }
+        case actionsAccount.ActionTypes.LOGOUT_SUCCESS: {
+            return {
+                ...state,
+                tickets: {}
             };
         }
         default: {
