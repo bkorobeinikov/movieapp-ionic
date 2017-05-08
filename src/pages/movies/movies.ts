@@ -18,7 +18,7 @@ import { CinemasPopoverComponent } from './cinemas-popover/cinemas-popover.compo
 
 import { Subscription } from "rxjs/Subscription";
 
-import { AsyncOperation } from "../../store/viewModels";
+import { AsyncOperation } from "./../../store/utils";
 
 @Component({
     selector: 'page-movies',

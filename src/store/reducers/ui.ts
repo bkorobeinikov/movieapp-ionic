@@ -19,16 +19,18 @@ export function reducer(state: State = initialState, actionRaw: ui.Actions): Sta
             let action = <ui.RootChangeTabAction>actionRaw;
             let newIndex = action.payload;
 
-            return Object.assign({}, state, {
+            return {
+                ...state,
                 rootTabIndex: newIndex,
-            });
+            };
         }
         case ui.ActionTypes.CHANGE_MOVIES_CATEGORY: {
             let action = <ui.ChangeMoviesCategoryAction>actionRaw;
 
-            return Object.assign({}, state, {
+            return {
+                ...state,
                 moviesCategory: action.payload
-            });
+            };
         }
 
         default: {

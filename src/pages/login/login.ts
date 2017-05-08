@@ -11,7 +11,7 @@ import { SignUpPage } from './../signup/signup';
 import * as _ from "lodash";
 import { Subscription } from "rxjs/Subscription";
 
-import { AsyncOperation } from "../../store/viewModels";
+import { AsyncOperation } from "./../../store/utils";
 
 @Component({
     selector: "page-login",
@@ -73,19 +73,12 @@ export class LoginPage implements OnDestroy {
         return _.isEmpty(this.creds.email) == false && _.isEmpty(this.creds.password) == false;
     }
 
-    fakeLogin() {
+    async fakeLogin() {
         console.log("fake login");
         if (this.loginOp.pending)
             return;
 
-        this.store.select(selectors.getAccountLoginOp).skip(1).filter(op => op.fail).first()
-            .subscribe(loginOp => {
-                this.alertCtrl.create({
-                    title: "Login Failed",
-                    message: loginOp.message,
-                    buttons: ["Dismiss"],
-                }).present();
-            });
+        let onLoginOpChange = this.store.select(selectors.getAccountLoginOp).skip(1).filter(op => op.fail).first().toPromise();
 
         this.store.dispatch(new actionsAccount.LoginAction({
             loginMethod: actionsAccount.LoginMethod.Email,
@@ -94,26 +87,33 @@ export class LoginPage implements OnDestroy {
 
             fake: true,
         }));
+
+        let loginOp = await onLoginOpChange;
+        this.alertCtrl.create({
+            title: "Login Failed",
+            message: loginOp.message,
+            buttons: ["Dismiss"],
+        }).present();
     }
 
-    login() {
+    async login() {
         if (this.loginOp.pending)
             return;
 
-        this.store.select(selectors.getAccountLoginOp).skip(1).filter(op => op.fail).first()
-            .subscribe(loginOp => {
-                this.alertCtrl.create({
-                    title: "Login Failed",
-                    message: loginOp.message,
-                    buttons: ["Dismiss"],
-                }).present();
-            });
+        let onLoginOpChange = this.store.select(selectors.getAccountLoginOp).skip(1).filter(op => op.fail).first().toPromise();
 
         this.store.dispatch(new actionsAccount.LoginAction({
             loginMethod: actionsAccount.LoginMethod.Email,
             email: this.creds.email,
             password: this.creds.password,
         }));
+
+        let loginOp = await onLoginOpChange;
+        this.alertCtrl.create({
+            title: "Login Failed",
+            message: loginOp.message,
+            buttons: ["Dismiss"],
+        }).present();
     }
 
     signup() {

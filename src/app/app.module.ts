@@ -1,7 +1,11 @@
 import { NgModule, ErrorHandler } from '@angular/core';
 import { HttpModule } from '@angular/http';
+import { BrowserModule } from '@angular/platform-browser';
 
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
+
+import { StatusBar } from '@ionic-native/status-bar';
+import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { MyApp } from './app.component';
 
@@ -46,76 +50,77 @@ import { AccountService } from "./../core/account.service";
 import { PlanetaKinoV2Service } from './../core/planetakino-api/planetakino-api.service';
 
 @NgModule({
-  imports: [
-    IonicModule.forRoot(MyApp, {
-      backButtonText: "",
-    }),
-    //CoreModule,
-    HttpModule,
+    imports: [
+        BrowserModule,
+        HttpModule,
+        IonicModule.forRoot(MyApp, {
+            backButtonText: "",
+        }),
 
-    StoreModule.provideStore(reducer),
-    StoreDevtoolsModule.instrumentOnlyWithExtension(),
-    EffectsModule.run(MovieEffects),
-    EffectsModule.run(CinemaEffects),
-    EffectsModule.run(BookingEffects),
-    EffectsModule.run(AccountEffects),
-  ],
-  declarations: [
-    JoinPipe,
-    MomentPipe,
-    TelPipe,
-    SafePipe,
+        StoreModule.provideStore(reducer),
+        StoreDevtoolsModule.instrumentOnlyWithExtension(),
+        EffectsModule.run(MovieEffects),
+        EffectsModule.run(CinemaEffects),
+        EffectsModule.run(BookingEffects),
+        EffectsModule.run(AccountEffects),
+    ],
+    declarations: [
+        JoinPipe,
+        MomentPipe,
+        TelPipe,
+        SafePipe,
 
-    MyApp,
+        MyApp,
 
-    MoviesPage,
-    MoviePage,
-    BookingPage,
-    CheckoutPage,
-    PaymentPage,
-    TabsPage,
-    AccountPage,
-    TicketsPage,
-    TicketPage,
-    LoginPage,
-    LoginNavPage,
-    SignUpPage,
-    SignUpConfirmPage,
-    CinemasPage,
-    NewsPage,
+        MoviesPage,
+        MoviePage,
+        BookingPage,
+        CheckoutPage,
+        PaymentPage,
+        TabsPage,
+        AccountPage,
+        TicketsPage,
+        TicketPage,
+        LoginPage,
+        LoginNavPage,
+        SignUpPage,
+        SignUpConfirmPage,
+        CinemasPage,
+        NewsPage,
 
-    HallComponent,
-    DatePicker,
-    BookingCartComponent,
-    CinemasPopoverComponent,
-    SvgPanZoomDirective,
-    BarcodeComponent,
-  ],
-  bootstrap: [IonicApp],
-  entryComponents: [
-    MyApp,
+        HallComponent,
+        DatePicker,
+        BookingCartComponent,
+        CinemasPopoverComponent,
+        SvgPanZoomDirective,
+        BarcodeComponent,
+    ],
+    bootstrap: [IonicApp],
+    entryComponents: [
+        MyApp,
 
-    MoviesPage,
-    MoviePage,
-    BookingPage,
-    CheckoutPage,
-    PaymentPage,
-    TabsPage,
-    AccountPage,
-    TicketsPage,
-    TicketPage,
-    LoginPage,
-    LoginNavPage,
-    SignUpPage,
-    SignUpConfirmPage,
-    CinemasPage,
-    NewsPage,
+        MoviesPage,
+        MoviePage,
+        BookingPage,
+        CheckoutPage,
+        PaymentPage,
+        TabsPage,
+        AccountPage,
+        TicketsPage,
+        TicketPage,
+        LoginPage,
+        LoginNavPage,
+        SignUpPage,
+        SignUpConfirmPage,
+        CinemasPage,
+        NewsPage,
 
-    CinemasPopoverComponent,
-  ],
-  providers: [
-    { provide: ErrorHandler, useClass: IonicErrorHandler },
-    CinemaService, AccountService, PlanetaKinoV2Service
-  ]
+        CinemasPopoverComponent,
+    ],
+    providers: [
+        StatusBar, SplashScreen,
+        { provide: ErrorHandler, useClass: IonicErrorHandler },
+        CinemaService, AccountService, PlanetaKinoV2Service
+    ]
 })
 export class AppModule { }

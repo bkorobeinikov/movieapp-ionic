@@ -71,17 +71,17 @@ export class TabsPage implements OnInit, OnDestroy {
         }));
     }
 
-    onLoggedInChange(loggedIn) {
+    async onLoggedInChange(loggedIn) {
         let page = loggedIn ? AccountPage : LoginPage;
 
         let tabView = this.tabs.getByIndex(3).getActive();
         if (tabView) {
-            tabView.getNav().setRoot(page, {}, {
+            await tabView.getNav().setRoot(page, {}, {
                 animate: tabView.getNav().getViews().length > 1 ? false : true,
                 direction: loggedIn ? "forward" : "back",
-            }).then(() => {
-                this.account = page;
-            });
+            })
+
+            this.account = page;
         }
         else {
             this.account = page;

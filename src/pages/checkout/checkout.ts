@@ -2,6 +2,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { App, ModalController, ToastController, ActionSheetController, AlertController, LoadingController } from "ionic-angular";
 
 import { Observable } from "rxjs/Observable";
+import 'rxjs/add/operator/toPromise';
 import 'rxjs/add/operator/first';
 import 'rxjs/add/operator/combineLatest';
 import 'rxjs/add/operator/distinctUntilChanged';
@@ -16,7 +17,7 @@ import { PaymentPage } from "../payment/payment";
 import { LoginNavPage } from "./../login/login-nav";
 
 import { Cinema, CinemaHall, CinemaHallSeat, Movie, Showtime } from "../../store/models";
-import { AsyncStatus } from './../../store/viewModels';
+import { AsyncStatus } from './../../store/utils';
 
 import * as _ from 'lodash';
 
@@ -79,14 +80,14 @@ export class CheckoutPage {
         return _.sumBy(this.order.seats, s => s.bonus);
     }
 
-    pay() {
-        this.store.select(selectors.getAccountLoggedIn).first().subscribe(loggedIn => {
-            if (!loggedIn) {
-                this.askToLogin()
-            } else {
-                this.checkAuth();
-            }
-        });
+    async pay() {
+        let loggedIn = await this.store.select(selectors.getAccountLoggedIn).first().toPromise();
+
+        if (!loggedIn) {
+            this.askToLogin()
+        } else {
+            this.checkAuth();
+        }
     }
 
     askHowToPay() {
@@ -152,57 +153,57 @@ export class CheckoutPage {
 
     }
 
-    checkAuth() {
+    async checkAuth() {
 
         let loading = this.loadingCtrl.create({
             content: "Preparing for payment"
         });
-        loading.present();
-
-        this.store.select(selectors.getAccountVerifyOp).skip(1)
-            .filter(verifyAuth => verifyAuth.status != AsyncStatus.Pending)
-            .first().subscribe(verifyAuth => {
-                if (verifyAuth.status != AsyncStatus.Success) {
-                    loading.dismiss().then(() => {
-                        this.alertCtrl.create({
-                            message: "Verification Failed. You where logged out.",
-                            buttons: ["Dismiss"],
-                        }).present();
-                    });
-                } else {
-                    loading.dismiss().then(() => {
-                        this.askHowToPay();
-                    });
-                }
-            });
+        await loading.present();
 
         // to check if user has valid auth token to purchase tickets
         // we need to update user profile, it will automatically relogin user if auth token is outdated 
         // of will logout user if credentials are invalid.
+        let onVerifyAuthOpChange = this.store.select(selectors.getAccountVerifyOp).skip(1)
+            .filter(verifyAuth => verifyAuth.status != AsyncStatus.Pending)
+            .first().toPromise();
         this.store.dispatch(new actionsAccount.VerifyAuthAction());
+
+        let verifyAuth = await onVerifyAuthOpChange;
+        await loading.dismiss();
+        if (verifyAuth.status != AsyncStatus.Success) {
+
+            this.alertCtrl.create({
+                message: "Verification Failed. You where logged out.",
+                buttons: ["Dismiss"],
+            }).present();
+
+        } else {
+            this.askHowToPay();
+        }
     }
 
-    askToLogin() {
+    async askToLogin() {
         let modal = this.modalCtrl.create(LoginNavPage, {
             modal: true,
         });
 
-        this.store.select(selectors.getAccountLoggedIn).skip(1).first().subscribe(loggedIn => {
-            if (loggedIn) {
-                modal.dismiss();
-
-                this.toastCtrl.create({
-                    message: "Successfully logged in",
-                    duration: 2000,
-                    position: "bottom",
-                    showCloseButton: true,
-                    closeButtonText: "OK",
-                    dismissOnPageChange: true,
-                }).present();
-            }
-        });
-
         modal.present();
+
+        let loggedIn = await this.store.select(selectors.getAccountLoggedIn).skip(1).first().toPromise();
+
+        if (loggedIn) {
+            modal.dismiss();
+
+            this.toastCtrl.create({
+                message: "Successfully logged in",
+                duration: 2000,
+                position: "bottom",
+                showCloseButton: true,
+                closeButtonText: "OK",
+                dismissOnPageChange: true,
+            }).present();
+        }
+
     }
 
 }
