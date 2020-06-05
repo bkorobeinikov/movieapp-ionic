@@ -32,7 +32,7 @@
     "ionicons": "3.0.0",
     "jsbarcode": "3.6.0",
     "lodash": "4.17.4",
-    "moment": "2.18.1",
+    "moment": "2.26.0",
     "ngrx-store-freeze": "0.1.9",
     "ngrx-store-localstorage": "0.1.6",
     "reselect": "3.0.0",
