@@ -1,3 +1,5 @@
+:warning: The app cannot be run anymore due to API changes. There is no plans to work on this project more.
+
 # Movie theater application
 
 This app was made just to see Ionic 2 in action with real page flows and real data api (and ngrx/store).
